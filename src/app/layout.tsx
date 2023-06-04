@@ -1,5 +1,15 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore"; 
+import firebaseConfig from '@root/firebase/config'; 
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const querySnapshot = await getDocs(collection(db, "dates"));
+console.log(querySnapshot.docs.map(doc => doc.data()));
 
 const inter = Inter({ subsets: ['latin'] })
 
