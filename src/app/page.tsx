@@ -1,36 +1,42 @@
 'use client';
-import { initializeApp } from "@firebase/app";
+import { initializeApp } from "firebase/app";
 import firebaseConfig from "@root/firebase/config";
 import { useEffect } from "react";
-import { getAuth, signInWithRedirect, GoogleAuthProvider, getRedirectResult } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const provider = new GoogleAuthProvider();
   initializeApp(firebaseConfig);
   const auth = getAuth();
-  const signInWithGoogle = () => {
-    signInWithRedirect(auth, provider);
-  }
+  const router = useRouter();
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
 
   useEffect(() => {
-    // Handle the redirect result after sign-in
     const handleRedirectResult = async () => {
       try {
-        const result = await getRedirectResult(auth);
-        // Handle the sign-in result here
-        console.log(result);
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+        console.log('signed in', user)
+        router.push('/groups');
+          } else {
+            console.log('signed out')
+            router.push('/');
+          }
+        });
       } catch (error) {
-        // Handle any errors that occurred during sign-in
         console.error(error);
       }
     };
 
     handleRedirectResult();
-  }, []);
+  }, [signInWithGoogle]);
 
   return (
     <div>
-      <button onClick={signInWithGoogle}>Sign in with Google</button>
+      <div>
+      <button onClick={() => signInWithGoogle()}>Sign in with Google</button>
+    </div>
     </div>
   )
 }
