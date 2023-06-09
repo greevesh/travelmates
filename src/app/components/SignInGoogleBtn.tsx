@@ -1,8 +1,13 @@
-'use client';
+"use client";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged, type User, type Auth } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  type User,
+  type Auth,
+} from "firebase/auth";
 import { useEffect } from "react";
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
 
 import firebaseConfig from "@root/firebase/config";
@@ -20,12 +25,12 @@ const SignInWithGoogle = () => {
       try {
         onAuthStateChanged(auth, (user: User | null) => {
           if (user) {
-        console.log('signed in', user)
-        router.push('/groups');
-          } 
+            console.log("signed in", user);
+            router.push("/groups");
+          }
         });
       } catch (error) {
-        throw new AuthError('There was an error signing in.');
+        throw new AuthError("There was an error signing in.");
       }
     };
 
@@ -36,7 +41,7 @@ const SignInWithGoogle = () => {
     <div>
       <button onClick={() => signInWithGoogle()}>Sign in with Google</button>
     </div>
-  )
-}
+  );
+};
 
-export default SignInWithGoogle
+export default SignInWithGoogle;

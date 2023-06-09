@@ -1,14 +1,13 @@
-'use client'
+"use client";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@root/firebase/config";
 
-initializeApp(firebaseConfig)
+initializeApp(firebaseConfig);
 
 export default function Groups() {
-
-    return (
-        <div>
-        <h1>Groups</h1>
-        </div>
-    )
+  return (
+    <div>
+      <h1>Groups</h1>
+    </div>
+  );
 }
