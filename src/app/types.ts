@@ -7,3 +7,11 @@ export interface FirebaseConfig {
   appId: string;
   measurementId: string;
 }
+
+export interface UserData {
+  id: string;
+  displayName: string;
+  email: string | null;
+  emailVerified: boolean;
+  photoURL: string | null;
+}

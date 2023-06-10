@@ -1,41 +1,60 @@
 "use client";
+import { UserData } from "@root/src/app/types";
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  onAuthStateChanged,
-  type User,
-  type Auth,
-} from "firebase/auth";
-import { useEffect } from "react";
+import { getAuth, Auth } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { useRouter } from "next/navigation";
-
+import { redirect } from "@root/src/app/helpers";
 import firebaseConfig from "@root/firebase/config";
 import { AuthError } from "../lib/exceptions";
 
-initializeApp(firebaseConfig);
+import { setDoc, doc, getFirestore } from "firebase/firestore";
+import { useEffect } from "react";
 
-const SignInWithGoogle = () => {
-  const auth: Auth = getAuth();
-  const router = useRouter();
+const firebaseApp = initializeApp(firebaseConfig);
+const auth: Auth = getAuth();
+const db = getFirestore(firebaseApp);
+
+const createUser = async (userData: UserData | null): Promise<void> => {
+  if (userData) {
+    await setDoc(doc(db, "users", userData.id), userData);
+  }
+};
+
+const SignInGoogleBtn = (): JSX.Element => {
+  const user = auth.currentUser;
+  let userData: UserData | null = null;
+
+  // if user is signed in
+  if (user) {
+    userData = {
+      id: user.uid,
+      displayName: user.displayName!,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      photoURL: user.photoURL,
+    };
+    redirect("/groups");
+  }
+
   const [signInWithGoogle] = useSignInWithGoogle(auth);
 
   useEffect(() => {
-    const handleRedirectResult = async () => {
+    const addUserToDB = async (): Promise<void> => {
       try {
-        onAuthStateChanged(auth, (user: User | null) => {
-          if (user) {
-            console.log("signed in", user);
-            router.push("/groups");
-          }
-        });
-      } catch (error) {
-        throw new AuthError("There was an error signing in.");
+        if (userData) {
+          await createUser(userData);
+          console.log("sign in successful", userData);
+        }
+      } catch (error: any) {
+        console.log("sign in error", error);
+        throw new AuthError(error.message);
       }
     };
 
-    handleRedirectResult();
-  }, [signInWithGoogle]);
+    addUserToDB();
+  }, [signInWithGoogle, userData]);
+
+  console.log(user);
 
   return (
     <div>
@@ -44,4 +63,4 @@ const SignInWithGoogle = () => {
   );
 };
 
-export default SignInWithGoogle;
+export default SignInGoogleBtn;
