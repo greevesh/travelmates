@@ -43,8 +43,8 @@ const SignInGoogleBtn = (): JSX.Element => {
     const handleSignIn = async (): Promise<void> => {
       try {
         if (userData) {
-          await createUser(userData);
           router.push("/groups");
+          await createUser(userData);
           console.log("sign in successful", userData);
         }
       } catch (error: any) {
