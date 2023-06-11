@@ -1,19 +1,19 @@
 "use client";
 import { UserData } from "@root/src/app/types";
-import { initializeApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
+import { FirebaseApp, initializeApp } from "firebase/app";
+import { getAuth, Auth, User } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { redirect } from "@root/src/app/helpers";
 import firebaseConfig from "@root/firebase/config";
 import { AuthError } from "../lib/exceptions";
 
-import { setDoc, doc, getFirestore } from "firebase/firestore";
+import { setDoc, doc, getFirestore, Firestore } from "firebase/firestore";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth();
-const db = getFirestore(firebaseApp);
+const db: Firestore = getFirestore(firebaseApp);
 
 const createUser = async (userData: UserData | null): Promise<void> => {
   if (userData) {
@@ -22,9 +22,9 @@ const createUser = async (userData: UserData | null): Promise<void> => {
 };
 
 const SignInGoogleBtn = (): JSX.Element => {
-  const user = auth.currentUser;
+  const user: User | null = auth.currentUser;
   let userData: UserData | null = null;
-  const router = useRouter();
+  const router: AppRouterInstance = useRouter();
 
   // if user is signed in
   if (user) {
@@ -40,7 +40,7 @@ const SignInGoogleBtn = (): JSX.Element => {
   const [signInWithGoogle] = useSignInWithGoogle(auth);
 
   useEffect(() => {
-    const addUserToDB = async (): Promise<void> => {
+    const handleSignIn = async (): Promise<void> => {
       try {
         if (userData) {
           await createUser(userData);
@@ -53,8 +53,8 @@ const SignInGoogleBtn = (): JSX.Element => {
       }
     };
 
-    addUserToDB();
-  }, [signInWithGoogle, userData]);
+    handleSignIn();
+  }, [userData]);
 
   return (
     <div>

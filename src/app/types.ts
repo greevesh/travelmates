@@ -10,7 +10,7 @@ export interface FirebaseConfig {
 
 export interface UserData {
   id: string;
-  displayName: string;
+  displayName: string | null;
   email: string | null;
   emailVerified: boolean;
   photoURL: string | null;
