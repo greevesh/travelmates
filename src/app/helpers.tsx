@@ -1,10 +1,3 @@
-import { useRouter } from "next/navigation";
-
-export const redirect = (page: string) => {
-  const router = useRouter();
-  router.push(page);
-};
-
 export const error = ({
   error,
   reset,

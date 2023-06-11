@@ -9,6 +9,7 @@ import { AuthError } from "../lib/exceptions";
 
 import { setDoc, doc, getFirestore } from "firebase/firestore";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const firebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth();
@@ -23,6 +24,7 @@ const createUser = async (userData: UserData | null): Promise<void> => {
 const SignInGoogleBtn = (): JSX.Element => {
   const user = auth.currentUser;
   let userData: UserData | null = null;
+  const router = useRouter();
 
   // if user is signed in
   if (user) {
@@ -33,7 +35,6 @@ const SignInGoogleBtn = (): JSX.Element => {
       emailVerified: user.emailVerified,
       photoURL: user.photoURL,
     };
-    redirect("/groups");
   }
 
   const [signInWithGoogle] = useSignInWithGoogle(auth);
@@ -43,6 +44,7 @@ const SignInGoogleBtn = (): JSX.Element => {
       try {
         if (userData) {
           await createUser(userData);
+          router.push("/groups");
           console.log("sign in successful", userData);
         }
       } catch (error: any) {
@@ -53,8 +55,6 @@ const SignInGoogleBtn = (): JSX.Element => {
 
     addUserToDB();
   }, [signInWithGoogle, userData]);
-
-  console.log(user);
 
   return (
     <div>
