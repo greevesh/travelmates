@@ -48,13 +48,15 @@ export default function Journeys() {
           onChange={(e) => handleChange(e.target.value)}
         />
       </Form>
-      <Card style={{ width: "18rem" }}>
-        <ListGroup variant="flush">
-          {geonamesList.map((name: string) => (
-            <ListGroup.Item key={name}>{name}</ListGroup.Item>
-          ))}
-        </ListGroup>
-      </Card>
+      {input && (
+        <Card style={{ width: "18rem" }}>
+          <ListGroup variant="flush">
+            {geonamesList.map((name: string) => (
+              <ListGroup.Item key={name}>{name}</ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Card>
+      )}
     </div>
   );
 }
