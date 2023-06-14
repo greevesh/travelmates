@@ -2,7 +2,8 @@
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
+import { Geoname } from "../types";
 
 export default function Journeys() {
   const [input, setInput] = useState("");
@@ -22,9 +23,24 @@ export default function Journeys() {
         return response.json();
       })
       .then((data) => {
-        console.log(data.geonames.map((geoname: any) => geoname.name));
-        const names = data.geonames.map((geoname: any) => geoname.name);
-        setGeonamesList(names);
+        console.log(data.geonames);
+        const matchedPlaceNames: string[] = data.geonames.filter(
+          (place: Geoname) =>
+            place.name.toLowerCase().startsWith(query.toLowerCase())
+        );
+        console.log(matchedPlaceNames);
+        const sortedResults = matchedPlaceNames.sort((a: any, b: any) =>
+          a.name.localeCompare(b.name)
+        );
+        console.log(sortedResults);
+        // const placeNames = data.geonames.map((place: any) => place.name);
+        // console.log(placeNames);
+        const filteredResults = sortedResults.filter(
+          (place: any) => place.population > 1000
+        );
+        const placeNames = filteredResults.map((place: any) => place.name);
+        const uniquePlaceNames = [...new Set(placeNames)];
+        setGeonamesList(uniquePlaceNames);
       })
       .catch((error) => {
         console.error("Error:", error);
