@@ -15,3 +15,12 @@ export interface UserData {
   emailVerified: boolean;
   photoURL: string | null;
 }
+
+export interface GeonameURLParams {
+  username: string;
+  q: string;
+  maxRows: string;
+  featureClass: string;
+  orderBy: string;
+  name_startsWith: string;
+}

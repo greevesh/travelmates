@@ -3,19 +3,29 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import { SetStateAction, useState } from "react";
-import { Geoname } from "../types";
+import { Geoname, GeonameURLParams } from "../types";
 
 export default function Journeys() {
   const [input, setInput] = useState("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
 
   const fetchPlace = async (query: string) => {
-    const apiUrl = new URL("http://api.geonames.org/searchJSON");
-    apiUrl.searchParams.set("username", "greevesh");
-    apiUrl.searchParams.set("q", query);
-    apiUrl.searchParams.set("maxRows", "10");
+    const params: GeonameURLParams = {
+      username: "greevesh",
+      q: query,
+      maxRows: "10",
+      featureClass: "P",
+      orderBy: "name",
+      name_startsWith: query,
+    };
 
-    fetch(apiUrl)
+    const apiURL = new URL("http://api.geonames.org/searchJSON");
+
+    Object.entries(params).forEach(([key, value]) => {
+      apiURL.searchParams.set(key, value);
+    });
+
+    fetch(apiURL)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Request failed");
