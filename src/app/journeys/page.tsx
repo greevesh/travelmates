@@ -14,7 +14,6 @@ export default function Journeys() {
       username: "greevesh",
       q: query,
       maxRows: "10",
-      featureClass: "P",
       orderBy: "name",
       name_startsWith: query,
     };
@@ -45,16 +44,20 @@ export default function Journeys() {
         console.log(sortedResults);
         // const placeNames = data.geonames.map((place: any) => place.name);
         // console.log(placeNames);
-        const filteredResults = sortedResults.filter(
-          (place: any) => place.population > 1000
-        );
-        const placeNames = filteredResults.map((place: any) => place.name);
-        const uniquePlaceNames = [...new Set(placeNames)];
-        setGeonamesList(uniquePlaceNames);
+        filterResults(sortedResults);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+
+  const filterResults = (results: string[]) => {
+    const filteredResults = results.filter(
+      (place: any) => place.population > 1000
+    );
+    const placeNames = filteredResults.map((place: any) => place.name);
+    const uniquePlaceNames = [...new Set(placeNames)];
+    setGeonamesList(uniquePlaceNames);
   };
 
   const handleChange = (value: string) => {
