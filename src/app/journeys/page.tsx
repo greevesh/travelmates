@@ -32,32 +32,33 @@ export default function Journeys() {
         return response.json();
       })
       .then((data) => {
-        console.log(data.geonames);
-        const matchedPlaceNames: string[] = data.geonames.filter(
-          (place: Geoname) =>
-            place.name.toLowerCase().startsWith(query.toLowerCase())
-        );
-        console.log(matchedPlaceNames);
-        const sortedResults = matchedPlaceNames.sort((a: any, b: any) =>
-          a.name.localeCompare(b.name)
-        );
-        console.log(sortedResults);
-        // const placeNames = data.geonames.map((place: any) => place.name);
-        // console.log(placeNames);
-        filterResults(sortedResults);
+        filterResults(data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const filterResults = (results: string[]) => {
-    const filteredResults = results.filter(
+  const filterResults = (data) => {
+    const filteredResults = data.geonames.filter(
       (place: any) => place.population > 1000
     );
     const placeNames = filteredResults.map((place: any) => place.name);
     const uniquePlaceNames = [...new Set(placeNames)];
     setGeonamesList(uniquePlaceNames);
+    console.log(geonamesList);
+  };
+
+  const matchResultsWithQuery = (results: any, query: string) => {
+    const matchedPlaceNames: string[] = results.geonames.filter(
+      (place: Geoname) =>
+        place.name.toLowerCase().startsWith(query.toLowerCase())
+    );
+    console.log(matchedPlaceNames);
+    const sortedResults = matchedPlaceNames.sort((a: any, b: any) =>
+      a.name.localeCompare(b.name)
+    );
+    setGeonamesList(sortedResults);
   };
 
   const handleChange = (value: string) => {
