@@ -4,12 +4,16 @@ import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth, Auth, User } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import firebaseConfig from "@root/firebase/config";
-import { AuthError } from "../lib/exceptions";
+import { AuthError } from "../../lib/exceptions";
 
 import { setDoc, doc, getFirestore, Firestore } from "firebase/firestore";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+
+import styles from "../../styles/auth/google-sign-in-btn.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth();
@@ -58,7 +62,10 @@ const SignInGoogleBtn = (): JSX.Element => {
 
   return (
     <div>
-      <button onClick={() => signInWithGoogle()}>Sign in with Google</button>
+      <button className={styles.btn} onClick={() => signInWithGoogle()}>
+        <FontAwesomeIcon className={styles.icon} icon={faGoogle} />
+        Sign in with Google
+      </button>
     </div>
   );
 };
