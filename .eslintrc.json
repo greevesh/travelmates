@@ -4,6 +4,12 @@
   "rules": {
     "indent": ["error", 2],
     "quotes": ["error", "double"],
-    "semi": ["error", "always"]
+    "semi": ["error", "always"],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [".*"]
+      }
+    ]
   }
 }
