@@ -1,9 +1,5 @@
-import SignInWithGoogle from "./components/SignInGoogleBtn";
+import AuthCard from "./components/auth/Card";
 
 export default function Home() {
-  return (
-    <div>
-      <SignInWithGoogle />
-    </div>
-  );
+  return <AuthCard />;
 }
