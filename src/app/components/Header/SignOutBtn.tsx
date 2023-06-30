@@ -1,5 +1,5 @@
 import { signOut as logOut, getAuth } from "firebase/auth";
-import { AuthError } from "../../lib/exceptions";
+import { AuthError } from "../../exceptions";
 import Button from "react-bootstrap/Button";
 import { type Auth } from "firebase/auth";
 import firebaseConfig from "@root/firebase/config";

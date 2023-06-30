@@ -4,7 +4,7 @@ import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth, Auth, User } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
 import firebaseConfig from "@root/firebase/config";
-import { AuthError } from "../../lib/exceptions";
+import { AuthError } from "../../exceptions";
 
 import { setDoc, doc, getFirestore, Firestore } from "firebase/firestore";
 import { useEffect } from "react";
