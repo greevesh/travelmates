@@ -72,6 +72,12 @@ export default function Journeys() {
     setSelectedPlace(e);
   };
 
+  const handleDelete = () => {
+    setSelectedPlace("");
+    const badge: HTMLElement | null = document.getElementById("badge");
+    badge!.style.display = "none";
+  };
+
   const handleChange = (value: string) => {
     setInput(value);
     fetchPlace(value);
@@ -100,9 +106,14 @@ export default function Journeys() {
           </ListGroup>
         </Card>
       )}
-      <Badge className="mt-2" bg="secondary">
-        {selectedPlace}
-      </Badge>
+      {selectedPlace !== "" && (
+        <Badge className="mt-2" id="badge" bg="secondary">
+          {selectedPlace}
+          <span onClick={handleDelete} className="ms-1">
+            X
+          </span>
+        </Badge>
+      )}
     </div>
   );
 }
