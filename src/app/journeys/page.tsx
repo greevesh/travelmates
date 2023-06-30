@@ -4,6 +4,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import { SetStateAction, useState } from "react";
 import { Geoname, GeonameURLParams } from "../types";
+import { type FormEvent } from "react";
 
 export default function Journeys() {
   const [input, setInput] = useState("");
@@ -61,6 +62,13 @@ export default function Journeys() {
     setGeonamesList(sortedResults);
   };
 
+  const handleSelect = (e: FormEvent<HTMLFormElement>) => {
+    console.log(e);
+    setInput("");
+    const form: HTMLElement | null = document.getElementById("form");
+    form.reset();
+  };
+
   const handleChange = (value: string) => {
     setInput(value);
     fetchPlace(value);
@@ -69,7 +77,7 @@ export default function Journeys() {
   return (
     <div>
       <h1>Journeys</h1>
-      <Form className="d-flex">
+      <form id="form" className="d-flex">
         <Form.Control
           type="search"
           placeholder="Search for any city"
@@ -77,12 +85,14 @@ export default function Journeys() {
           aria-label="Search"
           onChange={(e) => handleChange(e.target.value)}
         />
-      </Form>
+      </form>
       {input && (
         <Card style={{ width: "18rem" }}>
           <ListGroup variant="flush">
             {geonamesList.map((name: string) => (
-              <ListGroup.Item key={name}>{name}</ListGroup.Item>
+              <ListGroup.Item onClick={(e) => handleSelect(name)} key={name}>
+                {name}
+              </ListGroup.Item>
             ))}
           </ListGroup>
         </Card>
