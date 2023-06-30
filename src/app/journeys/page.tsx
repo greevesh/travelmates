@@ -6,6 +6,7 @@ import { SetStateAction, useState } from "react";
 import { Geoname, GeonameURLParams } from "../types";
 import { type FormEvent } from "react";
 import Badge from "react-bootstrap/Badge";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 
 export default function Journeys() {
   const [input, setInput] = useState("");
@@ -114,6 +115,7 @@ export default function Journeys() {
           </span>
         </Badge>
       )}
+      <DateRangePicker />
     </div>
   );
 }
