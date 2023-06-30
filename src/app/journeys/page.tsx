@@ -5,10 +5,12 @@ import Form from "react-bootstrap/Form";
 import { SetStateAction, useState } from "react";
 import { Geoname, GeonameURLParams } from "../types";
 import { type FormEvent } from "react";
+import Badge from "react-bootstrap/Badge";
 
 export default function Journeys() {
   const [input, setInput] = useState("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
+  const [selectedPlace, setSelectedPlace] = useState<string>("");
 
   const fetchPlace = async (query: string) => {
     const params: GeonameURLParams = {
@@ -67,6 +69,7 @@ export default function Journeys() {
     setInput("");
     const form: HTMLElement | null = document.getElementById("form");
     form.reset();
+    setSelectedPlace(e);
   };
 
   const handleChange = (value: string) => {
@@ -97,6 +100,9 @@ export default function Journeys() {
           </ListGroup>
         </Card>
       )}
+      <Badge className="mt-2" bg="secondary">
+        {selectedPlace}
+      </Badge>
     </div>
   );
 }
