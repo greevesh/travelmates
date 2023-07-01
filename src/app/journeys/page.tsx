@@ -2,16 +2,36 @@
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Geoname, GeonameURLParams } from "../types";
 import { type FormEvent } from "react";
 import Badge from "react-bootstrap/Badge";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { Button } from "react-bootstrap";
+
+import { setDoc, doc, getFirestore, Firestore } from "firebase/firestore";
+import { initializeApp, type FirebaseApp } from "firebase/app";
+import firebaseConfig from "@root/firebase/config";
 
 export default function Journeys() {
   const [input, setInput] = useState("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<string>("");
+  const [selectedStartDate, setSelectedStartDate] = useState<Date>(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<Date>(null);
+  // const [journey, setJourney] = useState<Journey | null>(null);
+
+  const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
+  const db: Firestore = getFirestore(firebaseApp);
+
+  interface Journey {
+    id: string;
+    place: string;
+    start_date: Date;
+    end_date: Date;
+  }
+
+  let journey: Journey | null = null;
 
   const fetchPlace = async (query: string) => {
     const params: GeonameURLParams = {
@@ -84,6 +104,42 @@ export default function Journeys() {
     fetchPlace(value);
   };
 
+  const generateRandomID = (): string => {
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charsLength = chars.length;
+    for (let i = 0; i < 20; i++) {
+      result += chars.charAt(Math.floor(Math.random() * charsLength));
+    }
+    return result;
+  };
+
+  journey = {
+    id: generateRandomID(),
+    place: selectedPlace,
+    start_date: selectedStartDate,
+    end_date: selectedEndDate,
+  };
+
+  const createJourney = async (journey: Journey | null): Promise<void> => {
+    console.log(journey);
+    if (journey !== null) {
+      try {
+        await setDoc(doc(db, "journeys", journey.id), journey);
+        console.log("Journey document written successfully!", journey);
+      } catch (error) {
+        console.error("Error writing document: ", error);
+      }
+    }
+  };
+
+  const handleDateChange = (dateRange: any) => {
+    // dateRange will be an object with 'start' and 'end' properties
+    setSelectedStartDate(new Date("2023-07-10"));
+    setSelectedEndDate(new Date("2023-07-17"));
+  };
+
   return (
     <div>
       <h1>Journeys</h1>
@@ -115,7 +171,8 @@ export default function Journeys() {
           </span>
         </Badge>
       )}
-      <DateRangePicker />
+      <DateRangePicker onChange={handleDateChange} />
+      <Button onClick={() => createJourney(journey)}>Create Journey</Button>
     </div>
   );
 }
