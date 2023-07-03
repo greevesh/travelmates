@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { UserData } from "@root/src/app/types";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth, Auth, User } from "firebase/auth";
@@ -25,7 +26,7 @@ const createUser = async (userData: UserData | null): Promise<void> => {
   }
 };
 
-const SignInGoogleBtn = (): JSX.Element => {
+const SignInGoogleBtn = (): React.JSX.Element => {
   const user: User | null = auth.currentUser;
   let userData: UserData | null = null;
   const router: AppRouterInstance = useRouter();
