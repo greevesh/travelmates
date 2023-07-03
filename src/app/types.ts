@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface FirebaseConfig {
   apiKey: string;
   authDomain: string;
@@ -20,7 +22,17 @@ export interface GeonameURLParams {
   username: string;
   q: string;
   maxRows: string;
-  featureClass: string;
   orderBy: string;
   name_startsWith: string;
+}
+
+export interface DateRange {
+  start: Timestamp | null;
+  end: Timestamp | null;
+}
+
+export interface Journey {
+  id: string;
+  place: string;
+  date_range: DateRange;
 }

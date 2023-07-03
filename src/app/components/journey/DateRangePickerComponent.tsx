@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { Timestamp } from "firebase/firestore";
+import { DateRange } from "../../types";
 
 interface DateRangePickerComponentProps {
   handleDateChange: (dateRange: DateRange) => void;
-}
-
-interface DateRange {
-  start: Timestamp | null;
-  end: Timestamp | null;
 }
 
 const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
