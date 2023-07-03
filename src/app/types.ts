@@ -18,6 +18,30 @@ export interface UserData {
   photoURL: string | null;
 }
 
+export interface Geoname {
+  adminCode1: string;
+  adminCodes1: { ISO3166_2: string };
+  adminName1: string;
+  countryCode: string;
+  countryId: string;
+  countryName: string;
+  fcl: string;
+  fclName: string;
+  fcode: string;
+  fcodeName: string;
+  geonameId: number;
+  lat: string;
+  lng: string;
+  name: string;
+  population: number;
+  toponymName: string;
+}
+
+export interface GeonameResponse {
+  totalResultsCount: number;
+  geonames: Geoname[];
+}
+
 export interface GeonameURLParams {
   username: string;
   q: string;
@@ -26,13 +50,29 @@ export interface GeonameURLParams {
   name_startsWith: string;
 }
 
+export interface SearchProps {
+  input: string;
+  geonamesList: string[];
+  handleChange: (value: string) => void;
+  handleSelect: (selectedPlace: string) => void;
+}
+
 export interface DateRange {
   start: Timestamp | null;
   end: Timestamp | null;
 }
 
-export interface Journey {
+export interface DateRangePickerComponentProps {
+  handleDateChange: (dateRange: DateRange) => void;
+}
+
+export interface JourneyData {
   id: string;
   place: string;
   date_range: DateRange;
+}
+
+export interface CreateJourneyButtonProps {
+  journey: JourneyData | null;
+  createJourney: (journey: JourneyData | null) => void;
 }

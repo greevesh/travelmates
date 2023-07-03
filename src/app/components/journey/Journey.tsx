@@ -7,7 +7,13 @@ import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
 import firebaseConfig from "@root/firebase/config";
 import { initializeApp } from "firebase/app";
 import { FirebaseApp } from "firebase/app";
-import { GeonameURLParams } from "../../types";
+import {
+  Geoname,
+  GeonameResponse,
+  GeonameURLParams,
+  DateRange,
+  JourneyData,
+} from "../../types";
 
 export default function Journeys() {
   const [input, setInput] = useState("");

@@ -2,13 +2,7 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-
-interface SearchProps {
-  input: string;
-  geonamesList: string[];
-  handleChange: (value: string) => void;
-  handleSelect: (selectedPlace: string) => void;
-}
+import { SearchProps } from "../../types";
 
 const Search: React.FC<SearchProps> = ({
   input,

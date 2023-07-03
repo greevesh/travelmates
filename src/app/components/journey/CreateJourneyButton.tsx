@@ -1,11 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { Journey } from "../../types";
-
-interface CreateJourneyButtonProps {
-  journey: Journey | null;
-  createJourney: (journey: Journey | null) => void;
-}
+import { CreateJourneyButtonProps } from "../../types";
 
 const CreateJourneyButton: React.FC<CreateJourneyButtonProps> = ({
   journey,
