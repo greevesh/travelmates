@@ -15,7 +15,7 @@ import {
   JourneyData,
 } from "../../types";
 
-export default function Journeys() {
+const Journey = () => {
   const [input, setInput] = useState("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<string>("");
@@ -27,18 +27,7 @@ export default function Journeys() {
   const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
   const db: Firestore = getFirestore(firebaseApp);
 
-  interface DateRange {
-    start: Date | null;
-    end: Date | null;
-  }
-
-  interface Journey {
-    id: string;
-    place: string;
-    date_range: DateRange;
-  }
-
-  let journey: Journey | null = null;
+  let journey: JourneyData | null = null;
 
   const fetchPlace = async (query: string) => {
     const params: GeonameURLParams = {
@@ -55,19 +44,29 @@ export default function Journeys() {
       apiURL.searchParams.set(key, value);
     });
 
-    fetch(apiURL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        filterResults(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try {
+      const response = await fetch(apiURL);
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+      const data: GeonameResponse = await response.json();
+      filterResults(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const filterResults = (data: GeonameResponse) => {
+    const filteredResults: Geoname[] = data.geonames.filter(
+      (place: Geoname) => place.population > 1000
+    );
+    const placeNames: string[] = filteredResults.map(
+      (place: Geoname) => place.name
+    );
+    const uniquePlaceNames: string[] = [...new Set(placeNames)];
+    setGeonamesList(uniquePlaceNames);
+    console.log(geonamesList);
+    console.log(data);
   };
 
   const handleSelect = (selectedPlace: string) => {
@@ -102,7 +101,7 @@ export default function Journeys() {
     date_range: dateRange,
   };
 
-  const createJourney = async (journey: Journey | null): Promise<void> => {
+  const createJourney = async (journey: JourneyData | null): Promise<void> => {
     console.log(journey);
     if (journey !== null) {
       try {
@@ -136,4 +135,6 @@ export default function Journeys() {
       <CreateJourneyButton journey={journey} createJourney={createJourney} />
     </div>
   );
-}
+};
+
+export default Journey;
