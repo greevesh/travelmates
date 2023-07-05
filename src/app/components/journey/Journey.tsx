@@ -15,6 +15,7 @@ import {
   DateRange,
   JourneyData,
 } from "../../types";
+import styles from "../../styles/journey/date-range-picker.module.css";
 
 const Journey = () => {
   const [input, setInput] = useState("");
@@ -132,7 +133,9 @@ const Journey = () => {
           handleDelete={handleDelete}
         />
       )}
-      <DateRangePickerComponent handleDateChange={handleDateChange} />
+      <div className={styles.picker}>
+        <DateRangePickerComponent handleDateChange={handleDateChange} />
+      </div>
       <CreateJourneyButton journey={journey} createJourney={createJourney} />
     </div>
   );
