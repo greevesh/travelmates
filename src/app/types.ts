@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 export interface FirebaseConfig {
   apiKey: string;
   authDomain: string;
@@ -58,18 +56,24 @@ export interface SearchProps {
 }
 
 export interface DateRange {
-  start: Timestamp | null;
-  end: Timestamp | null;
+  start: Date | null;
+  end: Date | null;
 }
 
 export interface DateRangePickerComponentProps {
   handleDateChange: (dateRange: DateRange) => void;
 }
 
+export interface Timestamp {
+  start: number | null;
+  end: number | null;
+}
+
 export interface JourneyData {
   id: string;
   place: string;
-  date_range: DateRange;
+  start_date: number | null;
+  end_date: number | null;
 }
 
 export interface CreateJourneyButtonProps {

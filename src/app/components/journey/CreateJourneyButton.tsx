@@ -8,11 +8,11 @@ const CreateJourneyButton: React.FC<CreateJourneyButtonProps> = ({
 }) => {
   return (
     <Button
-      disabled={
-        !journey?.place ||
-        !journey?.date_range.start ||
-        !journey?.date_range.end
-      }
+      // disabled={
+      //   !journey?.place ||
+      //   !journey?.date_range.start ||
+      //   !journey?.date_range.end
+      // }
       onClick={() => createJourney(journey)}
     >
       Create Journey

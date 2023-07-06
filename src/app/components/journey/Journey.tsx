@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Search from "./Search";
 import SelectedPlaceBadge from "./SelectedPlaceBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
@@ -12,18 +12,53 @@ import {
   Geoname,
   GeonameResponse,
   GeonameURLParams,
-  DateRange,
   JourneyData,
+  Timestamp,
 } from "../../types";
+import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 
 const Journey = () => {
   const [input, setInput] = useState("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<string>("");
-  const [dateRange, setDateRange] = useState<DateRange>({
+  const [dateRange, setDateRange] = useState({
     start: null,
     end: null,
   });
+  const [timestamps, setTimestamps] = useState<Timestamp>({
+    start: null,
+    end: null,
+  });
+
+  useEffect(() => {
+    console.log("Date Ranges: ", dateRange);
+
+    const startDate = dateRange.start?.$d;
+    const startTimestampObj = startDate
+      ? firebaseTimestamp.fromDate(startDate)
+      : null;
+    const startTimestamp = startTimestampObj ? startTimestampObj.seconds : null;
+
+    const endDate = dateRange.end?.$d;
+    const endTimestampObj = endDate
+      ? firebaseTimestamp.fromDate(endDate)
+      : null;
+    const endTimestamp = endTimestampObj ? endTimestampObj.seconds : null;
+
+    setTimestamps((dates) => ({
+      ...dates,
+      start: startTimestamp,
+      end: endTimestamp,
+    }));
+    console.log("Timestamps: ", timestamps);
+
+    // console.log(endTimestamp);
+    // const timestamps = {
+    //   start: startTimestamp,
+    //   end: endTimestamp
+    // };
+    // setTimestamps(timestamps);
+  }, [dateRange]);
 
   const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
   const db: Firestore = getFirestore(firebaseApp);
@@ -99,7 +134,8 @@ const Journey = () => {
   journey = {
     id: generateRandomID(),
     place: selectedPlace,
-    date_range: dateRange,
+    start_date: timestamps.start,
+    end_date: timestamps.end,
   };
 
   const createJourney = async (journey: JourneyData | null): Promise<void> => {
@@ -114,8 +150,14 @@ const Journey = () => {
     }
   };
 
-  const handleDateChange = (dateRange: DateRange) => {
-    setDateRange(dateRange);
+  const handleDateChange = (newDate: any) => {
+    const newStartDate = newDate[0];
+    const newEndDate = newDate[1];
+    setDateRange((prevDateRange) => ({
+      ...prevDateRange,
+      start: newStartDate,
+      end: newEndDate,
+    }));
   };
 
   return (

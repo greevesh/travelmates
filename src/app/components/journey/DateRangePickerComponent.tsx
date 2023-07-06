@@ -1,28 +1,18 @@
 import React, { useState } from "react";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { Timestamp } from "firebase/firestore";
 import { DateRange, DateRangePickerComponentProps } from "../../types";
 
 const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
   handleDateChange,
 }) => {
-  const [dateRange, setDateRange] = useState<DateRange>({
-    start: null,
-    end: null,
-  });
+  // const [val, setVal] = useState<DateRange>({
+  //   start: null,
+  //   end: null,
+  // });
 
-  const handleDateChangeInternal = (dateRange: any) => {
-    const startDate = dateRange.start
-      ? Timestamp.fromDate(dateRange.start)
-      : null;
-    const endDate = dateRange.end ? Timestamp.fromDate(dateRange.end) : null;
+  // console.log(val);
 
-    setDateRange({ start: startDate, end: endDate });
-
-    handleDateChange({ start: dateRange.start, end: dateRange.end });
-  };
-
-  return <DateRangePicker onChange={handleDateChangeInternal} />;
+  return <DateRangePicker onChange={(newVal) => handleDateChange(newVal)} />;
 };
 
 export default DateRangePickerComponent;
