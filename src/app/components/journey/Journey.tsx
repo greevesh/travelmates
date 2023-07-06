@@ -14,6 +14,7 @@ import {
   GeonameURLParams,
   JourneyData,
   Timestamp,
+  DateRange,
 } from "../../types";
 import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 
@@ -21,7 +22,7 @@ const Journey = () => {
   const [input, setInput] = useState("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<string>("");
-  const [dateRange, setDateRange] = useState({
+  const [dateRange, setDateRange] = useState<DateRange>({
     start: null,
     end: null,
   });
@@ -33,31 +34,21 @@ const Journey = () => {
   useEffect(() => {
     console.log("Date Ranges: ", dateRange);
 
-    const startDate = dateRange.start?.$d;
-    const startTimestampObj = startDate
-      ? firebaseTimestamp.fromDate(startDate)
+    const startTimestamp = dateRange.start?.$d
+      ? firebaseTimestamp.fromDate(dateRange.start.$d).seconds
       : null;
-    const startTimestamp = startTimestampObj ? startTimestampObj.seconds : null;
 
-    const endDate = dateRange.end?.$d;
-    const endTimestampObj = endDate
-      ? firebaseTimestamp.fromDate(endDate)
+    const endTimestamp = dateRange.end?.$d
+      ? firebaseTimestamp.fromDate(dateRange.end.$d).seconds
       : null;
-    const endTimestamp = endTimestampObj ? endTimestampObj.seconds : null;
 
     setTimestamps((dates) => ({
       ...dates,
       start: startTimestamp,
       end: endTimestamp,
     }));
-    console.log("Timestamps: ", timestamps);
 
-    // console.log(endTimestamp);
-    // const timestamps = {
-    //   start: startTimestamp,
-    //   end: endTimestamp
-    // };
-    // setTimestamps(timestamps);
+    console.log("Timestamps: ", timestamps);
   }, [dateRange]);
 
   const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
