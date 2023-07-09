@@ -42,11 +42,10 @@ const Journey = () => {
       ? firebaseTimestamp.fromDate(dateRange.end.$d).seconds
       : null;
 
-    setTimestamps((dates) => ({
-      ...dates,
+    setTimestamps({
       start: startTimestamp,
       end: endTimestamp,
-    }));
+    });
 
     console.log("Timestamps: ", timestamps);
   }, [dateRange]);
@@ -142,13 +141,12 @@ const Journey = () => {
   };
 
   const handleDateChange = (newDate: any) => {
-    const newStartDate = newDate[0];
-    const newEndDate = newDate[1];
-    setDateRange((prevDateRange) => ({
-      ...prevDateRange,
-      start: newStartDate,
-      end: newEndDate,
-    }));
+    const startDate = newDate[0];
+    const endDate = newDate[1];
+    setDateRange({
+      start: startDate,
+      end: endDate,
+    });
   };
 
   return (
