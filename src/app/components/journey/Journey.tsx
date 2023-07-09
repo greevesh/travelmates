@@ -154,7 +154,9 @@ const Journey = () => {
           handleDelete={handleDelete}
         />
       )}
-      <DateRangePickerComponent handleDateChange={handleDateChange} />
+      <div className={styles.picker}>
+        <DateRangePickerComponent handleDateChange={handleDateChange} />
+      </div>
       <CreateJourneyButton journey={journey} createJourney={createJourney} />
     </div>
   );
