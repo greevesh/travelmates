@@ -18,6 +18,7 @@ import {
 } from "../../types";
 import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 import { generateRandomID } from "../../helpers";
+import styles from "../../styles/journey/date-range-picker.module.css";
 
 const Journey = () => {
   const [input, setInput] = useState("");
