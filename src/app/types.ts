@@ -61,6 +61,8 @@ export interface DateRange {
 }
 
 export interface DateRangePickerComponentProps {
+  startDate: Date | null;
+  endDate: Date | null;
   handleDateChange: (dateRange: DateRange) => void;
 }
 

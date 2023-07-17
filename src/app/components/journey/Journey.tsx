@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import Search from "./Search";
 import SelectedPlaceBadge from "./SelectedPlaceBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
@@ -18,6 +18,7 @@ import {
 } from "../../types";
 import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 import { generateRandomID } from "../../helpers";
+import { Form } from "react-bootstrap";
 
 const Journey = () => {
   const [input, setInput] = useState("");
@@ -119,17 +120,33 @@ const Journey = () => {
     end_date: timestamps.end,
   };
 
+  const clearForm = () => {
+    setSelectedPlace("");
+    setDateRange({
+      start: null,
+      end: null,
+    });
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {};
+
   const createJourney = async (journey: JourneyData | null): Promise<void> => {
     console.log(journey);
     if (journey !== null) {
       try {
         await setDoc(doc(db, "journeys", journey.id), journey);
         console.log("Journey document written successfully!", journey);
+        // setInput("");
+        console.log("before: ", dateRange);
+        clearForm();
+        console.log("after: ", dateRange);
       } catch (error) {
         console.error("Error writing document: ", error);
       }
     }
   };
+
+  console.log(dateRange);
 
   const handleDateChange = (newDate: any) => {
     const startDate = newDate[0];
@@ -142,20 +159,30 @@ const Journey = () => {
 
   return (
     <div>
-      <Search
-        input={input}
-        geonamesList={geonamesList}
-        handleChange={handleChange}
-        handleSelect={handleSelect}
-      />
-      {selectedPlace !== "" && (
-        <SelectedPlaceBadge
-          selectedPlace={selectedPlace}
-          handleDelete={handleDelete}
+      <Form onSubmit={handleSubmit}>
+        <Search
+          input={input}
+          geonamesList={geonamesList}
+          handleChange={handleChange}
+          handleSelect={handleSelect}
         />
-      )}
-      <DateRangePickerComponent handleDateChange={handleDateChange} />
-      <CreateJourneyButton journey={journey} createJourney={createJourney} />
+        {selectedPlace !== "" && (
+          <SelectedPlaceBadge
+            selectedPlace={selectedPlace}
+            handleDelete={handleDelete}
+          />
+        )}
+        <DateRangePickerComponent
+          startDate={dateRange.start}
+          endDate={dateRange.end}
+          handleDateChange={handleDateChange}
+        />
+        <CreateJourneyButton
+          onClick={clearForm}
+          journey={journey}
+          createJourney={createJourney}
+        />
+      </Form>
     </div>
   );
 };
