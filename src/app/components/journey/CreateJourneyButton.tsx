@@ -4,11 +4,11 @@ import { CreateJourneyButtonProps } from "../../types";
 
 const CreateJourneyButton: React.FC<CreateJourneyButtonProps> = ({
   journey,
-  createJourney,
+  handleSubmit,
   emptyInput,
 }) => {
   return (
-    <Button disabled={emptyInput} onClick={() => createJourney(journey)}>
+    <Button disabled={emptyInput} onClick={() => handleSubmit()}>
       Create Journey
     </Button>
   );

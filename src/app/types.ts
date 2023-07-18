@@ -80,6 +80,6 @@ export interface JourneyData {
 
 export interface CreateJourneyButtonProps {
   journey: JourneyData | null;
-  createJourney: (journey: JourneyData | null) => void;
+  handleSubmit: () => void;
   emptyInput: boolean;
 }
