@@ -1,9 +1,10 @@
-import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
 import firebaseConfig from "@root/firebase/config";
+import { initializeApp, FirebaseApp } from "firebase/app";
 
-// Initialize Firebase
-// const db = getFirestore(firebaseApp);
+export const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
+export const db: Firestore = getFirestore(firebaseApp);
 
-// const querySnapshot = await getDocs(collection(db, "dates"));
-// console.log(querySnapshot.docs.map(doc => doc.data()));
+// export const createJourney = async (journey: JourneyData | null): Promise<void> => {
+//   // ...
+// };

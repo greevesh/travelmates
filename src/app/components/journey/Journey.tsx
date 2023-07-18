@@ -4,9 +4,12 @@ import Search from "./Search";
 import SelectedPlaceBadge from "./SelectedPlaceBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
-import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
-import firebaseConfig from "@root/firebase/config";
-import { initializeApp, type FirebaseApp } from "firebase/app";
+import {
+  setDoc,
+  doc,
+  Timestamp as firebaseTimestamp,
+} from "firebase/firestore";
+import { db } from "@root/firebase/app";
 import {
   Geoname,
   GeonameResponse,
@@ -15,7 +18,6 @@ import {
   Timestamp,
   DateRange,
 } from "../../types";
-import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 import { generateRandomID } from "../../helpers";
 
 const Journey = () => {
@@ -57,9 +59,6 @@ const Journey = () => {
 
     console.log("Timestamps: ", timestamps);
   }, [dateRange]);
-
-  const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
-  const db: Firestore = getFirestore(firebaseApp);
 
   let journey: JourneyData | null = null;
 
