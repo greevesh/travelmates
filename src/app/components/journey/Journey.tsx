@@ -21,7 +21,7 @@ import { generateRandomID } from "../../helpers";
 import { Form } from "react-bootstrap";
 
 const Journey = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<string>("");
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -32,6 +32,14 @@ const Journey = () => {
     start: null,
     end: null,
   });
+  const [emptyInput, setEmptyInput] = useState<boolean>(true);
+
+  useEffect(() => {
+    selectedPlace !== "" && dateRange.start !== null && dateRange.end !== null
+      ? setEmptyInput(false)
+      : setEmptyInput(true);
+    console.log("is input empty?", emptyInput);
+  }, [selectedPlace, dateRange]);
 
   useEffect(() => {
     console.log("Date Ranges: ", dateRange);
@@ -100,6 +108,7 @@ const Journey = () => {
   const handleSelect = (selectedPlace: string) => {
     setInput("");
     setSelectedPlace(selectedPlace);
+    dateRange;
   };
 
   const handleDelete = () => {
@@ -116,8 +125,8 @@ const Journey = () => {
   journey = {
     id: generateRandomID(),
     place: selectedPlace,
-    start_date: timestamps.start,
-    end_date: timestamps.end,
+    startDate: timestamps.start,
+    endDate: timestamps.end,
   };
 
   const clearForm = () => {
@@ -126,6 +135,7 @@ const Journey = () => {
       start: null,
       end: null,
     });
+    setEmptyInput(true);
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {};
@@ -178,7 +188,7 @@ const Journey = () => {
           handleDateChange={handleDateChange}
         />
         <CreateJourneyButton
-          onClick={clearForm}
+          emptyInput={emptyInput}
           journey={journey}
           createJourney={createJourney}
         />

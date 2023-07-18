@@ -5,16 +5,10 @@ import { CreateJourneyButtonProps } from "../../types";
 const CreateJourneyButton: React.FC<CreateJourneyButtonProps> = ({
   journey,
   createJourney,
+  emptyInput,
 }) => {
   return (
-    <Button
-      // disabled={
-      //   !journey?.place ||
-      //   !journey?.date_range.start ||
-      //   !journey?.date_range.end
-      // }
-      onClick={() => createJourney(journey)}
-    >
+    <Button disabled={emptyInput} onClick={() => createJourney(journey)}>
       Create Journey
     </Button>
   );

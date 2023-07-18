@@ -74,11 +74,12 @@ export interface Timestamp {
 export interface JourneyData {
   id: string;
   place: string;
-  start_date: number | null;
-  end_date: number | null;
+  startDate: number | null;
+  endDate: number | null;
 }
 
 export interface CreateJourneyButtonProps {
   journey: JourneyData | null;
   createJourney: (journey: JourneyData | null) => void;
+  emptyInput: boolean;
 }
