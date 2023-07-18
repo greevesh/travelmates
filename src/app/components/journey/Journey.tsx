@@ -172,7 +172,7 @@ const Journey = () => {
       <Search
         input={input}
         geonamesList={geonamesList}
-        handleSearchChange={handleSearchChange}
+        handleChange={handleSearchChange}
         handleSelect={handleSelect}
       />
       {selectedPlace !== "" && (
