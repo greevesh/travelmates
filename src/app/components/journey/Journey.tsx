@@ -6,8 +6,7 @@ import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
 import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
 import firebaseConfig from "@root/firebase/config";
-import { initializeApp } from "firebase/app";
-import { FirebaseApp } from "firebase/app";
+import { initializeApp, type FirebaseApp } from "firebase/app";
 import {
   Geoname,
   GeonameResponse,
