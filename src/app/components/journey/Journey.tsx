@@ -108,15 +108,30 @@ const Journey = () => {
     dateRange;
   };
 
+  const handleSearchChange = (value: string): void => {
+    setInput(value);
+    fetchPlace(value);
+  };
+
   const handleDelete = (): void => {
     setSelectedPlace("");
     const badge: HTMLElement | null = document.getElementById("badge");
     badge!.style.display = "none";
   };
 
-  const handleChange = (value: string): void => {
-    setInput(value);
-    fetchPlace(value);
+  const handleDateChange = (newDate: any): void => {
+    const startDate = newDate[0];
+    const endDate = newDate[1];
+    setDateRange({
+      start: startDate,
+      end: endDate,
+    });
+  };
+
+  const handleSubmit = (): void => {
+    console.log("submitted");
+    createJourney(journey);
+    clearForm();
   };
 
   journey = {
@@ -124,21 +139,6 @@ const Journey = () => {
     place: selectedPlace,
     startDate: timestamps.start,
     endDate: timestamps.end,
-  };
-
-  const clearForm = (): void => {
-    setSelectedPlace("");
-    setDateRange({
-      start: null,
-      end: null,
-    });
-    setEmptyInput(true);
-  };
-
-  const handleSubmit = (): void => {
-    console.log("submitted");
-    createJourney(journey);
-    clearForm();
   };
 
   const createJourney = async (journey: JourneyData | null): Promise<void> => {
@@ -155,23 +155,23 @@ const Journey = () => {
     }
   };
 
-  console.log(dateRange);
-
-  const handleDateChange = (newDate: any): void => {
-    const startDate = newDate[0];
-    const endDate = newDate[1];
+  const clearForm = (): void => {
+    setSelectedPlace("");
     setDateRange({
-      start: startDate,
-      end: endDate,
+      start: null,
+      end: null,
     });
+    setEmptyInput(true);
   };
+
+  console.log(dateRange);
 
   return (
     <div>
       <Search
         input={input}
         geonamesList={geonamesList}
-        handleChange={handleChange}
+        handleSearchChange={handleSearchChange}
         handleSelect={handleSelect}
       />
       {selectedPlace !== "" && (
