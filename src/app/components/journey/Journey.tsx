@@ -4,10 +4,12 @@ import Search from "./Search";
 import SelectedPlaceBadge from "./SelectedPlaceBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
-import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
-import firebaseConfig from "@root/firebase/config";
-import { initializeApp } from "firebase/app";
-import { FirebaseApp } from "firebase/app";
+import {
+  setDoc,
+  doc,
+  Timestamp as firebaseTimestamp,
+} from "firebase/firestore";
+import { db } from "@root/firebase/app";
 import {
   Geoname,
   GeonameResponse,
@@ -16,12 +18,11 @@ import {
   Timestamp,
   DateRange,
 } from "../../types";
-import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 import { generateRandomID } from "../../helpers";
 import styles from "../../styles/journey/date-range-picker.module.css";
 
 const Journey = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<string>("");
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -32,6 +33,14 @@ const Journey = () => {
     start: null,
     end: null,
   });
+  const [emptyInput, setEmptyInput] = useState<boolean>(true);
+
+  useEffect(() => {
+    selectedPlace !== "" && dateRange.start !== null && dateRange.end !== null
+      ? setEmptyInput(false)
+      : setEmptyInput(true);
+    console.log("is input empty?", emptyInput);
+  }, [selectedPlace, dateRange]);
 
   useEffect(() => {
     console.log("Date Ranges: ", dateRange);
@@ -52,12 +61,9 @@ const Journey = () => {
     console.log("Timestamps: ", timestamps);
   }, [dateRange]);
 
-  const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
-  const db: Firestore = getFirestore(firebaseApp);
-
   let journey: JourneyData | null = null;
 
-  const fetchPlace = async (query: string) => {
+  const fetchPlace = async (query: string): Promise<void> => {
     const params: GeonameURLParams = {
       username: "greevesh",
       q: query,
@@ -84,7 +90,7 @@ const Journey = () => {
     }
   };
 
-  const filterResults = (data: GeonameResponse) => {
+  const filterResults = (data: GeonameResponse): void => {
     const filteredResults: Geoname[] = data.geonames.filter(
       (place: Geoname) => place.population > 1000
     );
@@ -97,42 +103,24 @@ const Journey = () => {
     console.log(data);
   };
 
-  const handleSelect = (selectedPlace: string) => {
+  const handleSelect = (selectedPlace: string): void => {
     setInput("");
     setSelectedPlace(selectedPlace);
+    dateRange;
   };
 
-  const handleDelete = () => {
+  const handleSearchChange = (value: string): void => {
+    setInput(value);
+    fetchPlace(value);
+  };
+
+  const handleDelete = (): void => {
     setSelectedPlace("");
     const badge: HTMLElement | null = document.getElementById("badge");
     badge!.style.display = "none";
   };
 
-  const handleChange = (value: string) => {
-    setInput(value);
-    fetchPlace(value);
-  };
-
-  journey = {
-    id: generateRandomID(),
-    place: selectedPlace,
-    start_date: timestamps.start,
-    end_date: timestamps.end,
-  };
-
-  const createJourney = async (journey: JourneyData | null): Promise<void> => {
-    console.log(journey);
-    if (journey !== null) {
-      try {
-        await setDoc(doc(db, "journeys", journey.id), journey);
-        console.log("Journey document written successfully!", journey);
-      } catch (error) {
-        console.error("Error writing document: ", error);
-      }
-    }
-  };
-
-  const handleDateChange = (newDate: any) => {
+  const handleDateChange = (newDate: any): void => {
     const startDate = newDate[0];
     const endDate = newDate[1];
     setDateRange({
@@ -141,12 +129,50 @@ const Journey = () => {
     });
   };
 
+  const handleSubmit = (): void => {
+    console.log("submitted");
+    createJourney(journey);
+    clearForm();
+  };
+
+  journey = {
+    id: generateRandomID(),
+    place: selectedPlace,
+    startDate: timestamps.start,
+    endDate: timestamps.end,
+  };
+
+  const createJourney = async (journey: JourneyData | null): Promise<void> => {
+    console.log(journey);
+    if (journey !== null) {
+      try {
+        await setDoc(doc(db, "journeys", journey.id), journey);
+        console.log("Journey document written successfully!", journey);
+        console.log("before: ", dateRange);
+        console.log("after: ", dateRange);
+      } catch (error) {
+        console.error("Error writing document: ", error);
+      }
+    }
+  };
+
+  const clearForm = (): void => {
+    setSelectedPlace("");
+    setDateRange({
+      start: null,
+      end: null,
+    });
+    setEmptyInput(true);
+  };
+
+  console.log(dateRange);
+
   return (
     <div>
       <Search
         input={input}
         geonamesList={geonamesList}
-        handleChange={handleChange}
+        handleSearchChange={handleSearchChange}
         handleSelect={handleSelect}
       />
       {selectedPlace !== "" && (
@@ -155,10 +181,16 @@ const Journey = () => {
           handleDelete={handleDelete}
         />
       )}
-      <div className={styles.picker}>
-        <DateRangePickerComponent handleDateChange={handleDateChange} />
-      </div>
-      <CreateJourneyButton journey={journey} createJourney={createJourney} />
+      <DateRangePickerComponent
+        startDate={dateRange.start}
+        endDate={dateRange.end}
+        handleDateChange={handleDateChange}
+      />
+      <CreateJourneyButton
+        emptyInput={emptyInput}
+        journey={journey}
+        handleSubmit={handleSubmit}
+      />
     </div>
   );
 };

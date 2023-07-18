@@ -3,6 +3,8 @@ import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { DateRange, DateRangePickerComponentProps } from "../../types";
 
 const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
+  startDate,
+  endDate,
   handleDateChange,
 }) => {
   // const [val, setVal] = useState<DateRange>({
@@ -10,9 +12,12 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
   //   end: null,
   // });
 
-  // console.log(val);
-
-  return <DateRangePicker onChange={(newVal) => handleDateChange(newVal)} />;
+  return (
+    <DateRangePicker
+      value={[startDate, endDate]}
+      onChange={(newVal) => handleDateChange(newVal)}
+    />
+  );
 };
 
 export default DateRangePickerComponent;

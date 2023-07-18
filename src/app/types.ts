@@ -51,7 +51,7 @@ export interface GeonameURLParams {
 export interface SearchProps {
   input: string;
   geonamesList: string[];
-  handleChange: (value: string) => void;
+  handleSearchChange: (value: string) => void;
   handleSelect: (selectedPlace: string) => void;
 }
 
@@ -61,6 +61,8 @@ export interface DateRange {
 }
 
 export interface DateRangePickerComponentProps {
+  startDate: Date | null;
+  endDate: Date | null;
   handleDateChange: (dateRange: DateRange) => void;
 }
 
@@ -72,11 +74,12 @@ export interface Timestamp {
 export interface JourneyData {
   id: string;
   place: string;
-  start_date: number | null;
-  end_date: number | null;
+  startDate: number | null;
+  endDate: number | null;
 }
 
 export interface CreateJourneyButtonProps {
   journey: JourneyData | null;
-  createJourney: (journey: JourneyData | null) => void;
+  handleSubmit: () => void;
+  emptyInput: boolean;
 }
