@@ -34,6 +34,7 @@ const Journey = () => {
     end: null,
   });
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
+  const [spinnerVisible, setSpinnerVisible] = useState<boolean>(false);
 
   useEffect(() => {
     selectedPlace !== "" && dateRange.start !== null && dateRange.end !== null
@@ -129,10 +130,15 @@ const Journey = () => {
     });
   };
 
-  const handleSubmit = (): void => {
-    console.log("submitted");
-    createJourney(journey);
-    clearForm();
+  const handleSubmit = async (): Promise<void> => {
+    try {
+      setSpinnerVisible(true);
+      await createJourney(journey);
+      clearForm();
+      setSpinnerVisible(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   journey = {
@@ -190,6 +196,7 @@ const Journey = () => {
         emptyInput={emptyInput}
         journey={journey}
         handleSubmit={handleSubmit}
+        spinnerVisible={spinnerVisible}
       />
     </div>
   );

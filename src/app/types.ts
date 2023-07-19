@@ -82,4 +82,5 @@ export interface CreateJourneyButtonProps {
   journey: JourneyData | null;
   handleSubmit: () => void;
   emptyInput: boolean;
+  spinnerVisible: boolean;
 }
