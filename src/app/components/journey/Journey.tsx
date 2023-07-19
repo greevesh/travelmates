@@ -117,7 +117,7 @@ const Journey = () => {
   const handleDelete = (): void => {
     setSelectedPlace("");
     const badge: HTMLElement | null = document.getElementById("badge");
-    badge!.style.display = "none";
+    badge ? (badge.style.display = "none") : null;
   };
 
   const handleDateChange = (newDate: any): void => {
