@@ -46,6 +46,7 @@ export interface GeonameURLParams {
   maxRows: string;
   orderBy: string;
   name_startsWith: string;
+  featureCode: string;
 }
 
 export interface SearchProps {

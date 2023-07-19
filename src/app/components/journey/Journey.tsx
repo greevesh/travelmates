@@ -71,6 +71,7 @@ const Journey = () => {
       maxRows: "10",
       orderBy: "name",
       name_startsWith: query,
+      featureCode: "PPL", // filters cities, filters out countries
     };
 
     const apiURL = new URL("http://api.geonames.org/searchJSON");
@@ -92,8 +93,12 @@ const Journey = () => {
   };
 
   const filterResults = (data: GeonameResponse): void => {
+    const startsWithCapital = (text: string): boolean => {
+      return text[0] === text[0].toUpperCase();
+    };
     const filteredResults: Geoname[] = data.geonames.filter(
-      (place: Geoname) => place.population > 1000
+      (place: Geoname) =>
+        place.population > 1000 && startsWithCapital(place.name)
     );
     const placeNames: string[] = filteredResults.map(
       (place: Geoname) => place.name
