@@ -20,6 +20,7 @@ import {
 } from "../../types";
 import { generateRandomID } from "../../helpers";
 import styles from "../../styles/journey/date-range-picker.module.css";
+import { getAuth } from "firebase/auth";
 
 const Journey = () => {
   const [input, setInput] = useState<string>("");
@@ -151,6 +152,7 @@ const Journey = () => {
     place: selectedPlace,
     startDate: timestamps.start,
     endDate: timestamps.end,
+    userID: getAuth().currentUser?.uid,
   };
 
   const createJourney = async (journey: JourneyData | null): Promise<void> => {

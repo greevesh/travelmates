@@ -77,6 +77,7 @@ export interface JourneyData {
   place: string;
   startDate: number | null;
   endDate: number | null;
+  userID: string | undefined;
 }
 
 export interface CreateJourneyButtonProps {
