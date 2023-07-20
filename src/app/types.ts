@@ -86,3 +86,11 @@ export interface CreateJourneyButtonProps {
   emptyInput: boolean;
   spinnerVisible: boolean;
 }
+
+export interface NextButtonProps {
+  incrementStep: () => void;
+}
+
+export interface PreviousButtonProps {
+  decrementStep: () => void;
+}

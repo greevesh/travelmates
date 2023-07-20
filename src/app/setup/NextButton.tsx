@@ -1,14 +1,11 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { NextButtonProps } from "../types";
 
-const NextButton = () => {
-  const handleNextClick = () => {
-    console.log("Next button clicked!");
-  };
-
+const NextButton: React.FC<NextButtonProps> = ({ incrementStep }) => {
   return (
-    <Button variant="primary" onClick={handleNextClick}>
+    <Button variant="primary" onClick={incrementStep}>
       Next
     </Button>
   );
