@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import Journey from "../components/journey/Journey";
 import styles from "../styles/auth/card-container.module.css";
 import NextButton from "./NextButton";
+import Search from "../groups/Search";
 import PreviousButton from "./PreviousButton";
 
 const Setup = () => {
@@ -35,7 +36,10 @@ const Setup = () => {
               </div>
             </>
           ) : (
-            <PreviousButton decrementStep={decrementStep} />
+            <>
+              <Search />
+              <PreviousButton decrementStep={decrementStep} />
+            </>
           )}
         </Card.Body>
         <div className="d-flex align-items-center">
