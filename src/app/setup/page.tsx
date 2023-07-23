@@ -7,8 +7,46 @@ import NextButton from "./NextButton";
 import Search from "../groups/Search";
 import PreviousButton from "./PreviousButton";
 
+import { collection, query, getDocs } from "firebase/firestore";
+import { db } from "../../../firebase/app";
+
 const Setup = () => {
+  const [input, setInput] = useState<string>("");
+  const [usersList, setUsersList] = useState<string[]>([]);
+
   let [step, setStep] = useState<number>(1);
+
+  const fetchUsers = async (): Promise<void> => {
+    const q = query(collection(db, "users"));
+    const names: string[] = [];
+
+    const data = await getDocs(q);
+    const fetchUsernames = async (): Promise<void> => {
+      try {
+        data.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data().displayName);
+          names.push(doc.data().displayName);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    await fetchUsernames();
+    setUsersList(names);
+    console.log(usersList);
+  };
+
+  const handleSearchChange = (value: string): void => {
+    setInput(value);
+    fetchUsers();
+    console.log(input);
+  };
+
+  const handleSelect = (selectedPlace: string): void => {
+    setInput("");
+    console.log(input);
+  };
 
   const incrementStep = (): void => {
     setStep((step += 1));
@@ -37,7 +75,12 @@ const Setup = () => {
             </>
           ) : (
             <>
-              <Search />
+              <Search
+                input={input}
+                handleSelect={handleSelect}
+                handleChange={handleSearchChange}
+                usersList={usersList}
+              />
               <PreviousButton decrementStep={decrementStep} />
             </>
           )}
