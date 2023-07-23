@@ -51,7 +51,8 @@ export interface GeonameURLParams {
 
 export interface SearchProps {
   input: string;
-  geonamesList: string[];
+  geonamesList?: string[] | undefined;
+  usersList?: string[] | undefined;
   handleChange: (value: string) => void;
   handleSelect: (selectedPlace: string) => void;
 }
