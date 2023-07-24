@@ -10,22 +10,35 @@ import PreviousButton from "./PreviousButton";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
+import { UserResults } from "../types";
+
 const Setup = () => {
   const [input, setInput] = useState<string>("");
-  const [usersList, setUsersList] = useState<string[]>([]);
+  const [usersList, setUsersList] = useState<UserResults[]>([]);
 
   let [step, setStep] = useState<number>(1);
 
   const fetchUsers = async (): Promise<void> => {
     const q = query(collection(db, "users"));
-    const names: string[] = [];
+    let results: UserResults = {
+      photoURL: "",
+      displayName: "",
+    };
 
     const data = await getDocs(q);
     const fetchUsernames = async (): Promise<void> => {
       try {
         data.forEach((doc) => {
           console.log(doc.id, " => ", doc.data().displayName);
-          names.push(doc.data().displayName);
+          setUsersList((prevUsersList) => [
+            ...prevUsersList,
+            {
+              photoURL: doc.data().photoURL,
+              displayName: doc.data().displayName,
+            },
+          ]);
+          console.log("results :", results);
+          console.log("userslist :", usersList);
         });
       } catch (err) {
         console.log(err);
@@ -33,7 +46,6 @@ const Setup = () => {
     };
 
     await fetchUsernames();
-    setUsersList(names);
     console.log(usersList);
   };
 

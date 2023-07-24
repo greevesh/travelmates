@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 
 import { SearchProps } from "../types";
+import Image from "next/image";
 
 const Search: React.FC<SearchProps> = ({
   input,
@@ -26,9 +27,18 @@ const Search: React.FC<SearchProps> = ({
       {input && (
         <Card style={{ width: "18rem" }}>
           <ListGroup variant="flush">
-            {usersList.map((name: string) => (
-              <ListGroup.Item onClick={() => handleSelect(name)} key={name}>
-                {name}
+            {usersList.map((user) => (
+              <ListGroup.Item
+                onClick={() => handleSelect(user)}
+                key={user.displayName}
+              >
+                <Image
+                  width="50"
+                  height="50"
+                  src={user.photoURL}
+                  alt="user profile picture"
+                />{" "}
+                {user.displayName}
               </ListGroup.Item>
             ))}
           </ListGroup>

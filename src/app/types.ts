@@ -51,8 +51,8 @@ export interface GeonameURLParams {
 
 export interface SearchProps {
   input: string;
-  geonamesList?: string[] | undefined;
-  usersList?: string[] | undefined;
+  geonamesList?: string[];
+  usersList?: UserResults[];
   handleChange: (value: string) => void;
   handleSelect: (selectedPlace: string) => void;
 }
@@ -94,4 +94,9 @@ export interface NextButtonProps {
 
 export interface PreviousButtonProps {
   decrementStep: () => void;
+}
+
+export interface UserResults {
+  photoURL: string;
+  displayName: string;
 }
