@@ -11,10 +11,12 @@ import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
 import { UserResults } from "../types";
+import SelectedBadge from "../components/SelectedBadge";
 
 const Setup = () => {
   const [input, setInput] = useState<string>("");
   const [usersList, setUsersList] = useState<UserResults[]>([]);
+  const [selectedItem, setSelectedItem] = useState<string>("");
 
   let [step, setStep] = useState<number>(1);
 
@@ -47,9 +49,14 @@ const Setup = () => {
     console.log(input);
   };
 
-  const handleSelect = (selectedPlace: string): void => {
+  const handleSelect = (selectedItem: string): void => {
     setInput("");
-    console.log(input);
+    setSelectedItem(selectedItem);
+    console.log(selectedItem);
+  };
+
+  const handleDelete = (): void => {
+    setSelectedItem("");
   };
 
   const incrementStep = (): void => {
@@ -85,6 +92,12 @@ const Setup = () => {
                 handleChange={handleSearchChange}
                 usersList={usersList}
               />
+              {selectedItem !== "" ? (
+                <SelectedBadge
+                  selectedItem={selectedItem}
+                  handleDelete={handleDelete}
+                />
+              ) : null}
               <PreviousButton decrementStep={decrementStep} />
             </>
           )}

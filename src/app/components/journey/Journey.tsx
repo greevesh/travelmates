@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Search from "./Search";
-import SelectedPlaceBadge from "./SelectedPlaceBadge";
+import SelectedBadge from "../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
 import {
@@ -25,7 +25,7 @@ import { getAuth } from "firebase/auth";
 const Journey = () => {
   const [input, setInput] = useState<string>("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
-  const [selectedPlace, setSelectedPlace] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<string>("");
   const [dateRange, setDateRange] = useState<DateRange>({
     start: null,
     end: null,
@@ -38,11 +38,11 @@ const Journey = () => {
   const [spinnerVisible, setSpinnerVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    selectedPlace !== "" && dateRange.start !== null && dateRange.end !== null
+    selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
       ? setEmptyInput(false)
       : setEmptyInput(true);
     console.log("is input empty?", emptyInput);
-  }, [selectedPlace, dateRange]);
+  }, [selectedItem, dateRange]);
 
   useEffect(() => {
     console.log("Date Ranges: ", dateRange);
@@ -110,9 +110,9 @@ const Journey = () => {
     console.log(data);
   };
 
-  const handleSelect = (selectedPlace: string): void => {
+  const handleSelect = (selectedItem: string): void => {
     setInput("");
-    setSelectedPlace(selectedPlace);
+    setSelectedItem(selectedItem);
     dateRange;
   };
 
@@ -122,7 +122,7 @@ const Journey = () => {
   };
 
   const handleDelete = (): void => {
-    setSelectedPlace("");
+    setSelectedItem("");
     const badge: HTMLElement | null = document.getElementById("badge");
     badge ? (badge.style.display = "none") : null;
   };
@@ -149,7 +149,7 @@ const Journey = () => {
 
   journey = {
     id: generateRandomID(),
-    place: selectedPlace,
+    place: selectedItem,
     startDate: timestamps.start,
     endDate: timestamps.end,
     userID: getAuth().currentUser?.uid,
@@ -170,7 +170,7 @@ const Journey = () => {
   };
 
   const clearForm = (): void => {
-    setSelectedPlace("");
+    setSelectedItem("");
     setDateRange({
       start: null,
       end: null,
@@ -188,9 +188,9 @@ const Journey = () => {
         handleChange={handleSearchChange}
         handleSelect={handleSelect}
       />
-      {selectedPlace !== "" && (
-        <SelectedPlaceBadge
-          selectedPlace={selectedPlace}
+      {selectedItem !== "" && (
+        <SelectedBadge
+          selectedItem={selectedItem}
           handleDelete={handleDelete}
         />
       )}

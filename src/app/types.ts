@@ -54,7 +54,12 @@ export interface SearchProps {
   geonamesList?: string[];
   usersList?: UserResults[];
   handleChange: (value: string) => void;
-  handleSelect: (selectedPlace: string) => void;
+  handleSelect: (selectedItem: string) => void;
+}
+
+export interface SelectedBadgeProps {
+  selectedItem: string;
+  handleDelete: () => void;
 }
 
 export interface DateRange {

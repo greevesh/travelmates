@@ -1,18 +1,15 @@
 import React from "react";
 import Badge from "react-bootstrap/Badge";
 
-interface SelectedPlaceBadgeProps {
-  selectedPlace: string;
-  handleDelete: () => void;
-}
+import { SelectedBadgeProps } from "../types";
 
-const SelectedPlaceBadge: React.FC<SelectedPlaceBadgeProps> = ({
-  selectedPlace,
+const SelectedBadge: React.FC<SelectedBadgeProps> = ({
+  selectedItem,
   handleDelete,
 }) => {
   return (
     <Badge className="mt-2" bg="secondary">
-      {selectedPlace}
+      {selectedItem}
       <span onClick={handleDelete} className="ms-1">
         X
       </span>
@@ -20,4 +17,4 @@ const SelectedPlaceBadge: React.FC<SelectedPlaceBadgeProps> = ({
   );
 };
 
-export default SelectedPlaceBadge;
+export default SelectedBadge;

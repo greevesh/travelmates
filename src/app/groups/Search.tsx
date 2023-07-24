@@ -27,17 +27,17 @@ const Search: React.FC<SearchProps> = ({
       {input && (
         <Card style={{ width: "18rem" }}>
           <ListGroup variant="flush">
-            {usersList.map((user) => (
+            {usersList.map((user, index) => (
               <ListGroup.Item
-                onClick={() => handleSelect(user)}
-                key={user.displayName}
+                onClick={() => handleSelect(user.displayName)}
+                key={index}
               >
                 <Image
                   width="50"
                   height="50"
                   src={user.photoURL}
                   alt="user profile picture"
-                />{" "}
+                />
                 {user.displayName}
               </ListGroup.Item>
             ))}
