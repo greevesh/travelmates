@@ -20,16 +20,11 @@ const Setup = () => {
 
   const fetchUsers = async (): Promise<void> => {
     const q = query(collection(db, "users"));
-    let results: UserResults = {
-      photoURL: "",
-      displayName: "",
-    };
-
     const data = await getDocs(q);
+
     const fetchUsernames = async (): Promise<void> => {
       try {
         data.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data().displayName);
           setUsersList((prevUsersList) => [
             ...prevUsersList,
             {
@@ -37,8 +32,6 @@ const Setup = () => {
               displayName: doc.data().displayName,
             },
           ]);
-          console.log("results :", results);
-          console.log("userslist :", usersList);
         });
       } catch (err) {
         console.log(err);
@@ -46,7 +39,6 @@ const Setup = () => {
     };
 
     await fetchUsernames();
-    console.log(usersList);
   };
 
   const handleSearchChange = (value: string): void => {
