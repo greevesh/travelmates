@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Journey from "../components/journey/Journey";
 import styles from "../styles/auth/card-container.module.css";
@@ -15,6 +15,7 @@ import SelectedBadge from "../components/SelectedBadge";
 
 const Setup = () => {
   const [input, setInput] = useState<string>("");
+  const [matchedName, setMatchedName] = useState<boolean>(false);
   const [usersList, setUsersList] = useState<UserResults[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>("");
 
@@ -22,32 +23,35 @@ const Setup = () => {
 
   const fetchUsers = async (): Promise<void> => {
     const q = query(collection(db, "users"));
-    const data = await getDocs(q);
+    const querySnapshot = await getDocs(q);
 
-    const fetchUsernames = async (): Promise<void> => {
-      try {
-        data.forEach((doc) => {
-          setUsersList((prevUsersList) => [
-            ...prevUsersList,
-            {
-              photoURL: doc.data().photoURL,
-              displayName: doc.data().displayName,
-            },
-          ]);
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    try {
+      const usersData: any[] = [];
+      querySnapshot.forEach((doc) => usersData.push(doc.data()));
 
-    await fetchUsernames();
+      const filteredUsers: UserResults[] = usersData
+        .filter((user) =>
+          user.displayName.toLowerCase().includes(input.toLowerCase())
+        )
+        .map((user) => ({
+          photoURL: user.photoURL,
+          displayName: user.displayName,
+        }));
+
+      setUsersList(filteredUsers);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleSearchChange = (value: string): void => {
     setInput(value);
-    fetchUsers();
-    console.log(input);
   };
+
+  useEffect(() => {
+    console.log("input:", input);
+    fetchUsers();
+  }, [input]);
 
   const handleSelect = (selectedItem: string): void => {
     setInput("");
