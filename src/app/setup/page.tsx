@@ -17,7 +17,7 @@ const Setup = () => {
   const [input, setInput] = useState<string>("");
   const [matchedName, setMatchedName] = useState<boolean>(false);
   const [usersList, setUsersList] = useState<UserResults[]>([]);
-  const [selectedItem, setSelectedItem] = useState<string>("");
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   let [step, setStep] = useState<number>(1);
 
@@ -57,12 +57,17 @@ const Setup = () => {
 
   const handleSelect = (selectedItem: string): void => {
     setInput("");
-    setSelectedItem(selectedItem);
+    setSelectedItems((prevSelectedItems) => [
+      ...prevSelectedItems,
+      selectedItem,
+    ]);
     console.log(selectedItem);
   };
 
-  const handleDelete = (): void => {
-    setSelectedItem("");
+  const handleDelete = (itemToDelete: string): void => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.filter((item) => item !== itemToDelete)
+    );
   };
 
   const incrementStep = (): void => {
@@ -98,12 +103,13 @@ const Setup = () => {
                 handleChange={handleSearchChange}
                 usersList={usersList}
               />
-              {selectedItem !== "" ? (
+              {selectedItems.map((item) => (
                 <SelectedBadge
-                  selectedItem={selectedItem}
-                  handleDelete={handleDelete}
+                  key={item}
+                  selectedItem={item}
+                  handleDelete={() => handleDelete(item)}
                 />
-              ) : null}
+              ))}
               <PreviousButton decrementStep={decrementStep} />
             </>
           )}
