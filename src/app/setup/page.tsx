@@ -26,17 +26,19 @@ const Setup = () => {
     const querySnapshot = await getDocs(q);
 
     try {
-      const usersData: any[] = [];
-      querySnapshot.forEach((doc) => usersData.push(doc.data()));
+      const filteredUsers: UserResults[] = [];
 
-      const filteredUsers: UserResults[] = usersData
-        .filter((user) =>
-          user.displayName.toLowerCase().includes(input.toLowerCase())
-        )
-        .map((user) => ({
-          photoURL: user.photoURL,
-          displayName: user.displayName,
-        }));
+      querySnapshot.forEach((doc) => {
+        const displayName: string = doc.data().displayName.toLowerCase();
+        const inputLowerCase: string = input.toLowerCase();
+
+        if (displayName.startsWith(inputLowerCase.slice(0, input.length))) {
+          filteredUsers.push({
+            photoURL: doc.data().photoURL,
+            displayName: doc.data().displayName,
+          });
+        }
+      });
 
       setUsersList(filteredUsers);
     } catch (err) {
