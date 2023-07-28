@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useDebounce } from "react-use";
 import Card from "react-bootstrap/Card";
 import Journey from "../components/journey/Journey";
 import styles from "../styles/auth/card-container.module.css";
@@ -18,6 +19,8 @@ const Setup = () => {
   const [matchedName, setMatchedName] = useState<boolean>(false);
   const [usersList, setUsersList] = useState<UserResults[]>([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const debouncedInput = useDebounce(input, 300);
 
   let [step, setStep] = useState<number>(1);
 
@@ -53,7 +56,7 @@ const Setup = () => {
   useEffect(() => {
     console.log("input:", input);
     fetchUsers();
-  }, [input]);
+  }, [debouncedInput]);
 
   const handleSelect = (selectedItem: string): void => {
     setInput("");
