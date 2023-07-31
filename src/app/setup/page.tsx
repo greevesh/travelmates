@@ -87,12 +87,12 @@ const Setup = () => {
     <div className={styles.container}>
       <Card style={{ width: "22rem", height: "20rem" }}>
         <Card.Body>
-          <Card.Title>Create a Journey</Card.Title>
-          <Card.Subtitle className="mb-2 text-muted">
-            So your mates will know where you&lsquo;ll be
-          </Card.Subtitle>
           {step === 1 ? (
             <>
+              <Card.Title>Create a Journey</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">
+                So your mates will know where you&lsquo;ll be
+              </Card.Subtitle>
               <Journey />
               <div className="d-flex justify-content-end">
                 <NextButton incrementStep={incrementStep} />
@@ -100,6 +100,10 @@ const Setup = () => {
             </>
           ) : (
             <>
+              <Card.Title>Create a Group</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">
+                So you can see where your mates are
+              </Card.Subtitle>
               <Search
                 input={input}
                 handleSelect={handleSelect}
