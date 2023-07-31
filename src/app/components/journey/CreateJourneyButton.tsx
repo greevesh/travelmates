@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { CreateJourneyButtonProps } from "../../types";
-import SpinnerComponent from "./Spinner";
+import SpinnerComponent from "../Spinner";
 
 const CreateJourneyButton: React.FC<CreateJourneyButtonProps> = ({
   journey,
