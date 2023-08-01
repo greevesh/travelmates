@@ -52,7 +52,7 @@ export interface GeonameURLParams {
 export interface SearchProps {
   input: string;
   geonamesList?: string[];
-  usersList?: UserResults[];
+  filteredUsers?: UserResults[];
   handleChange: (value: string) => void;
   handleSelect: (selectedItem: string) => void;
 }
@@ -101,7 +101,24 @@ export interface PreviousButtonProps {
   decrementStep: () => void;
 }
 
+export interface GroupData {
+  id: string;
+}
+
+export interface CreateGroupButtonProps {
+  group: GroupData | null;
+  handleSubmit: () => void;
+  emptyInput: boolean;
+}
+
+export interface GroupMembershipData {
+  id: string;
+  user_id: string | undefined;
+  group_id: string;
+}
+
 export interface UserResults {
+  id: string;
   photoURL: string;
   displayName: string;
 }

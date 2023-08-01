@@ -8,17 +8,24 @@ import NextButton from "./NextButton";
 import Search from "../groups/Search";
 import PreviousButton from "./PreviousButton";
 
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
-import { UserResults } from "../types";
+import { generateRandomID } from "../helpers";
+
+import { UserResults, GroupData, GroupMembershipData } from "../types";
 import SelectedBadge from "../components/SelectedBadge";
+import CreateGroupButton from "../groups/CreateGroupButton";
 
 const Setup = () => {
   const [input, setInput] = useState<string>("");
-  const [matchedName, setMatchedName] = useState<boolean>(false);
-  const [usersList, setUsersList] = useState<UserResults[]>([]);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<UserResults[]>([]);
+  const [emptyInput, setEmptyInput] = useState<boolean>(true);
+  const [groupMemberships, setGroupMemberships] = useState<
+    GroupMembershipData[]
+  >([]);
+  const [groupID, setGroupID] = useState<string>("");
+  const [filteredUsers, setFilteredUsers] = useState<UserResults[]>([]);
 
   const debouncedInput = useDebounce(input, 300);
 
@@ -29,48 +36,120 @@ const Setup = () => {
     const querySnapshot = await getDocs(q);
 
     try {
-      const filteredUsers: UserResults[] = [];
+      const filteredUsers: any = querySnapshot.docs
+        .map((doc) => {
+          const id: string = doc.data().id;
+          const displayName: string = doc.data().displayName.toLowerCase();
+          const inputLowerCase: string = input.toLowerCase();
 
-      querySnapshot.forEach((doc) => {
-        const displayName: string = doc.data().displayName.toLowerCase();
-        const inputLowerCase: string = input.toLowerCase();
+          if (displayName.startsWith(inputLowerCase.slice(0, input.length))) {
+            return {
+              id: id,
+              photoURL: doc.data().photoURL,
+              displayName: doc.data().displayName,
+            };
+          }
 
-        if (displayName.startsWith(inputLowerCase.slice(0, input.length))) {
-          filteredUsers.push({
-            photoURL: doc.data().photoURL,
-            displayName: doc.data().displayName,
-          });
-        }
-      });
+          return null;
+        })
+        .filter(Boolean);
 
-      setUsersList(filteredUsers);
+      setFilteredUsers(filteredUsers);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleSearchChange = (value: string): void => {
-    setInput(value);
+  let group: GroupData | null = null;
+  let groupMembership: GroupMembershipData | null = null;
+
+  const createGroup = async (group: GroupData | null): Promise<void> => {
+    if (group !== null) {
+      try {
+        await setDoc(doc(db, "groups", group.id), group);
+        console.log("group document written successfully!", group);
+      } catch (error) {
+        console.error("Error writing document: ", error);
+      }
+    }
+  };
+
+  console.log(filteredUsers);
+
+  const createGroupMemberships = async (): Promise<void> => {
+    console.log(groupMembership);
+    try {
+      filteredUsers.forEach((filteredUser) => {
+        const groupMembership: GroupMembershipData = {
+          id: generateRandomID(),
+          user_id: filteredUser.id,
+          group_id: groupID,
+        };
+        setDoc(
+          doc(db, "group-memberships", groupMembership.id),
+          groupMembership
+        );
+        console.log(filteredUser);
+      });
+    } catch (error) {
+      console.error("Error writing document: ", error);
+    }
   };
 
   useEffect(() => {
-    console.log("input:", input);
+    setGroupID(generateRandomID());
+  }, []);
+
+  const handleSearchChange = (value: string): void => {
+    setInput(value);
+    setEmptyInput(false);
+  };
+
+  useEffect(() => {
     fetchUsers();
   }, [debouncedInput]);
 
   const handleSelect = (selectedItem: string): void => {
     setInput("");
-    setSelectedItems((prevSelectedItems) => [
-      ...prevSelectedItems,
-      selectedItem,
-    ]);
-    console.log(selectedItem);
+    // setSelectedItems((prevSelectedItems) => [
+    //   ...prevSelectedItems,
+    //   {
+    //     id: generateRandomID(),
+    //     user_id: selectedUser,
+    //     group_id: groupID,
+    //   }
+    // ]);
+    setEmptyInput(false);
+    // setGroupMemberships((prevMemberships) => [...prevMemberships, {
+    //
+    // }]);
   };
+
+  useEffect(() => {
+    console.log(groupMemberships);
+  }, [groupMemberships]);
 
   const handleDelete = (itemToDelete: string): void => {
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.filter((item) => item !== itemToDelete)
     );
+  };
+
+  useEffect(() => {
+    if (selectedItems.length === 0) {
+      setEmptyInput(true);
+    }
+  }, [selectedItems]);
+
+  const handleSubmit = async (): Promise<void> => {
+    try {
+      await createGroup(group);
+      await createGroupMemberships();
+      setFilteredUsers([]);
+      setSelectedItems([]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const incrementStep = (): void => {
@@ -108,7 +187,7 @@ const Setup = () => {
                 input={input}
                 handleSelect={handleSelect}
                 handleChange={handleSearchChange}
-                usersList={usersList}
+                filteredUsers={filteredUsers}
               />
               {selectedItems.map((item) => (
                 <SelectedBadge
@@ -117,6 +196,11 @@ const Setup = () => {
                   handleDelete={() => handleDelete(item)}
                 />
               ))}
+              <CreateGroupButton
+                group={group}
+                handleSubmit={handleSubmit}
+                emptyInput={emptyInput}
+              />
               <PreviousButton decrementStep={decrementStep} />
             </>
           )}
