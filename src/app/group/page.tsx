@@ -10,8 +10,8 @@ initializeApp(firebaseConfig);
 export default function DataGridProDemo() {
   const { data } = useDemoData({
     dataSet: "Commodity",
-    rowLength: 100000,
-    editable: true,
+    rowLength: 25,
+    editable: false,
   });
 
   return (
@@ -20,7 +20,6 @@ export default function DataGridProDemo() {
         {...data}
         loading={data.rows.length === 0}
         rowHeight={38}
-        checkboxSelection
         disableRowSelectionOnClick
       />
     </Box>
