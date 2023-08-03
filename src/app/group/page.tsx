@@ -3,23 +3,20 @@ import { initializeApp } from "firebase/app";
 import firebaseConfig from "@root/firebase/config";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-import { useDemoData } from "@mui/x-data-grid-generator";
+
+import columns from "./columns";
+import rows from "./rows";
 
 initializeApp(firebaseConfig);
 
 export default function DataGridProDemo() {
-  const { data } = useDemoData({
-    dataSet: "Commodity",
-    rowLength: 25,
-    editable: false,
-  });
-
   return (
-    <Box sx={{ height: 520, width: "100%" }}>
+    <Box sx={{ height: 300, width: "100%" }}>
       <DataGridPro
-        {...data}
-        loading={data.rows.length === 0}
+        loading={rows.length === 0}
         rowHeight={38}
+        rows={rows}
+        columns={columns}
         disableRowSelectionOnClick
       />
     </Box>

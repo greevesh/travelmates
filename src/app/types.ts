@@ -122,3 +122,14 @@ export interface UserResults {
   photoURL: string;
   displayName: string;
 }
+
+export interface ColumnData {
+  field: string;
+  headerName: number;
+  width: number;
+}
+
+export interface RowData {
+  id: number;
+  name: string;
+}
