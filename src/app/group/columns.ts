@@ -5,8 +5,6 @@ const currentYear = new Date().getFullYear();
 const currentMonth = new Date().getMonth();
 const calendar = generateCalendar(currentYear, currentMonth);
 
-const currentMonthDays: string[] = [];
-
 const columns: GridColDef[] = [
   {
     field: "name",
@@ -38,9 +36,7 @@ const generateCurrentMonthDays = () => {
     columns.push({
       field: day,
       headerName: day,
-      valueGetter: ({ row }) => {
-        row.slots[day];
-      },
+      valueGetter: ({ row }) => row.slots[day],
       sortable: false,
       ...slotColumnCommonFields,
     });
@@ -48,6 +44,5 @@ const generateCurrentMonthDays = () => {
 };
 
 generateCurrentMonthDays();
-console.log(currentMonthDays);
 
 export default columns;
