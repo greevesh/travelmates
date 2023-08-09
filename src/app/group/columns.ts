@@ -15,7 +15,7 @@ const columns: GridColDef[] = [
 ];
 
 const slotColumnCommonFields: Partial<GridColDef> = {
-  minWidth: 100,
+  maxWidth: 10,
   cellClassName: (params) => params.value,
   colSpan: ({ row, field, value }: GridCellParams) => {
     const index = Number(field);
