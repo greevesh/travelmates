@@ -4,7 +4,16 @@ const rows: Array<{ id: number; name: string; slots: string[] }> = [
   {
     id: 1,
     name: "Harri",
-    slots: ["Cebu", "Moalboal", "Moalboal", "Hanoi", "", "Singapore"],
+    slots: [
+      "Cebu",
+      "Moalboal",
+      "Moalboal",
+      "Moalboal",
+      "Moalboal",
+      "Moalboal",
+      "Hanoi",
+      "Singapore",
+    ],
   },
   {
     id: 2,
