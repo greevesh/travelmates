@@ -1,25 +1,15 @@
-import { RowData } from "../types";
+import { Journeys, RowData } from "../types";
 
-const rows: RowData[] = [
+const rows: Array<{ id: number; name: string; slots: string[] }> = [
   {
     id: 1,
     name: "Harri",
+    slots: ["Cebu", "Moalboal", "Moalboal", "Hanoi", "", "Singapore"],
   },
   {
     id: 2,
     name: "Myo",
-  },
-  {
-    id: 3,
-    name: "Wilson",
-  },
-  {
-    id: 4,
-    name: "Mark",
-  },
-  {
-    id: 5,
-    name: "Tim",
+    slots: ["Taipei", "Taipei", "Taipei", "Brisbane", "Brisbane", "Tokyo"],
   },
 ];
 
