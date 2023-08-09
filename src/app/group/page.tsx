@@ -45,6 +45,7 @@ export default function ColumnSpanningDerived() {
         showCellVerticalBorder
         showColumnVerticalBorder
         disableColumnReorder
+        disableColumnMenu
       />
     </Box>
   );
