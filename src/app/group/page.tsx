@@ -8,6 +8,8 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import columns from "./columns";
 import rows from "./rows";
 import NextMonthButton from "./NextMonthButton";
+import generateCalendar from "./generateCalendar";
+import { slotColumnCommonFields } from "./columns";
 
 initializeApp(firebaseConfig);
 
@@ -37,15 +39,34 @@ const rootStyles = {
 };
 
 export default function ColumnSpanningDerived() {
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [selectedMonth, setselectedMonth] = useState(new Date().getMonth());
+  const currentYear = new Date().getFullYear();
+  const calendar = generateCalendar(currentYear, selectedMonth);
 
-  const incrementMonth = () => {
-    setCurrentMonth(currentMonth + 1);
+  const generateCurrentMonthDays = () => {
+    columns.splice(0);
+    calendar.forEach((date) => {
+      const day: string = date.day.toString();
+      columns.push({
+        field: day,
+        headerName: day,
+        valueGetter: ({ row }) => row.slots[day],
+        sortable: false,
+        ...slotColumnCommonFields,
+      });
+    });
+  };
+
+  generateCurrentMonthDays();
+
+  const incrementMonth = (): void => {
+    setselectedMonth(selectedMonth + 1);
   };
 
   useEffect(() => {
-    console.log(currentMonth);
-  }, [currentMonth]);
+    generateCurrentMonthDays();
+    console.log(columns.length);
+  }, [selectedMonth]);
 
   return (
     <>
