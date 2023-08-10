@@ -19,8 +19,12 @@ export default function ColumnSpanningDerived() {
   const currentYear = new Date().getFullYear();
   const calendar = generateCalendar(currentYear, selectedMonth);
 
-  const generateCurrentMonthDays = () => {
+  const generateCurrentMonthColumns = () => {
     columns.splice(0);
+    columns.push({
+      field: "name",
+      headerName: "Name",
+    });
     calendar.forEach((date) => {
       const day: string = date.day.toString();
       columns.push({
@@ -33,14 +37,14 @@ export default function ColumnSpanningDerived() {
     });
   };
 
-  generateCurrentMonthDays();
+  generateCurrentMonthColumns();
 
   const incrementMonth = (): void => {
     setselectedMonth(selectedMonth + 1);
   };
 
   useEffect(() => {
-    generateCurrentMonthDays();
+    generateCurrentMonthColumns();
     console.log(columns.length);
   }, [selectedMonth]);
 
