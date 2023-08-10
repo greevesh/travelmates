@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@root/firebase/config";
 import Box from "@mui/material/Box";
@@ -6,6 +7,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 
 import columns from "./columns";
 import rows from "./rows";
+import NextMonthButton from "./NextMonthButton";
 
 initializeApp(firebaseConfig);
 
@@ -35,18 +37,31 @@ const rootStyles = {
 };
 
 export default function ColumnSpanningDerived() {
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+
+  const incrementMonth = () => {
+    setCurrentMonth(currentMonth + 1);
+  };
+
+  useEffect(() => {
+    console.log(currentMonth);
+  }, [currentMonth]);
+
   return (
-    <Box sx={rootStyles}>
-      <DataGridPro
-        columns={columns}
-        rows={rows}
-        disableRowSelectionOnClick
-        hideFooter
-        showCellVerticalBorder
-        showColumnVerticalBorder
-        disableColumnReorder
-        disableColumnMenu
-      />
-    </Box>
+    <>
+      <Box sx={rootStyles}>
+        <DataGridPro
+          columns={columns}
+          rows={rows}
+          disableRowSelectionOnClick
+          hideFooter
+          showCellVerticalBorder
+          showColumnVerticalBorder
+          disableColumnReorder
+          disableColumnMenu
+        />
+      </Box>
+      <NextMonthButton incrementMonth={incrementMonth} />
+    </>
   );
 }

@@ -129,7 +129,20 @@ export interface ColumnData {
   width: number;
 }
 
+export interface Journeys {
+  id: number;
+  places: string[];
+  startDate: number;
+  endDate: number;
+  name: string;
+}
+
 export interface RowData {
   id: number;
   name: string;
+  places: string[];
+}
+
+export interface NextMonthButtonProps {
+  incrementMonth: () => void;
 }
