@@ -5,26 +5,32 @@ import firebaseConfig from "@root/firebase/config";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
-import columns from "./columns";
 import rows from "./rows";
 import NextMonthButton from "./NextMonthButton";
 import generateCalendar from "./generateCalendar";
 import { slotColumnCommonFields } from "./columns";
 import { rootStyles } from "./rootStyles";
+import { GridColDef } from "@mui/x-data-grid-pro";
 
 initializeApp(firebaseConfig);
 
 export default function ColumnSpanningDerived() {
+  const [columns, setColumns] = useState<GridColDef[]>([]);
   const [selectedMonth, setselectedMonth] = useState(new Date().getMonth());
   const currentYear = new Date().getFullYear();
   const calendar = generateCalendar(currentYear, selectedMonth);
 
-  const generateCurrentMonthColumns = () => {
-    columns.splice(0);
-    columns.push({
-      field: "name",
-      headerName: "Name",
-    });
+  const incrementMonth = (): void => {
+    setselectedMonth(selectedMonth + 1);
+  };
+
+  const generateColumns = (): void => {
+    const columns: GridColDef[] = [
+      {
+        field: "name",
+        headerName: "Name",
+      },
+    ];
     calendar.forEach((date) => {
       const day: string = date.day.toString();
       columns.push({
@@ -34,18 +40,12 @@ export default function ColumnSpanningDerived() {
         sortable: false,
         ...slotColumnCommonFields,
       });
+      setColumns(columns);
     });
   };
 
-  generateCurrentMonthColumns();
-
-  const incrementMonth = (): void => {
-    setselectedMonth(selectedMonth + 1);
-  };
-
   useEffect(() => {
-    generateCurrentMonthColumns();
-    console.log(columns.length);
+    generateColumns();
   }, [selectedMonth]);
 
   return (

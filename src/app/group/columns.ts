@@ -1,12 +1,4 @@
-import generateCalendar from "./generateCalendar";
 import { GridColDef, GridCellParams } from "@mui/x-data-grid";
-
-const columns: GridColDef[] = [
-  {
-    field: "name",
-    headerName: "Name",
-  },
-];
 
 export const slotColumnCommonFields: Partial<GridColDef> = {
   maxWidth: 10,
@@ -25,5 +17,3 @@ export const slotColumnCommonFields: Partial<GridColDef> = {
     return colSpan;
   },
 };
-
-export default columns;
