@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "@root/firebase/config";
 import Box from "@mui/material/Box";
@@ -15,17 +15,35 @@ import { GridColDef } from "@mui/x-data-grid-pro";
 initializeApp(firebaseConfig);
 
 export default function ColumnSpanningDerived() {
+  const months: string[] = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   const [columns, setColumns] = useState<GridColDef[]>([]);
-  const [selectedMonth, setselectedMonth] = useState(new Date().getMonth());
+  const [monthIndex, setMonthIndex] = useState<number>(7);
   const currentYear = new Date().getFullYear();
-  const calendar = generateCalendar(currentYear, selectedMonth);
 
   const incrementMonth = (): void => {
-    setselectedMonth(selectedMonth + 1);
+    if (monthIndex === 11) {
+      setMonthIndex(0);
+    } else {
+      setMonthIndex(monthIndex + 1);
+    }
   };
 
   const generateColumns = (): void => {
-    const columns: GridColDef[] = [
+    const calendar = generateCalendar(currentYear, monthIndex);
+    const newColumns: GridColDef[] = [
       {
         field: "name",
         headerName: "Name",
@@ -33,20 +51,20 @@ export default function ColumnSpanningDerived() {
     ];
     calendar.forEach((date) => {
       const day: string = date.day.toString();
-      columns.push({
+      newColumns.push({
         field: day,
         headerName: day,
         valueGetter: ({ row }) => row.slots[day],
         sortable: false,
         ...slotColumnCommonFields,
       });
-      setColumns(columns);
     });
+    setColumns(newColumns);
   };
 
   useEffect(() => {
     generateColumns();
-  }, [selectedMonth]);
+  }, [monthIndex]);
 
   return (
     <>
@@ -63,6 +81,7 @@ export default function ColumnSpanningDerived() {
         />
       </Box>
       <NextMonthButton incrementMonth={incrementMonth} />
+      {months[monthIndex]}
     </>
   );
 }
