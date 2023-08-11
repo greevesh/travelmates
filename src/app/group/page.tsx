@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
 import rows from "./rows";
+import PreviousMonthButton from "./PreviousMonthButton";
 import NextMonthButton from "./NextMonthButton";
 import generateCalendar from "./generateCalendar";
 import { slotColumnCommonFields } from "./columns";
@@ -34,6 +35,15 @@ export default function ColumnSpanningDerived() {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
+
+  const decrementMonth = (): void => {
+    if (monthIndex === 0) {
+      setMonthIndex(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setMonthIndex(monthIndex - 1);
+    }
+  };
 
   const incrementMonth = (): void => {
     if (monthIndex === 11) {
@@ -83,6 +93,7 @@ export default function ColumnSpanningDerived() {
           disableColumnMenu
         />
       </Box>
+      <PreviousMonthButton decrementMonth={decrementMonth} />
       <NextMonthButton incrementMonth={incrementMonth} />
       {months[monthIndex]}, {currentYear}
     </>

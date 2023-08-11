@@ -146,3 +146,7 @@ export interface RowData {
 export interface NextMonthButtonProps {
   incrementMonth: () => void;
 }
+
+export interface PreviousMonthButtonProps {
+  decrementMonth: () => void;
+}
