@@ -31,11 +31,14 @@ export default function ColumnSpanningDerived() {
   ];
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number>(
+    new Date().getFullYear()
+  );
 
   const incrementMonth = (): void => {
     if (monthIndex === 11) {
       setMonthIndex(0);
+      setCurrentYear(currentYear + 1);
     } else {
       setMonthIndex(monthIndex + 1);
     }
@@ -81,7 +84,7 @@ export default function ColumnSpanningDerived() {
         />
       </Box>
       <NextMonthButton incrementMonth={incrementMonth} />
-      {months[monthIndex]}
+      {months[monthIndex]}, {currentYear}
     </>
   );
 }
