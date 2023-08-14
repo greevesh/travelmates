@@ -6,8 +6,8 @@ export const slotColumnCommonFields: Partial<GridColDef> = {
   colSpan: ({ row, field, value }: GridCellParams) => {
     const index = Number(field);
     let colSpan = 1;
-    for (let i = index + 1; i < row.slots.length; i += 1) {
-      const nextValue = row.slots[i];
+    for (let i = index + 1; i < row.places.length; i += 1) {
+      const nextValue = row.places[i];
       if (nextValue === value) {
         colSpan += 1;
       } else {

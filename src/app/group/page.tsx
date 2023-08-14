@@ -67,7 +67,7 @@ export default function ColumnSpanningDerived() {
       newColumns.push({
         field: day,
         headerName: day,
-        valueGetter: ({ row }) => row.slots[day],
+        valueGetter: ({ row }) => row.places[day],
         sortable: false,
         ...slotColumnCommonFields,
       });
