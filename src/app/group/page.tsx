@@ -9,14 +9,14 @@ import rows from "./rows";
 import PreviousMonthButton from "./PreviousMonthButton";
 import NextMonthButton from "./NextMonthButton";
 import generateCalendar from "./generateCalendar";
-import { slotColumnCommonFields, months } from "./columns";
+import { slotColumnCommonFields, months, generatedColumns } from "./columns";
 import { rootStyles } from "./rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
 import { Row } from "../types";
 
 initializeApp(firebaseConfig);
 
-export default function ColumnSpanningDerived() {
+const GroupPage = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);
@@ -47,12 +47,7 @@ export default function ColumnSpanningDerived() {
     const filteredRows = rows.filter((row) => {
       return row.month === months[monthIndex];
     });
-    const generatedColumns: GridColDef[] = [
-      {
-        field: "name",
-        headerName: "Name",
-      },
-    ];
+
     calendar.forEach((date) => {
       const day: string = date.day.toString();
       generatedColumns.push({
@@ -90,4 +85,6 @@ export default function ColumnSpanningDerived() {
       {months[monthIndex]}, {currentYear}
     </>
   );
-}
+};
+
+export default GroupPage;

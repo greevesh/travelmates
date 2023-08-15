@@ -33,3 +33,10 @@ export const months: Months[] = [
   "November",
   "December",
 ];
+
+export const generatedColumns: GridColDef[] = [
+  {
+    field: "name",
+    headerName: "Name",
+  },
+];
