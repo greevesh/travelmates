@@ -47,7 +47,7 @@ export default function ColumnSpanningDerived() {
     const filteredRows = rows.filter((row) => {
       return row.month === months[monthIndex];
     });
-    const newColumns: GridColDef[] = [
+    const generatedColumns: GridColDef[] = [
       {
         field: "name",
         headerName: "Name",
@@ -55,7 +55,7 @@ export default function ColumnSpanningDerived() {
     ];
     calendar.forEach((date) => {
       const day: string = date.day.toString();
-      newColumns.push({
+      generatedColumns.push({
         field: day,
         headerName: day,
         valueGetter: ({ row }) => row.places[day],
@@ -63,7 +63,7 @@ export default function ColumnSpanningDerived() {
         ...slotColumnCommonFields,
       });
     });
-    setColumns(newColumns);
+    setColumns(generatedColumns);
     setCurrentMonthRows(filteredRows);
   };
 
