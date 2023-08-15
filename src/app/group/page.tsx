@@ -45,7 +45,7 @@ const GroupPage: React.FC = () => {
   const generateColumns = (): void => {
     const calendar: CalendarDay[] = generateCalendar(currentYear, monthIndex);
     const filteredRows: Row[] | undefined = rows.filter((row) => {
-      return row.month === months[monthIndex];
+      return row.month === months[monthIndex] && row.year === currentYear;
     });
 
     calendar.forEach((date) => {
