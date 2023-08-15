@@ -1,4 +1,5 @@
 import { GridColDef, GridCellParams } from "@mui/x-data-grid";
+import { Months } from "../types";
 
 export const slotColumnCommonFields: Partial<GridColDef> = {
   maxWidth: 10,
@@ -18,7 +19,7 @@ export const slotColumnCommonFields: Partial<GridColDef> = {
   },
 };
 
-export const months: string[] = [
+export const months: Months[] = [
   "January",
   "February",
   "March",
