@@ -137,9 +137,11 @@ export interface Journeys {
   name: string;
 }
 
-export interface RowData {
+export interface Row {
   id: number;
   name: string;
+  month: string;
+  year: number;
   places: string[];
 }
 

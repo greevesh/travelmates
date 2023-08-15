@@ -1,9 +1,11 @@
-import { Journeys, RowData } from "../types";
+import { Row } from "../types";
 
-const rows: Array<{ id: number; name: string; places: string[] }> = [
+const rows: Row[] = [
   {
     id: 1,
     name: "Harri",
+    month: "August",
+    year: 2023,
     places: [
       "Moalboal (PH)",
       "Moalboal (PH)",
@@ -22,6 +24,8 @@ const rows: Array<{ id: number; name: string; places: string[] }> = [
   {
     id: 2,
     name: "Myo",
+    month: "September",
+    year: 2023,
     places: [
       "Taipei (TW)",
       "Taipei (TW)",

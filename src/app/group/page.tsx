@@ -12,6 +12,7 @@ import generateCalendar from "./generateCalendar";
 import { slotColumnCommonFields } from "./columns";
 import { rootStyles } from "./rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
+import { Row } from "../types";
 
 initializeApp(firebaseConfig);
 
@@ -31,6 +32,7 @@ export default function ColumnSpanningDerived() {
     "December",
   ];
   const [columns, setColumns] = useState<GridColDef[]>([]);
+  const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
@@ -56,6 +58,9 @@ export default function ColumnSpanningDerived() {
 
   const generateColumns = (): void => {
     const calendar = generateCalendar(currentYear, monthIndex);
+    const filteredRows = rows.filter((row) => {
+      return row.month === months[monthIndex];
+    });
     const newColumns: GridColDef[] = [
       {
         field: "name",
@@ -73,6 +78,7 @@ export default function ColumnSpanningDerived() {
       });
     });
     setColumns(newColumns);
+    setCurrentMonthRows(filteredRows);
   };
 
   useEffect(() => {
@@ -84,7 +90,7 @@ export default function ColumnSpanningDerived() {
       <Box sx={rootStyles}>
         <DataGridPro
           columns={columns}
-          rows={rows}
+          rows={currentMonthRows}
           disableRowSelectionOnClick
           hideFooter
           showCellVerticalBorder
