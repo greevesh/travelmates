@@ -1,4 +1,6 @@
-export const rootStyles = {
+import { RootStyles } from "../types";
+
+export const rootStyles: RootStyles = {
   width: "100%",
   "& .Cebu": {
     backgroundColor: "rgba(157, 255, 118, 0.49)",

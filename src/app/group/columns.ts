@@ -5,10 +5,10 @@ export const slotColumnCommonFields: Partial<GridColDef> = {
   maxWidth: 10,
   cellClassName: (params) => params.value,
   colSpan: ({ row, field, value }: GridCellParams) => {
-    const index = Number(field);
-    let colSpan = 1;
+    const index: number = Number(field);
+    let colSpan: number = 1;
     for (let i = index + 1; i < row.places.length; i += 1) {
-      const nextValue = row.places[i];
+      const nextValue: string = row.places[i];
       if (nextValue === value) {
         colSpan += 1;
       } else {

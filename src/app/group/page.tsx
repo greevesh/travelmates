@@ -12,11 +12,11 @@ import generateCalendar from "./generateCalendar";
 import { slotColumnCommonFields, months, generatedColumns } from "./columns";
 import { rootStyles } from "./rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { Row } from "../types";
+import { CalendarDay, Row } from "../types";
 
 initializeApp(firebaseConfig);
 
-const GroupPage = () => {
+const GroupPage: React.FC = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);
@@ -43,8 +43,8 @@ const GroupPage = () => {
   };
 
   const generateColumns = (): void => {
-    const calendar = generateCalendar(currentYear, monthIndex);
-    const filteredRows = rows.filter((row) => {
+    const calendar: CalendarDay[] = generateCalendar(currentYear, monthIndex);
+    const filteredRows: Row[] | undefined = rows.filter((row) => {
       return row.month === months[monthIndex];
     });
 

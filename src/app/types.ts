@@ -171,3 +171,28 @@ export interface NextMonthButtonProps {
 export interface PreviousMonthButtonProps {
   decrementMonth: () => void;
 }
+
+export interface RootStyles {
+  width: string;
+  "& .Cebu": {
+    backgroundColor: string;
+  };
+  "& .Moalboal": {
+    backgroundColor: string;
+  };
+  "& .Hanoi": {
+    backgroundColor: string;
+  };
+  "& .Taipei": {
+    backgroundColor: string;
+  };
+  "& .Brisbane": {
+    backgroundColor: string;
+  };
+  "& .Tokyo": {
+    backgroundColor: string;
+  };
+  "& .Singapore": {
+    backgroundColor: string;
+  };
+}
