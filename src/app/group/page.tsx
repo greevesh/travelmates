@@ -9,7 +9,7 @@ import rows from "./rows";
 import PreviousMonthButton from "./PreviousMonthButton";
 import NextMonthButton from "./NextMonthButton";
 import generateCalendar from "./generateCalendar";
-import { slotColumnCommonFields } from "./columns";
+import { slotColumnCommonFields, months } from "./columns";
 import { rootStyles } from "./rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
 import { Row } from "../types";
@@ -17,20 +17,6 @@ import { Row } from "../types";
 initializeApp(firebaseConfig);
 
 export default function ColumnSpanningDerived() {
-  const months: string[] = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);
