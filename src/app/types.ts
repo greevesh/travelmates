@@ -137,6 +137,11 @@ export interface Journeys {
   name: string;
 }
 
+export interface CalendarDay {
+  date: Date;
+  day: string;
+}
+
 export interface Row {
   id: number;
   name: string;
