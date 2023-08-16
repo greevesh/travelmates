@@ -52,7 +52,7 @@ export interface GeonameURLParams {
 export interface SearchProps {
   input: string;
   geonamesList?: string[];
-  filteredUsers?: UserResults[];
+  users?: UserResults[];
   handleChange: (value: string) => void;
   handleSelect: (selectedItem: string) => void;
 }

@@ -25,7 +25,7 @@ const Setup = () => {
     GroupMembershipData[]
   >([]);
   const [groupID, setGroupID] = useState<string>("");
-  const [filteredUsers, setFilteredUsers] = useState<UserResults[]>([]);
+  const [users, setUsers] = useState<UserResults[]>([]);
 
   const debouncedInput = useDebounce(input, 300);
 
@@ -36,7 +36,7 @@ const Setup = () => {
     const querySnapshot = await getDocs(q);
 
     try {
-      const filteredUsers: any = querySnapshot.docs
+      const users: any = querySnapshot.docs
         .map((doc) => {
           const id: string = doc.data().id;
           const displayName: string = doc.data().displayName.toLowerCase();
@@ -54,7 +54,7 @@ const Setup = () => {
         })
         .filter(Boolean);
 
-      setFilteredUsers(filteredUsers);
+      setUsers(users);
     } catch (err) {
       console.log(err);
     }
@@ -74,22 +74,22 @@ const Setup = () => {
     }
   };
 
-  console.log(filteredUsers);
+  console.log(users);
 
   const createGroupMemberships = async (): Promise<void> => {
     console.log(groupMembership);
     try {
-      filteredUsers.forEach((filteredUser) => {
+      users.forEach((user) => {
         const groupMembership: GroupMembershipData = {
           id: generateRandomID(),
-          user_id: filteredUser.id,
+          user_id: user.id,
           group_id: groupID,
         };
         setDoc(
           doc(db, "group-memberships", groupMembership.id),
           groupMembership
         );
-        console.log(filteredUser);
+        console.log(user);
       });
     } catch (error) {
       console.error("Error writing document: ", error);
@@ -145,7 +145,7 @@ const Setup = () => {
     try {
       await createGroup(group);
       await createGroupMemberships();
-      setFilteredUsers([]);
+      setUsers([]);
       setSelectedItems([]);
     } catch (error) {
       console.log(error);
@@ -187,7 +187,7 @@ const Setup = () => {
                 input={input}
                 handleSelect={handleSelect}
                 handleChange={handleSearchChange}
-                filteredUsers={filteredUsers}
+                users={users}
               />
               {selectedItems.map((item) => (
                 <SelectedBadge
