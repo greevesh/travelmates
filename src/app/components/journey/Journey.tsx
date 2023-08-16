@@ -22,7 +22,7 @@ import {
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
 
-const Journey = () => {
+const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>("");
@@ -134,7 +134,7 @@ const Journey = () => {
     badge ? (badge.style.display = "none") : null;
   };
 
-  const handleDateChange = (newDate: any): void => {
+  const handleDateChange = (newDate: SelectedDate[]): void => {
     const startDate: SelectedDate = newDate[0];
     const endDate: SelectedDate = newDate[1];
     setDateRange({
