@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const Search: React.FC<SearchProps> = ({
   input,
-  usersList,
+  users,
   handleChange,
   handleSelect,
 }) => {
@@ -27,20 +27,24 @@ const Search: React.FC<SearchProps> = ({
       {input && (
         <Card style={{ width: "18rem" }}>
           <ListGroup variant="flush">
-            {usersList.map((user, index) => (
-              <ListGroup.Item
-                onClick={() => handleSelect(user.displayName)}
-                key={index}
-              >
-                <Image
-                  width="50"
-                  height="50"
-                  src={user.photoURL}
-                  alt="user profile picture"
-                />
-                {user.displayName}
-              </ListGroup.Item>
-            ))}
+            {users && users.length > 0 ? (
+              users.map((user, index) => (
+                <ListGroup.Item
+                  onClick={() => handleSelect(user.displayName)}
+                  key={index}
+                >
+                  <Image
+                    width="50"
+                    height="50"
+                    src={user.photoURL}
+                    alt="user profile picture"
+                  />
+                  {user.displayName}
+                </ListGroup.Item>
+              ))
+            ) : (
+              <ListGroup.Item>Couldn't retrieve any users</ListGroup.Item>
+            )}
           </ListGroup>
         </Card>
       )}
