@@ -83,14 +83,14 @@ const Journey = () => {
       featureCode: "PPL", // filters cities, filters out countries
     };
 
-    const apiURL = new URL("http://api.geonames.org/searchJSON");
+    const apiURL: URL = new URL("http://api.geonames.org/searchJSON");
 
     Object.entries(params).forEach(([key, value]) => {
       apiURL.searchParams.set(key, value);
     });
 
     try {
-      const response = await fetch(apiURL);
+      const response: Response = await fetch(apiURL);
       if (!response.ok) {
         throw new Error("Request failed");
       }
