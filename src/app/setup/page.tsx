@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 import Journey from "../components/journey/Journey";
 import styles from "../styles/auth/card-container.module.css";
 import NextButton from "./NextButton";
-import Search from "../groups/Search";
+import Search from "./create-group/Search";
 import PreviousButton from "./PreviousButton";
 
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
@@ -15,7 +15,7 @@ import { generateRandomID } from "../helpers";
 
 import { UserResults, GroupData, GroupMembershipData } from "../types";
 import SelectedBadge from "../components/SelectedBadge";
-import CreateGroupButton from "../groups/CreateGroupButton";
+import CreateGroupButton from "./create-group/CreateGroupButton";
 
 const Setup = () => {
   const [input, setInput] = useState<string>("");
