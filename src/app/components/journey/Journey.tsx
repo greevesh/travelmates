@@ -19,7 +19,6 @@ import {
   DateRange,
 } from "../../types";
 import { generateRandomID } from "../../helpers";
-import styles from "../../styles/journey/date-range-picker.module.css";
 import { getAuth } from "firebase/auth";
 
 const Journey = () => {
