@@ -19,7 +19,7 @@ import CreateGroupButton from "./create-group/CreateGroupButton";
 
 const Setup = () => {
   const [input, setInput] = useState<string>("");
-  const [selectedItems, setSelectedItems] = useState<UserResults[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<UserResults[]>([]);
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
   const [groupMemberships, setGroupMemberships] = useState<
     GroupMembershipData[]
@@ -106,13 +106,15 @@ const Setup = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    if (input) {
+      fetchUsers();
+    }
   }, [debouncedInput]);
 
   const handleSelect = (selectedItem: string): void => {
     setInput("");
-    // setSelectedItems((prevSelectedItems) => [
-    //   ...prevSelectedItems,
+    // setSelectedUsers((prevSelectedUsers) => [
+    //   ...prevSelectedUsers,
     //   {
     //     id: generateRandomID(),
     //     user_id: selectedUser,
@@ -130,23 +132,23 @@ const Setup = () => {
   }, [groupMemberships]);
 
   const handleDelete = (itemToDelete: string): void => {
-    setSelectedItems((prevSelectedItems) =>
-      prevSelectedItems.filter((item) => item !== itemToDelete)
+    setSelectedUsers((prevSelectedUsers) =>
+      prevSelectedUsers.filter((item) => item !== itemToDelete)
     );
   };
 
   useEffect(() => {
-    if (selectedItems.length === 0) {
+    if (selectedUsers.length === 0) {
       setEmptyInput(true);
     }
-  }, [selectedItems]);
+  }, [selectedUsers]);
 
   const handleSubmit = async (): Promise<void> => {
     try {
       await createGroup(group);
       await createGroupMemberships();
       setUsers([]);
-      setSelectedItems([]);
+      setSelectedUsers([]);
     } catch (error) {
       console.log(error);
     }
@@ -189,7 +191,7 @@ const Setup = () => {
                 handleChange={handleSearchChange}
                 users={users}
               />
-              {selectedItems.map((item) => (
+              {selectedUsers.map((item) => (
                 <SelectedBadge
                   key={item}
                   selectedItem={item}
