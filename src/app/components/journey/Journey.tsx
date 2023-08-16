@@ -17,6 +17,7 @@ import {
   JourneyData,
   Timestamp,
   DateRange,
+  SelectedDate,
 } from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
@@ -30,8 +31,8 @@ const Journey = () => {
     end: null,
   });
   const [timestamps, setTimestamps] = useState<Timestamp>({
-    start: null,
-    end: null,
+    start: undefined,
+    end: undefined,
   });
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
   const [spinnerVisible, setSpinnerVisible] = useState<boolean>(false);
@@ -46,13 +47,21 @@ const Journey = () => {
   useEffect(() => {
     console.log("Date Ranges: ", dateRange);
 
-    const startTimestamp = dateRange.start?.$d
-      ? firebaseTimestamp.fromDate(dateRange.start.$d).seconds
-      : null;
+    const selectedStartDate: Date | undefined = dateRange.start?.$d;
+    let startTimestamp: number | undefined;
+    selectedStartDate !== undefined
+      ? (startTimestamp = firebaseTimestamp.fromDate(selectedStartDate).seconds)
+      : undefined;
 
-    const endTimestamp = dateRange.end?.$d
-      ? firebaseTimestamp.fromDate(dateRange.end.$d).seconds
-      : null;
+    selectedStartDate ? console.log(startTimestamp) : null;
+
+    const selectedEndDate: Date | undefined = dateRange.end?.$d;
+    let endTimestamp: number | undefined;
+    selectedEndDate !== undefined
+      ? (endTimestamp = firebaseTimestamp.fromDate(selectedEndDate).seconds)
+      : undefined;
+
+    selectedEndDate ? console.log(endTimestamp) : null;
 
     setTimestamps({
       start: startTimestamp,
@@ -126,8 +135,8 @@ const Journey = () => {
   };
 
   const handleDateChange = (newDate: any): void => {
-    const startDate = newDate[0];
-    const endDate = newDate[1];
+    const startDate: SelectedDate = newDate[0];
+    const endDate: SelectedDate = newDate[1];
     setDateRange({
       start: startDate,
       end: endDate,
