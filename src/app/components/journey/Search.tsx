@@ -25,11 +25,13 @@ const Search: React.FC<SearchProps> = ({
       {input && (
         <Card style={{ width: "18rem" }}>
           <ListGroup variant="flush">
-            {geonamesList.map((name: string) => (
-              <ListGroup.Item onClick={() => handleSelect(name)} key={name}>
-                {name}
-              </ListGroup.Item>
-            ))}
+            {geonamesList !== undefined
+              ? geonamesList.map((name: string) => (
+                  <ListGroup.Item onClick={() => handleSelect(name)} key={name}>
+                    {name}
+                  </ListGroup.Item>
+                ))
+              : null}
           </ListGroup>
         </Card>
       )}
