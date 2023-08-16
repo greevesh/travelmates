@@ -138,6 +138,11 @@ export interface UserResults {
   displayName: string;
 }
 
+export interface SelectedUser {
+  id: string;
+  displayName: string;
+}
+
 export interface ColumnData {
   field: string;
   headerName: number;

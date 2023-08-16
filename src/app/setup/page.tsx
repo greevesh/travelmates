@@ -13,13 +13,18 @@ import { db } from "../../../firebase/app";
 
 import { generateRandomID } from "../helpers";
 
-import { UserResults, GroupData, GroupMembershipData } from "../types";
+import {
+  UserResults,
+  GroupData,
+  GroupMembershipData,
+  SelectedUser,
+} from "../types";
 import SelectedBadge from "../components/SelectedBadge";
 import CreateGroupButton from "./create-group/CreateGroupButton";
 
 const Setup = () => {
   const [input, setInput] = useState<string>("");
-  const [selectedUsers, setSelectedUsers] = useState<UserResults[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
   const [groupMemberships, setGroupMemberships] = useState<
     GroupMembershipData[]
@@ -79,7 +84,7 @@ const Setup = () => {
   const createGroupMemberships = async (): Promise<void> => {
     console.log(groupMembership);
     try {
-      users.forEach((user) => {
+      selectedUsers.forEach((user) => {
         const groupMembership: GroupMembershipData = {
           id: generateRandomID(),
           user_id: user.id,
@@ -111,29 +116,25 @@ const Setup = () => {
     }
   }, [debouncedInput]);
 
-  const handleSelect = (selectedItem: string): void => {
+  const handleSelect = (selectedUser: SelectedUser): void => {
     setInput("");
-    // setSelectedUsers((prevSelectedUsers) => [
-    //   ...prevSelectedUsers,
-    //   {
-    //     id: generateRandomID(),
-    //     user_id: selectedUser,
-    //     group_id: groupID,
-    //   }
-    // ]);
+    setSelectedUsers((prevSelectedUsers) => [
+      ...prevSelectedUsers,
+      {
+        id: selectedUser.id,
+        displayName: selectedUser.displayName,
+      },
+    ]);
     setEmptyInput(false);
-    // setGroupMemberships((prevMemberships) => [...prevMemberships, {
-    //
-    // }]);
   };
 
   useEffect(() => {
     console.log(groupMemberships);
   }, [groupMemberships]);
 
-  const handleDelete = (itemToDelete: string): void => {
+  const handleDelete = (userToDelete: SelectedUser): void => {
     setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.filter((item) => item !== itemToDelete)
+      prevSelectedUsers.filter((user) => user !== userToDelete)
     );
   };
 
