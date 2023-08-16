@@ -62,9 +62,24 @@ export interface SelectedBadgeProps {
   handleDelete: () => void;
 }
 
+export interface SelectedDate extends Date {
+  $D: number;
+  $H: number;
+  $L: string;
+  $M: number;
+  $W: number;
+  $d: Date;
+  $m: number;
+  $ms: number;
+  $s: number;
+  $u: undefined;
+  $x: object;
+  $y: number;
+}
+
 export interface DateRange {
-  start: Date | null;
-  end: Date | null;
+  start: SelectedDate | null;
+  end: SelectedDate | null;
 }
 
 export interface DateRangePickerComponentProps {
@@ -74,15 +89,15 @@ export interface DateRangePickerComponentProps {
 }
 
 export interface Timestamp {
-  start: number | null;
-  end: number | null;
+  start: number | undefined;
+  end: number | undefined;
 }
 
 export interface JourneyData {
   id: string;
   place: string;
-  startDate: number | null;
-  endDate: number | null;
+  startDate: number | undefined;
+  endDate: number | undefined;
   userID: string | undefined;
 }
 
