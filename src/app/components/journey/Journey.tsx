@@ -73,7 +73,7 @@ const Journey: React.FC = () => {
 
   let journey: JourneyData | null = null;
 
-  const fetchPlace = async (query: string): Promise<void> => {
+  const fetchLocation = async (query: string): Promise<void> => {
     const params: GeonameURLParams = {
       username: "greevesh",
       q: query,
@@ -105,14 +105,14 @@ const Journey: React.FC = () => {
     const startsWithCapital = (text: string): boolean => {
       return text[0] === text[0].toUpperCase();
     };
-    const filteredResults: Geoname[] = data.geonames.filter((place: Geoname) =>
-      startsWithCapital(place.name)
+    const filteredResults: Geoname[] = data.geonames.filter(
+      (location: Geoname) => startsWithCapital(location.name)
     );
-    const placeNames: string[] = filteredResults.map(
-      (place: Geoname) => place.name
+    const locationNames: string[] = filteredResults.map(
+      (location: Geoname) => location.name
     );
-    const uniquePlaceNames: string[] = [...new Set(placeNames)];
-    setGeonamesList(uniquePlaceNames);
+    const uniqueLocationNames: string[] = [...new Set(locationNames)];
+    setGeonamesList(uniqueLocationNames);
     console.log(geonamesList);
     console.log(data);
   };
@@ -125,7 +125,7 @@ const Journey: React.FC = () => {
 
   const handleSearchChange = (value: string): void => {
     setInput(value);
-    fetchPlace(value);
+    fetchLocation(value);
   };
 
   const handleDelete = (): void => {
@@ -156,7 +156,7 @@ const Journey: React.FC = () => {
 
   journey = {
     id: generateRandomID(),
-    place: selectedItem,
+    location: selectedItem,
     startDate: timestamps.start,
     endDate: timestamps.end,
     userID: getAuth().currentUser?.uid,
