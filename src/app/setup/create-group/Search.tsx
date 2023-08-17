@@ -29,10 +29,7 @@ const Search: React.FC<UserSearchProps> = ({
           <ListGroup variant="flush">
             {users && users.length > 0 ? (
               users.map((user, index) => (
-                <ListGroup.Item
-                  onClick={() => handleSelect(user.displayName)}
-                  key={index}
-                >
+                <ListGroup.Item onClick={() => handleSelect(user)} key={index}>
                   <Image
                     width="50"
                     height="50"

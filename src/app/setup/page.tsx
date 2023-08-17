@@ -192,11 +192,11 @@ const Setup = () => {
                 handleChange={handleSearchChange}
                 users={users}
               />
-              {selectedUsers.map((item) => (
+              {selectedUsers.map((user) => (
                 <SelectedBadge
-                  key={item}
-                  selectedItem={item}
-                  handleDelete={() => handleDelete(item)}
+                  key={user}
+                  selectedItem={user.displayName}
+                  handleDelete={() => handleDelete(user)}
                 />
               ))}
               <CreateGroupButton
