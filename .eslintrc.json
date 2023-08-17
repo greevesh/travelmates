@@ -6,6 +6,23 @@
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "no-unused-vars": "off",
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "import/no-unresolved": [
+      "error",
+      { "commonjs": true, "caseSensitive": true }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [["builtin", "external", "internal"]]
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "moduleDirectory": ["node_modules", "src"]
+      }
+    }
   }
 }
