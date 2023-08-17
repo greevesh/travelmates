@@ -49,10 +49,9 @@ export interface GeonameURLParams {
   featureCode: string;
 }
 
-export interface SearchProps {
+export interface LocationSearchProps {
   input: string;
-  geonamesList?: string[];
-  users?: UserResults[];
+  geonamesList: string[];
   handleChange: (value: string) => void;
   handleSelect: (selectedItem: string) => void;
 }
@@ -130,6 +129,13 @@ export interface GroupMembershipData {
   id: string;
   user_id: string | undefined;
   group_id: string;
+}
+
+export interface UserSearchProps {
+  input: string;
+  users: UserResults[];
+  handleChange: (value: string) => void;
+  handleSelect: (selectedItem: UserResults) => void;
 }
 
 export interface UserResults {
