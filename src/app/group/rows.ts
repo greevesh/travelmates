@@ -1,4 +1,4 @@
-import { Row } from "../types";
+import { Row } from "src/app/types";
 
 const rows: Row[] = [
   {

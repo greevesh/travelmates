@@ -1,6 +1,6 @@
 import React from "react";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { SelectedDate, DateRangePickerComponentProps } from "../../types";
+import { SelectedDate, DateRangePickerComponentProps } from "src/app/types";
 
 const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
   startDate,

@@ -1,4 +1,4 @@
-import Journey from "../components/journey/Journey";
+import Journey from "src/app/components/journey/Journey";
 
 const JourneyPage = () => {
   return <Journey />;

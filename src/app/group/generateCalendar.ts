@@ -1,5 +1,5 @@
 import { startOfMonth, endOfMonth, eachDayOfInterval, format } from "date-fns";
-import { CalendarDay } from "../types";
+import { CalendarDay } from "src/app/types";
 
 const generateCalendar = (year: number, month: number): CalendarDay[] => {
   const startDate: Date = startOfMonth(new Date(year, month));

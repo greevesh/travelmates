@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
-import firebaseConfig from "@root/firebase/config";
+import { initializeApp } from "node_modules/firebase/app";
+import firebaseConfig from "@/firebase/config";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
@@ -12,7 +12,7 @@ import generateCalendar from "./generateCalendar";
 import { slotColumnCommonFields, months, generatedColumns } from "./columns";
 import { rootStyles } from "./rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { CalendarDay, Row } from "../types";
+import { CalendarDay, Row } from "src/app/types";
 
 initializeApp(firebaseConfig);
 

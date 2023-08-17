@@ -9,7 +9,7 @@ import {
   doc,
   Timestamp as firebaseTimestamp,
 } from "firebase/firestore";
-import { db } from "@root/firebase/app";
+import { db } from "firebase/app";
 import {
   Geoname,
   GeonameResponse,
@@ -18,8 +18,8 @@ import {
   Timestamp,
   DateRange,
   SelectedDate,
-} from "../../types";
-import { generateRandomID } from "../../helpers";
+} from "src/app/types";
+import { generateRandomID } from "src/app/helpers";
 import { getAuth } from "firebase/auth";
 
 const Journey: React.FC = () => {

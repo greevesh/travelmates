@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { PreviousButtonProps } from "../types";
+import { PreviousButtonProps } from "src/app/types";
 
 const PreviousButton: React.FC<PreviousButtonProps> = ({ decrementStep }) => {
   return (

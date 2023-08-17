@@ -1,4 +1,4 @@
-import { RootStyles } from "../types";
+import { RootStyles } from "src/app/types";
 
 export const rootStyles: RootStyles = {
   width: "100%",
