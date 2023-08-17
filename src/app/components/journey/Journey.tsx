@@ -8,6 +8,8 @@ import {
   setDoc,
   doc,
   Timestamp as firebaseTimestamp,
+  getFirestore,
+  collection,
 } from "firebase/firestore";
 import { db } from "@root/firebase/app";
 import {
@@ -21,6 +23,8 @@ import {
 } from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
+import { initializeApp, FirebaseApp } from "node_modules/firebase/app";
+import firebaseConfig from "@/firebase/config";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -36,6 +40,8 @@ const Journey: React.FC = () => {
   });
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
   const [spinnerVisible, setSpinnerVisible] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
@@ -92,11 +98,14 @@ const Journey: React.FC = () => {
     try {
       const response: Response = await fetch(apiURL);
       if (!response.ok) {
-        throw new Error("Request failed");
+        setError(true);
+        setErrorMessage("Network error");
       }
       const data: GeonameResponse = await response.json();
       filterResults(data);
     } catch (error) {
+      setError(true);
+      setErrorMessage("Couldn't retrieve locations");
       console.error("Error:", error);
     }
   };
@@ -150,6 +159,9 @@ const Journey: React.FC = () => {
       clearForm();
       setSpinnerVisible(false);
     } catch (error) {
+      setSpinnerVisible(false);
+      setError(true);
+      setErrorMessage("There was a problem creating a journey");
       console.log(error);
     }
   };
@@ -164,7 +176,7 @@ const Journey: React.FC = () => {
 
   const createJourney = async (journey: JourneyData | null): Promise<void> => {
     console.log(journey);
-    if (journey !== null) {
+    if (journey) {
       try {
         await setDoc(doc(db, "journeys", journey.id), journey);
         console.log("Journey document written successfully!", journey);
@@ -173,6 +185,8 @@ const Journey: React.FC = () => {
       } catch (error) {
         console.error("Error writing document: ", error);
       }
+    } else {
+      console.log("Journey has a null value and it shouldn't");
     }
   };
 
@@ -212,6 +226,7 @@ const Journey: React.FC = () => {
         handleSubmit={handleSubmit}
         spinnerVisible={spinnerVisible}
       />
+      {error ? errorMessage : null}
     </div>
   );
 };
