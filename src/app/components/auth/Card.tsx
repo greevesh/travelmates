@@ -1,7 +1,7 @@
 "use client";
 import Card from "react-bootstrap/Card";
-import styles from "../../styles/auth/card-container.module.css";
-import SignInGoogleBtn from "../auth/SignInGoogleBtn";
+import styles from "src/app/styles/auth/card-container.module.css";
+import SignInGoogleBtn from "src/app/components/auth/SignInGoogleBtn";
 
 const AuthCard = () => {
   return (
