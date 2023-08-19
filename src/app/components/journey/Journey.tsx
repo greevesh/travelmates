@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Search from "./Search";
 import SelectedBadge from "../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
@@ -21,11 +21,13 @@ import {
 } from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
+import formatDate from "./formatDate";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>("");
+  const selectedJourneyBadge = useRef<HTMLElement | null>(null);
   const [dateRange, setDateRange] = useState<DateRange>({
     start: null,
     end: null,
@@ -125,8 +127,9 @@ const Journey: React.FC = () => {
 
   const handleDelete = (): void => {
     setSelectedItem("");
-    const badge: HTMLElement | null = document.getElementById("badge");
-    badge ? (badge.style.display = "none") : null;
+    selectedJourneyBadge.current
+      ? (selectedJourneyBadge.current.style.display = "none")
+      : null;
   };
 
   const handleDateChange = (newDate: SelectedDate[]): void => {
