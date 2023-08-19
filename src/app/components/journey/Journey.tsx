@@ -8,8 +8,6 @@ import {
   setDoc,
   doc,
   Timestamp as firebaseTimestamp,
-  getFirestore,
-  collection,
 } from "firebase/firestore";
 import { db } from "@root/firebase/app";
 import {
@@ -23,8 +21,6 @@ import {
 } from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
-import { initializeApp, FirebaseApp } from "node_modules/firebase/app";
-import firebaseConfig from "@/firebase/config";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -48,19 +44,14 @@ const Journey: React.FC = () => {
     selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
       ? setEmptyInput(false)
       : setEmptyInput(true);
-    console.log("is input empty?", emptyInput);
   }, [selectedItem, dateRange]);
 
   useEffect(() => {
-    console.log("Date Ranges: ", dateRange);
-
     const selectedStartDate: Date | undefined = dateRange.start?.$d;
     let startTimestamp: number | undefined;
     selectedStartDate !== undefined
       ? (startTimestamp = firebaseTimestamp.fromDate(selectedStartDate).seconds)
       : undefined;
-
-    selectedStartDate ? console.log(startTimestamp) : null;
 
     const selectedEndDate: Date | undefined = dateRange.end?.$d;
     let endTimestamp: number | undefined;
@@ -68,14 +59,10 @@ const Journey: React.FC = () => {
       ? (endTimestamp = firebaseTimestamp.fromDate(selectedEndDate).seconds)
       : undefined;
 
-    selectedEndDate ? console.log(endTimestamp) : null;
-
     setTimestamps({
       start: startTimestamp,
       end: endTimestamp,
     });
-
-    console.log("Timestamps: ", timestamps);
   }, [dateRange]);
 
   let journey: JourneyData | null = null;
@@ -123,8 +110,6 @@ const Journey: React.FC = () => {
     );
     const uniqueLocationNames: string[] = [...new Set(locationNames)];
     setGeonamesList(uniqueLocationNames);
-    console.log(geonamesList);
-    console.log(data);
   };
 
   const handleSelect = (selectedItem: string): void => {
@@ -175,7 +160,6 @@ const Journey: React.FC = () => {
       setSpinnerVisible(false);
       setError(true);
       setErrorMessage("There was a problem creating a journey");
-      console.log(error);
     }
   };
 
@@ -188,18 +172,13 @@ const Journey: React.FC = () => {
   };
 
   const createJourney = async (journey: JourneyData | null): Promise<void> => {
-    console.log(journey);
     if (journey) {
       try {
         await setDoc(doc(db, "journeys", journey.id), journey);
-        console.log("Journey document written successfully!", journey);
-        console.log("before: ", dateRange);
-        console.log("after: ", dateRange);
       } catch (error) {
         console.error("Error writing document: ", error);
       }
     } else {
-      console.log("Journey has a null value and it shouldn't");
     }
   };
 
@@ -225,8 +204,6 @@ const Journey: React.FC = () => {
     }
     return "";
   };
-
-  console.log(formatDate(journey.startDate));
 
   return (
     <div>
