@@ -93,8 +93,8 @@ export interface Timestamp {
 }
 
 export interface JourneyData {
-  id: string;
-  location: string;
+  id: string | undefined;
+  location: string | undefined;
   startDate: number | undefined;
   endDate: number | undefined;
   userID: string | undefined;

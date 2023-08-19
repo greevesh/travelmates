@@ -42,6 +42,7 @@ const Journey: React.FC = () => {
   const [spinnerVisible, setSpinnerVisible] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [createdJourneys, setCreatedJourneys] = useState<JourneyData[]>([]);
 
   useEffect(() => {
     selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
@@ -158,6 +159,18 @@ const Journey: React.FC = () => {
       await createJourney(journey);
       clearForm();
       setSpinnerVisible(false);
+      if (journey) {
+        setCreatedJourneys((prevCreatedJourneys) => [
+          ...prevCreatedJourneys,
+          {
+            id: journey?.id,
+            location: journey?.location,
+            startDate: journey?.startDate,
+            endDate: journey?.endDate,
+            userID: journey?.userID,
+          },
+        ]);
+      }
     } catch (error) {
       setSpinnerVisible(false);
       setError(true);
@@ -199,7 +212,21 @@ const Journey: React.FC = () => {
     setEmptyInput(true);
   };
 
-  console.log(dateRange);
+  const formatDate = (timestamp: number | undefined): string => {
+    if (timestamp !== undefined) {
+      const date = new Date(timestamp * 1000);
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      };
+      return date.toLocaleString("en-GB", options);
+    }
+    return "";
+  };
+
+  console.log(formatDate(journey.startDate));
 
   return (
     <div>
@@ -227,6 +254,14 @@ const Journey: React.FC = () => {
         spinnerVisible={spinnerVisible}
       />
       {error ? errorMessage : null}
+      {createdJourneys.length > 0
+        ? createdJourneys.map((createdJourney, index) => (
+            <div key={index}>
+              {createdJourney.location} - {formatDate(createdJourney.startDate)}{" "}
+              - {formatDate(createdJourney.endDate)}
+            </div>
+          ))
+        : null}
     </div>
   );
 };
