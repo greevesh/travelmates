@@ -23,6 +23,7 @@ import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
 import fetchLocation from "./fetchLocation";
+import createJourney from "./createJourney";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -128,17 +129,6 @@ const Journey: React.FC = () => {
     startDate: timestamps.start,
     endDate: timestamps.end,
     userID: getAuth().currentUser?.uid,
-  };
-
-  const createJourney = async (journey: JourneyData | null): Promise<void> => {
-    if (journey) {
-      try {
-        await setDoc(doc(db, "journeys", journey.id), journey);
-      } catch (error) {
-        console.error("Error writing document: ", error);
-      }
-    } else {
-    }
   };
 
   const clearForm = (): void => {
