@@ -22,6 +22,7 @@ import {
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
+import fetchLocation from "./fetchLocation";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -69,51 +70,6 @@ const Journey: React.FC = () => {
 
   let journey: JourneyData | null = null;
 
-  const fetchLocation = async (query: string): Promise<void> => {
-    const params: GeonameURLParams = {
-      username: "greevesh",
-      q: query,
-      maxRows: "10",
-      orderBy: "name",
-      name_startsWith: query,
-      featureCode: "PPL", // filters cities, filters out countries
-    };
-
-    const apiURL: URL = new URL("http://api.geonames.org/searchJSON");
-
-    Object.entries(params).forEach(([key, value]) => {
-      apiURL.searchParams.set(key, value);
-    });
-
-    try {
-      const response: Response = await fetch(apiURL);
-      if (!response.ok) {
-        setError(true);
-        setErrorMessage("Network error");
-      }
-      const data: GeonameResponse = await response.json();
-      filterResults(data);
-    } catch (error) {
-      setError(true);
-      setErrorMessage("Couldn't retrieve locations");
-      console.error("Error:", error);
-    }
-  };
-
-  const filterResults = (data: GeonameResponse): void => {
-    const startsWithCapital = (text: string): boolean => {
-      return text[0] === text[0].toUpperCase();
-    };
-    const filteredResults: Geoname[] = data.geonames.filter(
-      (location: Geoname) => startsWithCapital(location.name)
-    );
-    const locationNames: string[] = filteredResults.map(
-      (location: Geoname) => location.name
-    );
-    const uniqueLocationNames: string[] = [...new Set(locationNames)];
-    setGeonamesList(uniqueLocationNames);
-  };
-
   const handleSelect = (selectedItem: string): void => {
     setInput("");
     setSelectedItem(selectedItem);
@@ -122,7 +78,7 @@ const Journey: React.FC = () => {
 
   const handleSearchChange = (value: string): void => {
     setInput(value);
-    fetchLocation(value);
+    fetchLocation(value, setError, setErrorMessage, setGeonamesList);
   };
 
   const handleDelete = (): void => {
