@@ -1,4 +1,5 @@
 import { GeonameResponse, GeonameURLParams } from "../../types";
+import generateLocationParams from "./generateLocationParams";
 import filterResults from "./filterResults";
 
 const fetchLocation = async (
@@ -7,16 +8,9 @@ const fetchLocation = async (
   setErrorMessage: any,
   setGeonamesList: React.Dispatch<React.SetStateAction<string[]>>
 ): Promise<void> => {
-  const params: GeonameURLParams = {
-    username: "greevesh",
-    q: query,
-    maxRows: "10",
-    orderBy: "name",
-    name_startsWith: query,
-    featureCode: "PPL", // filters cities, filters out countries
-  };
-
   const apiURL: URL = new URL("http://api.geonames.org/searchJSON");
+
+  const params = generateLocationParams(query);
 
   Object.entries(params).forEach(([key, value]) => {
     apiURL.searchParams.set(key, value);
