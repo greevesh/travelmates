@@ -10,7 +10,10 @@ const CreateJourneyButton: React.FC<CreateJourneyButtonProps> = ({
   spinnerVisible,
 }) => {
   return (
-    <Button disabled={emptyInput} onClick={() => handleSubmit()}>
+    <Button
+      disabled={emptyInput || spinnerVisible}
+      onClick={() => handleSubmit()}
+    >
       Create Journey
       {spinnerVisible ? <SpinnerComponent /> : null}
     </Button>
