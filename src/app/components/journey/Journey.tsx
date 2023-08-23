@@ -4,21 +4,8 @@ import Search from "./Search";
 import SelectedBadge from "../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
-import {
-  setDoc,
-  doc,
-  Timestamp as firebaseTimestamp,
-} from "firebase/firestore";
-import { db } from "@root/firebase/app";
-import {
-  Geoname,
-  GeonameResponse,
-  GeonameURLParams,
-  JourneyData,
-  Timestamp,
-  DateRange,
-  SelectedDate,
-} from "../../types";
+import { Timestamp as firebaseTimestamp } from "firebase/firestore";
+import { JourneyData, Timestamp, DateRange, SelectedDate } from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
