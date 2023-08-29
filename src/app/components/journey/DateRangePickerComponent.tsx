@@ -11,8 +11,9 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
   endDate,
   handleDateChange,
 }) => {
-  const [selectedStartDates, setSelectedStartDates] = useState<string[]>([]);
-  const [selectedEndDates, setSelectedEndDates] = useState<string[]>([]);
+  const [selectedDateRanges, setSelectedDateRanges] = useState<
+    { start: Date; end: Date }[]
+  >([]);
 
   const getSelectedDates = async () => {
     const currentUserID = getAuth().currentUser?.uid;
@@ -22,22 +23,28 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
         where("userID", "==", currentUserID)
       );
       const querySnapshot = await getDocs(q);
-      const startDates: string[] = [];
-      const endDates: string[] = [];
+      const dateRanges: { start: Date; end: Date }[] = [];
       querySnapshot.forEach((doc) => {
-        const sd = new Date(doc.data().startDate * 1000).toDateString();
-        startDates.push(sd);
-        const ed = new Date(doc.data().endDate * 1000).toDateString();
-        endDates.push(ed);
+        const startDate = new Date(doc.data().startDate * 1000);
+        const endDate = new Date(doc.data().endDate * 1000);
+        dateRanges.push({ start: startDate, end: endDate });
       });
-      setSelectedStartDates(startDates);
-      setSelectedEndDates(endDates);
+      setSelectedDateRanges(dateRanges);
     }
   };
 
+  const isDateInRange = (date: Date): boolean => {
+    for (const dateRange of selectedDateRanges) {
+      if (date >= dateRange.start && date <= dateRange.end) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const isSelected = (date: Dayjs) => {
-    const stringifiedDate = date.toDate().toDateString();
-    return selectedStartDates.includes(stringifiedDate);
+    const selectedDate = date.toDate();
+    return isDateInRange(selectedDate);
   };
 
   useEffect(() => {
@@ -45,12 +52,8 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
   }, []);
 
   useEffect(() => {
-    console.log("Selected Start Dates:", selectedStartDates);
-  }, [selectedStartDates]);
-
-  useEffect(() => {
-    console.log("Selected End Dates:", selectedEndDates);
-  }, [selectedEndDates]);
+    console.log("Selected Date Ranges:", selectedDateRanges);
+  }, [selectedDateRanges]);
 
   return (
     <DateRangePicker
