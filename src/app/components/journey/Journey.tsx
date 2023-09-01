@@ -4,6 +4,7 @@ import Search from "./Search";
 import SelectedBadge from "../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
+import CreatedJourneyBadge from "../CreatedJourneyBadge";
 import { Timestamp as firebaseTimestamp } from "firebase/firestore";
 import { JourneyData, Timestamp, DateRange, SelectedDate } from "../../types";
 import { generateRandomID } from "../../helpers";
@@ -30,6 +31,8 @@ const Journey: React.FC = () => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [createdJourneys, setCreatedJourneys] = useState<JourneyData[]>([]);
+
+  console.log(createdJourneys);
 
   useEffect(() => {
     selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
@@ -97,8 +100,10 @@ const Journey: React.FC = () => {
           {
             id: journey?.id,
             location: journey?.location,
-            startDate: journey?.startDate,
-            endDate: journey?.endDate,
+            dateRange: {
+              startDate: journey?.dateRange.startDate,
+              endDate: journey?.dateRange.endDate,
+            },
             userID: journey?.userID,
           },
         ]);
@@ -113,8 +118,10 @@ const Journey: React.FC = () => {
   journey = {
     id: generateRandomID(),
     location: selectedItem,
-    startDate: timestamps.start,
-    endDate: timestamps.end,
+    dateRange: {
+      startDate: timestamps.start,
+      endDate: timestamps.end,
+    },
     userID: getAuth().currentUser?.uid,
   };
 
@@ -155,12 +162,18 @@ const Journey: React.FC = () => {
       {error ? errorMessage : null}
       {createdJourneys.length > 0
         ? createdJourneys.map((createdJourney, index) => (
-            <div key={index}>
-              {createdJourney.location} - {formatDate(createdJourney.startDate)}{" "}
-              - {formatDate(createdJourney.endDate)}
-            </div>
+            <CreatedJourneyBadge
+              key={index}
+              location={createdJourney.location}
+              startDate={formatDate(createdJourney.dateRange.startDate)}
+              endDate={formatDate(createdJourney.dateRange.endDate)}
+              journey={journey}
+              setCreatedJourneys={setCreatedJourneys}
+              createdJourneys={createdJourneys}
+            />
           ))
         : null}
+      ˝
     </div>
   );
 };
