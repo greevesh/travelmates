@@ -12,6 +12,8 @@ import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
 import fetchLocation from "./fetchLocation";
 import createJourney from "./createJourney";
+import { query, collection, where, getDocs } from "firebase/firestore";
+import { db } from "@root/firebase/app";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -32,7 +34,34 @@ const Journey: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [createdJourneys, setCreatedJourneys] = useState<JourneyData[]>([]);
 
-  console.log(createdJourneys);
+  const fetchJourneyFromDB = async (): Promise<JourneyData[]> => {
+    const currentUserID = localStorage.getItem("userID");
+    if (currentUserID) {
+      const q = query(
+        collection(db, "journeys"),
+        where("userID", "==", currentUserID)
+      );
+      const querySnapshot = await getDocs(q);
+      const journeyData: JourneyData[] = [];
+      querySnapshot.forEach((doc) => {
+        const location: string = doc.data().location;
+        const startDate = new Date(doc.data().startDate * 1000);
+        const endDate = new Date(doc.data().endDate * 1000);
+        journeyData.push({ location, startDate, endDate });
+      });
+      console.log(journeyData);
+      return journeyData;
+    } else {
+      console.log("User not authenticated");
+      throw new Error("User not authenticated");
+    }
+  };
+
+  console.log(localStorage.getItem("userID"));
+
+  useEffect(() => {
+    fetchJourneyFromDB();
+  }, []);
 
   useEffect(() => {
     selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
@@ -173,7 +202,6 @@ const Journey: React.FC = () => {
             />
           ))
         : null}
-      ˝
     </div>
   );
 };
