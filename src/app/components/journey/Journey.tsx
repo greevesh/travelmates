@@ -6,7 +6,13 @@ import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
 import CreatedJourneyBadge from "../CreatedJourneyBadge";
 import { Timestamp as firebaseTimestamp } from "firebase/firestore";
-import { JourneyData, Timestamp, DateRange, SelectedDate } from "../../types";
+import {
+  JourneyGetData,
+  JourneyPostData,
+  Timestamp,
+  DateRange,
+  SelectedDate,
+} from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
@@ -32,35 +38,44 @@ const Journey: React.FC = () => {
   const [spinnerVisible, setSpinnerVisible] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [createdJourneys, setCreatedJourneys] = useState<JourneyData[]>([]);
+  const [journeyDataLoaded, setJourneyDataLoaded] = useState(false);
+  const [journeyData, setJourneyData] = useState<JourneyGetData[]>([]);
 
-  const fetchJourneyFromDB = async (): Promise<JourneyData[]> => {
+  const fetchJourneys = async (): Promise<void> => {
     const currentUserID = localStorage.getItem("userID");
+
     if (currentUserID) {
       const q = query(
         collection(db, "journeys"),
         where("userID", "==", currentUserID)
       );
+
       const querySnapshot = await getDocs(q);
-      const journeyData: JourneyData[] = [];
+
       querySnapshot.forEach((doc) => {
         const location: string = doc.data().location;
         const startDate = new Date(doc.data().startDate * 1000);
         const endDate = new Date(doc.data().endDate * 1000);
-        journeyData.push({ location, startDate, endDate });
+
+        const newJourneyData: JourneyGetData = {
+          location,
+          dateRange: { startDate, endDate },
+        };
+
+        setJourneyData((prevJourneyData) => [
+          ...prevJourneyData,
+          newJourneyData,
+        ]);
+
+        setJourneyDataLoaded(true);
       });
-      console.log(journeyData);
-      return journeyData;
     } else {
-      console.log("User not authenticated");
-      throw new Error("User not authenticated");
+      console.log("User isn't authenticated");
     }
   };
 
-  console.log(localStorage.getItem("userID"));
-
   useEffect(() => {
-    fetchJourneyFromDB();
+    fetchJourneys();
   }, []);
 
   useEffect(() => {
@@ -88,7 +103,8 @@ const Journey: React.FC = () => {
     });
   }, [dateRange]);
 
-  let journey: JourneyData | null = null;
+  let journeyGet: JourneyGetData | null = null;
+  let journeyPost: JourneyPostData | null = null;
 
   const handleSelect = (selectedItem: string): void => {
     setInput("");
@@ -120,20 +136,18 @@ const Journey: React.FC = () => {
   const handleSubmit = async (): Promise<void> => {
     try {
       setSpinnerVisible(true);
-      await createJourney(journey);
+      await createJourney(journeyPost);
       clearForm();
       setSpinnerVisible(false);
-      if (journey) {
-        setCreatedJourneys((prevCreatedJourneys) => [
-          ...prevCreatedJourneys,
+      if (journeyGet) {
+        setJourneyData((journeyData) => [
+          ...journeyData,
           {
-            id: journey?.id,
-            location: journey?.location,
+            location: journeyGet?.location,
             dateRange: {
-              startDate: journey?.dateRange.startDate,
-              endDate: journey?.dateRange.endDate,
+              startDate: journeyGet?.dateRange.startDate,
+              endDate: journeyGet?.dateRange.endDate,
             },
-            userID: journey?.userID,
           },
         ]);
       }
@@ -144,7 +158,7 @@ const Journey: React.FC = () => {
     }
   };
 
-  journey = {
+  journeyPost = {
     id: generateRandomID(),
     location: selectedItem,
     dateRange: {
@@ -184,24 +198,28 @@ const Journey: React.FC = () => {
       />
       <CreateJourneyButton
         emptyInput={emptyInput}
-        journey={journey}
+        journey={journeyPost}
         handleSubmit={handleSubmit}
         spinnerVisible={spinnerVisible}
       />
       {error ? errorMessage : null}
-      {createdJourneys.length > 0
-        ? createdJourneys.map((createdJourney, index) => (
+      {journeyDataLoaded ? (
+        journeyData.length > 0 ? (
+          journeyData.map((journey, index) => (
             <CreatedJourneyBadge
               key={index}
-              location={createdJourney.location}
-              startDate={formatDate(createdJourney.dateRange.startDate)}
-              endDate={formatDate(createdJourney.dateRange.endDate)}
-              journey={journey}
-              setCreatedJourneys={setCreatedJourneys}
-              createdJourneys={createdJourneys}
+              location={journey.location}
+              startDate={journey.dateRange.startDate?.toDateString()}
+              endDate={journey.dateRange.endDate?.toDateString()}
+              journey={journeyGet}
             />
           ))
-        : null}
+        ) : (
+          <p>No journeys found.</p>
+        )
+      ) : (
+        <p>Loading journeys...</p>
+      )}
     </div>
   );
 };
