@@ -137,20 +137,9 @@ const Journey: React.FC = () => {
     try {
       setSpinnerVisible(true);
       await createJourney(journeyPost);
+      await fetchJourneys();
       clearForm();
       setSpinnerVisible(false);
-      if (journeyGet) {
-        setJourneyData((journeyData) => [
-          ...journeyData,
-          {
-            location: journeyGet?.location,
-            dateRange: {
-              startDate: journeyGet?.dateRange.startDate,
-              endDate: journeyGet?.dateRange.endDate,
-            },
-          },
-        ]);
-      }
     } catch (error) {
       setSpinnerVisible(false);
       setError(true);
