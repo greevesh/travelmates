@@ -92,11 +92,10 @@ const Journey: React.FC = () => {
       const currentUserID = localStorage.getItem("userID");
 
       if (currentUserID) {
-        // Create a query that orders the documents by a timestamp field in descending order
         const q = query(
           collection(db, "journeys"),
           where("userID", "==", currentUserID),
-          orderBy("startDate", "desc"),
+          orderBy("created", "desc"),
           limit(1)
         );
 
@@ -106,14 +105,16 @@ const Journey: React.FC = () => {
           const lastDocument = querySnapshot.docs[0];
           const data = lastDocument.data();
 
-          // Update the state with the last entry
+          const startDate = new Date(data.dateRange?.startDate * 1000); // Use toDate() method
+          const endDate = new Date(data.dateRange?.endDate * 1000);
+
           setJourneyData((prevJourneyData) => [
             ...prevJourneyData,
             {
               location: data.location,
               dateRange: {
-                startDate: new Date(data.startDate.seconds * 1000),
-                endDate: new Date(data.endDate.seconds * 1000),
+                startDate,
+                endDate,
               },
             },
           ]);
