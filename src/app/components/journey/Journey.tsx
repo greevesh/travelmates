@@ -161,17 +161,14 @@ const Journey: React.FC = () => {
   }, [dateRange]);
 
   useEffect(() => {
-    // Your existing code here...
-
-    // Add a setTimeout to display "No journeys found" after a certain period
     const timeoutId = setTimeout(() => {
       if (!journeyDataLoaded) {
         setShowNoJourneys(true);
       }
-    }, 5000); // Adjust the timeout duration as needed (in milliseconds)
+    }, 10000);
 
     return () => {
-      clearTimeout(timeoutId); // Clear the timeout when the component unmounts
+      clearTimeout(timeoutId);
     };
   }, []);
 
