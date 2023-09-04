@@ -54,8 +54,10 @@ const Journey: React.FC = () => {
 
       querySnapshot.forEach((doc) => {
         const location: string = doc.data().location;
-        const startDate = new Date(doc.data().startDate * 1000);
-        const endDate = new Date(doc.data().endDate * 1000);
+        const startDate: Date = new Date(
+          doc.data().dateRange?.startDate * 1000
+        );
+        const endDate: Date = new Date(doc.data().dateRange?.endDate * 1000);
 
         const newJourneyData: JourneyGetData = {
           location,
