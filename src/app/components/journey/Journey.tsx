@@ -119,6 +119,8 @@ const Journey: React.FC = () => {
             },
           ]);
 
+          setJourneyDataLoaded(true);
+
           console.log("Last Entry Data:", data);
         } else {
           console.log("No documents found in the collection.");
