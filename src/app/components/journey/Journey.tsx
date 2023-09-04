@@ -18,7 +18,14 @@ import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
 import fetchLocation from "./fetchLocation";
 import createJourney from "./createJourney";
-import { query, collection, where, getDocs } from "firebase/firestore";
+import {
+  query,
+  collection,
+  where,
+  getDocs,
+  orderBy,
+  limit,
+} from "firebase/firestore";
 import { db } from "@root/firebase/app";
 
 const Journey: React.FC = () => {
@@ -41,9 +48,9 @@ const Journey: React.FC = () => {
   const [journeyDataLoaded, setJourneyDataLoaded] = useState(false);
   const [journeyData, setJourneyData] = useState<JourneyGetData[]>([]);
 
-  const fetchJourneys = async (): Promise<void> => {
-    const currentUserID = localStorage.getItem("userID");
+  const currentUserID = localStorage.getItem("userID");
 
+  const fetchJourneys = async (): Promise<void> => {
     if (currentUserID) {
       const q = query(
         collection(db, "journeys"),
@@ -73,6 +80,49 @@ const Journey: React.FC = () => {
       });
     } else {
       console.log("User isn't authenticated");
+    }
+  };
+
+  const getLastEntry = async () => {
+    try {
+      const currentUserID = localStorage.getItem("userID");
+
+      if (currentUserID) {
+        // Create a query that orders the documents by a timestamp field in descending order
+        const q = query(
+          collection(db, "journeys"),
+          where("userID", "==", currentUserID),
+          orderBy("startDate", "desc"),
+          limit(1)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const lastDocument = querySnapshot.docs[0];
+          const data = lastDocument.data();
+
+          // Update the state with the last entry
+          setJourneyData((prevJourneyData) => [
+            ...prevJourneyData,
+            {
+              location: data.location,
+              dateRange: {
+                startDate: new Date(data.startDate.seconds * 1000),
+                endDate: new Date(data.endDate.seconds * 1000),
+              },
+            },
+          ]);
+
+          console.log("Last Entry Data:", data);
+        } else {
+          console.log("No documents found in the collection.");
+        }
+      } else {
+        console.log("User isn't authenticated");
+      }
+    } catch (error) {
+      console.error("Error getting last entry:", error);
     }
   };
 
@@ -139,7 +189,7 @@ const Journey: React.FC = () => {
     try {
       setSpinnerVisible(true);
       await createJourney(journeyPost);
-      await fetchJourneys();
+      await getLastEntry();
       clearForm();
       setSpinnerVisible(false);
     } catch (error) {
