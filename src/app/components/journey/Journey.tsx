@@ -260,6 +260,7 @@ const Journey: React.FC = () => {
         journey={journeyPost}
         handleSubmit={handleSubmit}
         spinnerVisible={spinnerVisible}
+        journeyCount={journeyData.length}
       />
       {error ? errorMessage : null}
       {journeyDataLoaded && journeyData.length > 0 ? (

@@ -171,7 +171,7 @@ const Setup = () => {
         <Card.Body>
           {step === 1 ? (
             <>
-              <Card.Title>Create a Journey</Card.Title>
+              <Card.Title>Create a Journey (max 5)</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
                 So your mates will know where you&lsquo;ll be
               </Card.Subtitle>
