@@ -5,7 +5,10 @@ import SelectedBadge from "../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
 import CreatedJourneyBadge from "../CreatedJourneyBadge";
-import { Timestamp as firebaseTimestamp } from "firebase/firestore";
+import {
+  Timestamp as firebaseTimestamp,
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   JourneyGetData,
   JourneyPostData,
@@ -47,6 +50,7 @@ const Journey: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [journeyDataLoaded, setJourneyDataLoaded] = useState(false);
   const [journeyData, setJourneyData] = useState<JourneyGetData[]>([]);
+  const [showNoJourneys, setShowNoJourneys] = useState(false);
 
   const currentUserID = localStorage.getItem("userID");
 
@@ -155,6 +159,21 @@ const Journey: React.FC = () => {
     });
   }, [dateRange]);
 
+  useEffect(() => {
+    // Your existing code here...
+
+    // Add a setTimeout to display "No journeys found" after a certain period
+    const timeoutId = setTimeout(() => {
+      if (!journeyDataLoaded) {
+        setShowNoJourneys(true);
+      }
+    }, 5000); // Adjust the timeout duration as needed (in milliseconds)
+
+    return () => {
+      clearTimeout(timeoutId); // Clear the timeout when the component unmounts
+    };
+  }, []);
+
   let journeyGet: JourneyGetData | null = null;
   let journeyPost: JourneyPostData | null = null;
 
@@ -207,6 +226,7 @@ const Journey: React.FC = () => {
       endDate: timestamps.end,
     },
     userID: getAuth().currentUser?.uid,
+    created: serverTimestamp(),
   };
 
   const clearForm = (): void => {
@@ -244,20 +264,18 @@ const Journey: React.FC = () => {
         spinnerVisible={spinnerVisible}
       />
       {error ? errorMessage : null}
-      {journeyDataLoaded ? (
-        journeyData.length > 0 ? (
-          journeyData.map((journey, index) => (
-            <CreatedJourneyBadge
-              key={index}
-              location={journey.location}
-              startDate={journey.dateRange.startDate?.toDateString()}
-              endDate={journey.dateRange.endDate?.toDateString()}
-              journey={journeyGet}
-            />
-          ))
-        ) : (
-          <p>No journeys found.</p>
-        )
+      {journeyDataLoaded && journeyData.length > 0 ? (
+        journeyData.map((journey, index) => (
+          <CreatedJourneyBadge
+            key={index}
+            location={journey.location}
+            startDate={journey.dateRange.startDate?.toDateString()}
+            endDate={journey.dateRange.endDate?.toDateString()}
+            journey={journeyGet}
+          />
+        ))
+      ) : showNoJourneys ? (
+        <p>No journeys found.</p>
       ) : (
         <p>Loading journeys...</p>
       )}
