@@ -1,4 +1,4 @@
-import Journey from "../components/journey/Journey";
+import Journey from "../components/journey/JourneyForm";
 
 const JourneyPage = () => {
   return <Journey />;

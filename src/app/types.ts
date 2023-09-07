@@ -1,3 +1,6 @@
+import { FieldValue } from "firebase/firestore";
+import { SetStateAction, Dispatch } from "react";
+
 export interface FirebaseConfig {
   apiKey: string;
   authDomain: string;
@@ -92,19 +95,33 @@ export interface Timestamp {
   end: number | undefined;
 }
 
-export interface JourneyData {
+export interface Journey {
   id: string | undefined;
   location: string | undefined;
-  startDate: number | undefined;
-  endDate: number | undefined;
-  userID: string | undefined;
+  dateRange: {
+    startDate: number | Date | undefined;
+    endDate: number | Date | undefined;
+  };
+  userID?: string | undefined;
+  created?: FieldValue;
 }
 
 export interface CreateJourneyButtonProps {
-  journey: JourneyData | null;
+  journey: Journey | null;
   handleSubmit: () => void;
   emptyInput: boolean;
   spinnerVisible: boolean;
+  journeyCount: number;
+}
+
+export interface JourneyBadgeProps {
+  location: string | undefined;
+  startDate: string | undefined;
+  endDate: string | undefined;
+  journey: Journey | null;
+  id: string | undefined;
+  setJourneys: Dispatch<SetStateAction<Journey[]>>;
+  journeys: Journey[];
 }
 
 export interface NextButtonProps {
