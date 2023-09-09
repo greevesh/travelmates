@@ -13,6 +13,7 @@ import { Journey, Timestamp, DateRange, SelectedDate } from "../../types";
 import { generateRandomID } from "../../helpers";
 import { getAuth } from "firebase/auth";
 import formatDate from "./formatDate";
+import fetchJourneys from "./fetchJourneys";
 import fetchLocation from "./fetchLocation";
 import createJourney from "./createJourney";
 import {
@@ -45,40 +46,6 @@ const Journey: React.FC = () => {
   const [journeysLoaded, setJourneysLoaded] = useState(false);
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [showNoJourneys, setShowNoJourneys] = useState(false);
-
-  const currentUserID = localStorage.getItem("userID");
-
-  const fetchJourneys = async (): Promise<void> => {
-    if (currentUserID) {
-      const q = query(
-        collection(db, "journeys"),
-        where("userID", "==", currentUserID)
-      );
-
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-        const id: string = doc.data().id;
-        const location: string = doc.data().location;
-        const startDate: Date = new Date(
-          doc.data().dateRange?.startDate * 1000
-        );
-        const endDate: Date = new Date(doc.data().dateRange?.endDate * 1000);
-
-        const newJourneyData: Journey = {
-          id,
-          location,
-          dateRange: { startDate, endDate },
-        };
-
-        setJourneys((prevJourneyData) => [...prevJourneyData, newJourneyData]);
-
-        setJourneysLoaded(true);
-      });
-    } else {
-      console.log("User isn't authenticated");
-    }
-  };
 
   const getLastEntry = async () => {
     try {
@@ -128,7 +95,7 @@ const Journey: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchJourneys();
+    fetchJourneys(setJourneys, setJourneysLoaded);
   }, []);
 
   useEffect(() => {
