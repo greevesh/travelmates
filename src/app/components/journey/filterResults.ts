@@ -11,7 +11,7 @@ const filterResults = (
     startsWithCapital(location.name)
   );
   const locationNames: string[] = filteredResults.map(
-    (location: Geoname) => location.name
+    (location: Geoname) => `${location.name}, ${location.countryName}`
   );
   const uniqueLocationNames: string[] = [...new Set(locationNames)];
   setGeonamesList(uniqueLocationNames);
