@@ -102,8 +102,13 @@ export interface Journey {
     startDate: number | Date | undefined;
     endDate: number | Date | undefined;
   };
-  userID?: string | undefined;
+  userID?: string | null;
   created?: FieldValue;
+}
+
+export interface JourneysStateParams {
+  setJourneys: React.Dispatch<React.SetStateAction<Journey[]>>;
+  setJourneysLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface CreateJourneyButtonProps {

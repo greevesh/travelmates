@@ -11,7 +11,7 @@ import PreviousButton from "./PreviousButton";
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
-import { generateRandomID } from "../helpers";
+import { generateRandomID } from "../globals";
 
 import {
   UserResults,

@@ -1,3 +1,5 @@
+export const currentUserID = localStorage.getItem("userID");
+
 export const generateRandomID = (): string => {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

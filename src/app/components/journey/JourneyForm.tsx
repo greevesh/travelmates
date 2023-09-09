@@ -10,21 +10,12 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { Journey, Timestamp, DateRange, SelectedDate } from "../../types";
-import { generateRandomID } from "../../helpers";
-import { getAuth } from "firebase/auth";
-import formatDate from "./formatDate";
+import { generateRandomID } from "../../globals";
 import fetchJourneys from "./fetchJourneys";
 import fetchLocation from "./fetchLocation";
 import createJourney from "./createJourney";
-import {
-  query,
-  collection,
-  where,
-  getDocs,
-  orderBy,
-  limit,
-} from "firebase/firestore";
-import { db } from "@root/firebase/app";
+import getLatestJourney from "./getLatestJourney";
+import { currentUserID } from "../../globals";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -47,55 +38,8 @@ const Journey: React.FC = () => {
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [showNoJourneys, setShowNoJourneys] = useState(false);
 
-  const getLastEntry = async () => {
-    try {
-      const currentUserID = localStorage.getItem("userID");
-
-      if (currentUserID) {
-        const q = query(
-          collection(db, "journeys"),
-          where("userID", "==", currentUserID),
-          orderBy("created", "desc"),
-          limit(1)
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          const lastDocument = querySnapshot.docs[0];
-          const data = lastDocument.data();
-
-          const startDate = new Date(data.dateRange?.startDate * 1000);
-          const endDate = new Date(data.dateRange?.endDate * 1000);
-
-          setJourneys((prevJourneyData) => [
-            ...prevJourneyData,
-            {
-              id: data.id,
-              location: data.location,
-              dateRange: {
-                startDate,
-                endDate,
-              },
-            },
-          ]);
-
-          setJourneysLoaded(true);
-
-          console.log("Last Entry Data:", data);
-        } else {
-          console.log("No documents found in the collection.");
-        }
-      } else {
-        console.log("User isn't authenticated");
-      }
-    } catch (error) {
-      console.error("Error getting last entry:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchJourneys(setJourneys, setJourneysLoaded);
+    fetchJourneys({ setJourneys, setJourneysLoaded });
   }, []);
 
   useEffect(() => {
@@ -168,7 +112,7 @@ const Journey: React.FC = () => {
     try {
       setSpinnerVisible(true);
       await createJourney(journey);
-      await getLastEntry();
+      await getLatestJourney({ setJourneys, setJourneysLoaded });
       clearForm();
       setSpinnerVisible(false);
     } catch (error) {
@@ -185,7 +129,7 @@ const Journey: React.FC = () => {
       startDate: timestamps.start,
       endDate: timestamps.end,
     },
-    userID: getAuth().currentUser?.uid,
+    userID: currentUserID,
     created: serverTimestamp(),
   };
 
