@@ -37,10 +37,25 @@ const Journey: React.FC = () => {
   const [journeysLoaded, setJourneysLoaded] = useState(false);
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [showNoJourneys, setShowNoJourneys] = useState(false);
+  const [disabledDateRanges, setDisabledDateRanges] = useState<
+    { start: Date; end: Date }[]
+  >([]);
 
   useEffect(() => {
     fetchJourneys({ setJourneys, setJourneysLoaded });
   }, []);
+
+  useEffect(() => {
+    if (journeys.length > 0) {
+      setDisabledDateRanges((prevDisabledDateRanges) => [
+        ...prevDisabledDateRanges,
+        {
+          start: new Date(journeys[journeys.length - 1]?.dateRange.startDate),
+          end: new Date(journeys[journeys.length - 1]?.dateRange.endDate),
+        },
+      ]);
+    }
+  }, [journeys]);
 
   useEffect(() => {
     selectedItem !== "" && dateRange.start !== null && dateRange.end !== null
@@ -97,6 +112,10 @@ const Journey: React.FC = () => {
     selectedJourneyBadge.current
       ? (selectedJourneyBadge.current.style.display = "none")
       : null;
+    disabledDateRanges.filter((dateRange) => {
+      dateRange.start !== journey?.dateRange.startDate &&
+        dateRange.end !== journey?.dateRange.endDate;
+    });
   };
 
   const handleDateChange = (newDate: SelectedDate[]): void => {
@@ -107,6 +126,12 @@ const Journey: React.FC = () => {
       end: endDate,
     });
   };
+
+  console.log(
+    "Latest Journey End Date:",
+    new Date(journeys[journeys.length - 1]?.dateRange.endDate)
+  );
+  console.log("Disabled Date Ranges:", disabledDateRanges);
 
   const handleSubmit = async (): Promise<void> => {
     try {
@@ -160,6 +185,8 @@ const Journey: React.FC = () => {
         startDate={dateRange.start}
         endDate={dateRange.end}
         handleDateChange={handleDateChange}
+        disabledDateRanges={disabledDateRanges}
+        setDisabledDateRanges={setDisabledDateRanges}
       />
       <CreateJourneyButton
         emptyInput={emptyInput}
