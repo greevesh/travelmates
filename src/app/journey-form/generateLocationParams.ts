@@ -1,4 +1,4 @@
-import { GeonameURLParams } from "../../types";
+import { GeonameURLParams } from "../types";
 
 const generateLocationParams = (query: string): GeonameURLParams => {
   return {

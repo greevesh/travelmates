@@ -1,4 +1,4 @@
-import { Geoname, GeonameResponse } from "../../types";
+import { Geoname, GeonameResponse } from "../types";
 
 const filterResults = (
   data: GeonameResponse,

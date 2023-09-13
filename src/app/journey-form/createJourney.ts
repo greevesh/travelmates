@@ -1,4 +1,4 @@
-import { Journey } from "../../types";
+import { Journey } from "../types";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "@root/firebase/app";
 

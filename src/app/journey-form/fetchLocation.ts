@@ -1,4 +1,4 @@
-import { GeonameResponse, GeonameURLParams } from "../../types";
+import { GeonameResponse, GeonameURLParams } from "../types";
 import generateLocationParams from "./generateLocationParams";
 import filterResults from "./filterResults";
 

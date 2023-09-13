@@ -1,8 +1,8 @@
 import { query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "@root/firebase/app";
-import { Journey, JourneysStateParams } from "../../types";
+import { Journey, JourneysStateParams } from "../types";
 import formatDate from "./formatDate";
-import { currentUserID } from "../../globals";
+import { currentUserID } from "../globals";
 
 const fetchJourneys = async ({
   setJourneys,
