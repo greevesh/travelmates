@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import Card from "react-bootstrap/Card";
-import Journey from "src/app/components/journey/Journey";
-import styles from "src/app/styles/auth/card-container.module.css";
+import Journey from "../components/journey-form/JourneyForm";
+import styles from "../styles/auth/card-container.module.css";
 import NextButton from "./NextButton";
 import Search from "./create-group/Search";
 import PreviousButton from "./PreviousButton";
@@ -11,7 +11,7 @@ import PreviousButton from "./PreviousButton";
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "firebase/app";
 
-import { generateRandomID } from "src/app/helpers";
+import { generateRandomID } from "../globals";
 
 import {
   UserResults,
@@ -171,7 +171,7 @@ const Setup = () => {
         <Card.Body>
           {step === 1 ? (
             <>
-              <Card.Title>Create a Journey</Card.Title>
+              <Card.Title>Create a Journey (max 5)</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
                 So your mates will know where you&lsquo;ll be
               </Card.Subtitle>
