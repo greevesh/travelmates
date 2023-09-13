@@ -1,6 +1,6 @@
 import { Journey } from "../types";
 import { setDoc, doc } from "firebase/firestore";
-import { db } from "@root/firebase/app";
+import { db } from "../../../firebase/app";
 
 const createJourney = async (journey: Journey | null): Promise<void> => {
   if (journey?.id) {

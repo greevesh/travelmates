@@ -1,5 +1,5 @@
 import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
-import firebaseConfig from "firebase/config";
+import firebaseConfig from "./config";
 import { initializeApp, FirebaseApp } from "node_modules/firebase/app";
 
 export const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);

@@ -1,5 +1,5 @@
 import { query, collection, where, getDocs } from "firebase/firestore";
-import { db } from "@root/firebase/app";
+import { db } from "../../../firebase/app";
 import { Journey, JourneysStateParams } from "../types";
 import formatDate from "./formatDate";
 import { currentUserID } from "../globals";
