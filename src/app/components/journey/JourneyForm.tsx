@@ -4,7 +4,7 @@ import Search from "./Search";
 import SelectedBadge from "../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
-import JourneyBadge from "../JourneyBadge";
+import JourneyBadge from "./JourneyBadge";
 import {
   Timestamp as firebaseTimestamp,
   serverTimestamp,
