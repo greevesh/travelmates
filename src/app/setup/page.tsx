@@ -9,7 +9,7 @@ import Search from "./create-group/Search";
 import PreviousButton from "./PreviousButton";
 
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
-import { db } from "firebase/app";
+import { db } from "../../../firebase/app";
 
 import { generateRandomID } from "../globals";
 
@@ -79,7 +79,7 @@ const Setup = () => {
     }
   };
 
-  console.log(users);
+  console.log("users:", users);
 
   const createGroupMemberships = async (): Promise<void> => {
     console.log(groupMembership);
