@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import Card from "react-bootstrap/Card";
-import Journey from "../components/journey/JourneyForm";
+import Journey from "../components/journey-form/JourneyForm";
 import styles from "../styles/auth/card-container.module.css";
 import NextButton from "./NextButton";
 import Search from "./create-group/Search";
