@@ -4,7 +4,7 @@ import { UserData } from "src/app/types";
 import { FirebaseApp, initializeApp } from "node_modules/firebase/app";
 import { getAuth, Auth, User } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import firebaseConfig from "@/firebase/config";
+import firebaseConfig from "../../../../firebase/config";
 import { AuthError } from "src/app/exceptions";
 
 import { setDoc, doc, getFirestore, Firestore } from "firebase/firestore";
