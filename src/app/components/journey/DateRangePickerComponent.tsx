@@ -19,19 +19,24 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
     setDataFetched(true);
   };
 
-  // const preventInvalidEndDates = (date: Date): boolean => {
-  //   if (startDate) {
-  //     const nearestDisabledEndDate = disabledDateRanges.reduce(
-  //       (nearestDate, dateRange) =>
-  //         dateRange.end > nearestDate && dateRange.end > startDate
-  //           ? dateRange.end
-  //           : nearestDate,
-  //       new Date(0)
-  //     );
-  //     return date > nearestDisabledEndDate;
-  //   }
-  //   return false;
-  // };
+  const preventInvalidEndDates = (date?: Date): boolean => {
+    if (startDate && disabledDateRanges.length > 0) {
+      let nearestDisabledEndDate = disabledDateRanges.reduce(
+        (nearestDate, dateRange) =>
+          dateRange.end > nearestDate && dateRange.end > startDate
+            ? dateRange.end
+            : nearestDate,
+        new Date(0)
+      );
+
+      if (nearestDisabledEndDate > startDate) {
+        if (date) {
+          return date > nearestDisabledEndDate;
+        }
+      }
+    }
+    return false;
+  };
 
   const isDateInRange = (date: Date): boolean => {
     for (const dateRange of disabledDateRanges) {
@@ -45,13 +50,11 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
 
   useEffect(() => {
     getSelectedDates();
-    console.log("Data Fetched:", dataFetched);
-    console.log("Disabled Dates:", disabledDateRanges);
   }, []);
 
   const isSelected = (date: Dayjs): boolean => {
     const selectedDate = date.toDate();
-    return isDateInRange(selectedDate);
+    return isDateInRange(selectedDate) || preventInvalidEndDates(selectedDate);
   };
 
   return (
@@ -61,6 +64,7 @@ const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
         value={[startDate, endDate]}
         onChange={(newVal: SelectedDate[]) => handleDateChange(newVal)}
         shouldDisableDate={isSelected}
+        disablePast
       />
     ) : (
       <div>Loading...</div>

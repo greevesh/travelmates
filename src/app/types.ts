@@ -89,6 +89,14 @@ export interface DateRangePickerComponentProps {
   endDate: Date | null;
   handleDateChange: (dateRange: SelectedDate[]) => void;
   disabledDateRanges: { start: Date; end: Date }[];
+  setDisabledDateRanges: React.Dispatch<
+    React.SetStateAction<
+      {
+        start: Date;
+        end: Date;
+      }[]
+    >
+  >;
 }
 
 export interface Timestamp {
