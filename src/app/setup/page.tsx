@@ -11,26 +11,30 @@ import PreviousButton from "./PreviousButton";
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
-import { generateRandomID } from "../globals";
+import { currentUserID, generateRandomID } from "../globals";
 
 import {
   UserResults,
-  GroupData,
+  Group,
   GroupMembershipData,
   SelectedUser,
 } from "../types";
 import SelectedBadge from "../components/SelectedBadge";
 import CreateGroupButton from "./create-group/CreateGroupButton";
 
-const Setup = () => {
+const Setup: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
   const [groupMemberships, setGroupMemberships] = useState<
     GroupMembershipData[]
   >([]);
-  const [groupID, setGroupID] = useState<string>("");
   const [users, setUsers] = useState<UserResults[]>([]);
+  const [group, setGroup] = useState<Group>();
+
+  useEffect(() => {
+    setGroup({ id: generateRandomID(), creatorID: currentUserID });
+  }, []);
 
   const debouncedInput = useDebounce(input, 300);
 
@@ -65,10 +69,9 @@ const Setup = () => {
     }
   };
 
-  let group: GroupData | null = null;
   let groupMembership: GroupMembershipData | null = null;
 
-  const createGroup = async (group: GroupData | null): Promise<void> => {
+  const createGroup = async (group: Group): Promise<void> => {
     if (group !== null) {
       try {
         await setDoc(doc(db, "groups", group.id), group);
@@ -76,34 +79,35 @@ const Setup = () => {
       } catch (error) {
         console.error("Error writing document: ", error);
       }
+    } else {
+      console.log("group is null");
     }
   };
 
+  console.log("group:", group);
   console.log("users:", users);
 
   const createGroupMemberships = async (): Promise<void> => {
-    console.log(groupMembership);
-    try {
-      selectedUsers.forEach((user) => {
-        const groupMembership: GroupMembershipData = {
-          id: generateRandomID(),
-          user_id: user.id,
-          group_id: groupID,
-        };
-        setDoc(
-          doc(db, "group-memberships", groupMembership.id),
-          groupMembership
-        );
-        console.log(user);
-      });
-    } catch (error) {
-      console.error("Error writing document: ", error);
+    console.log("group membership:", groupMembership);
+    if (group) {
+      try {
+        selectedUsers.forEach((user) => {
+          const groupMembership: GroupMembershipData = {
+            id: generateRandomID(),
+            user_id: user.id,
+            group_id: group.id,
+          };
+          setDoc(
+            doc(db, "group-memberships", groupMembership.id),
+            groupMembership
+          );
+          console.log("group member:", user);
+        });
+      } catch (error) {
+        console.error("Error writing document: ", error);
+      }
     }
   };
-
-  useEffect(() => {
-    setGroupID(generateRandomID());
-  }, []);
 
   const handleSearchChange = (value: string): void => {
     setInput(value);
@@ -129,7 +133,7 @@ const Setup = () => {
   };
 
   useEffect(() => {
-    console.log(groupMemberships);
+    console.log("group memberships:", groupMemberships);
   }, [groupMemberships]);
 
   const handleDelete = (userToDelete: SelectedUser): void => {
@@ -145,13 +149,15 @@ const Setup = () => {
   }, [selectedUsers]);
 
   const handleSubmit = async (): Promise<void> => {
-    try {
-      await createGroup(group);
-      await createGroupMemberships();
-      setUsers([]);
-      setSelectedUsers([]);
-    } catch (error) {
-      console.log(error);
+    if (group !== undefined) {
+      try {
+        await createGroup(group);
+        await createGroupMemberships();
+        setUsers([]);
+        setSelectedUsers([]);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

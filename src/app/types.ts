@@ -11,7 +11,7 @@ export interface FirebaseConfig {
   measurementId: string;
 }
 
-export interface UserData {
+export interface User {
   id: string;
   displayName: string | null;
   email: string | null;
@@ -146,12 +146,13 @@ export interface PreviousButtonProps {
   decrementStep: () => void;
 }
 
-export interface GroupData {
+export interface Group {
   id: string;
+  creatorID: string | null;
 }
 
 export interface CreateGroupButtonProps {
-  group: GroupData | null;
+  group: Group | null;
   handleSubmit: () => void;
   emptyInput: boolean;
 }
