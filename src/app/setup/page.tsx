@@ -84,9 +84,6 @@ const Setup: React.FC = () => {
     }
   };
 
-  console.log("group:", group);
-  console.log("users:", users);
-
   const createGroupMemberships = async (): Promise<void> => {
     console.log("group membership:", groupMembership);
     if (group) {
@@ -131,10 +128,6 @@ const Setup: React.FC = () => {
     ]);
     setEmptyInput(false);
   };
-
-  useEffect(() => {
-    console.log("group memberships:", groupMemberships);
-  }, [groupMemberships]);
 
   const handleDelete = (userToDelete: SelectedUser): void => {
     setSelectedUsers((prevSelectedUsers) =>
