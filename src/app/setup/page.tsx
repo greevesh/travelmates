@@ -13,27 +13,38 @@ import { db } from "../../../firebase/app";
 
 import { currentUserID, generateRandomID } from "../globals";
 
-import {
-  UserResults,
-  Group,
-  GroupMembershipData,
-  SelectedUser,
-} from "../types";
+import { UserResults, Group, GroupMembership, GroupMember } from "../types";
 import SelectedBadge from "../components/SelectedBadge";
 import CreateGroupButton from "./create-group/CreateGroupButton";
+import fetchGroupMembers from "./create-group/fetchGroupMembers";
 
 const Setup: React.FC = () => {
   const [input, setInput] = useState<string>("");
-  const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
+  const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
-  const [groupMemberships, setGroupMemberships] = useState<
-    GroupMembershipData[]
-  >([]);
   const [users, setUsers] = useState<UserResults[]>([]);
-  const [group, setGroup] = useState<Group>();
+  const [groupMembersLoaded, setGroupMembersLoaded] = useState(false);
+  const [showNoGroupMembers, setShowNoGroupMembers] = useState(false);
+
+  const group: Group = {
+    id: localStorage.getItem("groupID"),
+    creatorID: currentUserID,
+  };
+
+  if (!localStorage.getItem("groupID")) {
+    localStorage.setItem("groupID", generateRandomID());
+  }
 
   useEffect(() => {
-    setGroup({ id: generateRandomID(), creatorID: currentUserID });
+    console.log("group:", group);
+    const groupID: string | null = group.id;
+    if (group) {
+      fetchGroupMembers({
+        setGroupMembers,
+        setGroupMembersLoaded,
+        groupID,
+      });
+    }
   }, []);
 
   const debouncedInput = useDebounce(input, 300);
@@ -69,10 +80,10 @@ const Setup: React.FC = () => {
     }
   };
 
-  let groupMembership: GroupMembershipData | null = null;
+  let groupMembership: GroupMembership | null = null;
 
   const createGroup = async (group: Group): Promise<void> => {
-    if (group !== null) {
+    if (group.id) {
       try {
         await setDoc(doc(db, "groups", group.id), group);
         console.log("group document written successfully!", group);
@@ -88,11 +99,12 @@ const Setup: React.FC = () => {
     console.log("group membership:", groupMembership);
     if (group) {
       try {
-        selectedUsers.forEach((user) => {
-          const groupMembership: GroupMembershipData = {
+        groupMembers.forEach((user) => {
+          const groupMembership: GroupMembership = {
             id: generateRandomID(),
-            user_id: user.id,
-            group_id: group.id,
+            userID: user.id,
+            groupID: group.id,
+            displayName: user.displayName,
           };
           setDoc(
             doc(db, "group-memberships", groupMembership.id),
@@ -117,29 +129,31 @@ const Setup: React.FC = () => {
     }
   }, [debouncedInput]);
 
-  const handleSelect = (selectedUser: SelectedUser): void => {
+  const handleSelect = (groupMember: GroupMember): void => {
     setInput("");
-    setSelectedUsers((prevSelectedUsers) => [
-      ...prevSelectedUsers,
+    setGroupMembers((prevGroupMembers) => [
+      ...prevGroupMembers,
       {
-        id: selectedUser.id,
-        displayName: selectedUser.displayName,
+        id: groupMember.id,
+        displayName: groupMember.displayName,
       },
     ]);
+    setGroupMembersLoaded(true);
     setEmptyInput(false);
   };
 
-  const handleDelete = (userToDelete: SelectedUser): void => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.filter((user) => user !== userToDelete)
+  const handleDelete = (userToDelete: GroupMember): void => {
+    setGroupMembers((prevGroupMembers) =>
+      prevGroupMembers.filter((user) => user !== userToDelete)
     );
   };
 
   useEffect(() => {
-    if (selectedUsers.length === 0) {
+    if (groupMembers.length === 0) {
       setEmptyInput(true);
     }
-  }, [selectedUsers]);
+    console.log("group members:", groupMembers);
+  }, [groupMembers]);
 
   const handleSubmit = async (): Promise<void> => {
     if (group !== undefined) {
@@ -147,7 +161,6 @@ const Setup: React.FC = () => {
         await createGroup(group);
         await createGroupMemberships();
         setUsers([]);
-        setSelectedUsers([]);
       } catch (error) {
         console.log(error);
       }
@@ -164,13 +177,25 @@ const Setup: React.FC = () => {
     console.log(step);
   };
 
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!groupMembersLoaded) {
+        setShowNoGroupMembers(true);
+      }
+    }, 10000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <div className={styles.container}>
       <Card style={{ width: "22rem", height: "20rem" }}>
         <Card.Body>
           {step === 1 ? (
             <>
-              <Card.Title>Create a Journey (max 5)</Card.Title>
+              <Card.Title>Create some Journeys (max 5)</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
                 So your mates will know where you&lsquo;ll be
               </Card.Subtitle>
@@ -191,13 +216,19 @@ const Setup: React.FC = () => {
                 handleChange={handleSearchChange}
                 users={users}
               />
-              {selectedUsers.map((user) => (
-                <SelectedBadge
-                  key={user}
-                  selectedItem={user.displayName}
-                  handleDelete={() => handleDelete(user)}
-                />
-              ))}
+              {groupMembersLoaded || groupMembers.length > 0 ? (
+                groupMembers.map((groupMember) => (
+                  <SelectedBadge
+                    key={groupMember.id}
+                    selectedItem={groupMember.displayName}
+                    handleDelete={() => handleDelete(groupMember)}
+                  />
+                ))
+              ) : showNoGroupMembers ? (
+                <p>No group members added yet.</p>
+              ) : (
+                <p>Searching for group members...</p>
+              )}
               <CreateGroupButton
                 group={group}
                 handleSubmit={handleSubmit}

@@ -1,5 +1,5 @@
 import { FieldValue } from "firebase/firestore";
-import { SetStateAction, Dispatch } from "react";
+import React, { SetStateAction, Dispatch } from "react";
 
 export interface FirebaseConfig {
   apiKey: string;
@@ -147,8 +147,14 @@ export interface PreviousButtonProps {
 }
 
 export interface Group {
-  id: string;
+  id: string | null;
   creatorID: string | null;
+}
+
+export interface FetchGroupMemberProps {
+  setGroupMembers: React.Dispatch<React.SetStateAction<GroupMember[]>>;
+  setGroupMembersLoaded: React.Dispatch<React.SetStateAction<boolean>>;
+  groupID: string | null;
 }
 
 export interface CreateGroupButtonProps {
@@ -157,10 +163,11 @@ export interface CreateGroupButtonProps {
   emptyInput: boolean;
 }
 
-export interface GroupMembershipData {
+export interface GroupMembership {
   id: string;
-  user_id: string | undefined;
-  group_id: string;
+  userID: string | undefined;
+  groupID: string | null;
+  displayName: string;
 }
 
 export interface UserSearchProps {
@@ -176,7 +183,7 @@ export interface UserResults {
   displayName: string;
 }
 
-export interface SelectedUser {
+export interface GroupMember {
   id: string;
   displayName: string;
 }
