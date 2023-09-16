@@ -164,7 +164,7 @@ export interface CreateGroupButtonProps {
 }
 
 export interface GroupMembership {
-  id: string;
+  membershipID: string;
   userID: string | undefined;
   groupID: string | null;
   displayName: string;
@@ -184,7 +184,8 @@ export interface UserResults {
 }
 
 export interface GroupMember {
-  id: string;
+  membershipID: string;
+  userID: string;
   displayName: string;
 }
 

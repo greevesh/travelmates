@@ -17,10 +17,11 @@ const fetchGroupMembers = async ({
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach((doc) => {
-        const { id, displayName } = doc.data();
+        const { membershipID, userID, displayName } = doc.data();
 
         const groupMember: GroupMember = {
-          id,
+          membershipID,
+          userID,
           displayName,
         };
 

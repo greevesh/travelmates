@@ -62,7 +62,16 @@ const Setup: React.FC = () => {
           const displayName: string = doc.data().displayName.toLowerCase();
           const inputLowerCase: string = input.toLowerCase();
 
-          if (displayName.startsWith(inputLowerCase.slice(0, input.length))) {
+          const alreadySelected = (id: string): boolean => {
+            return groupMembers.some(
+              (groupMember) => groupMember.userID === id
+            );
+          };
+
+          if (
+            displayName.startsWith(inputLowerCase.slice(0, input.length)) &&
+            !alreadySelected(id)
+          ) {
             return {
               id: id,
               photoURL: doc.data().photoURL,
@@ -99,18 +108,17 @@ const Setup: React.FC = () => {
     console.log("group membership:", groupMembership);
     if (group) {
       try {
-        groupMembers.forEach((user) => {
+        groupMembers.forEach((groupMember) => {
           const groupMembership: GroupMembership = {
-            id: generateRandomID(),
-            userID: user.id,
+            membershipID: generateRandomID(),
+            userID: groupMember.userID,
             groupID: group.id,
-            displayName: user.displayName,
+            displayName: groupMember.displayName,
           };
           setDoc(
-            doc(db, "group-memberships", groupMembership.id),
+            doc(db, "group-memberships", groupMembership.membershipID),
             groupMembership
           );
-          console.log("group member:", user);
         });
       } catch (error) {
         console.error("Error writing document: ", error);
@@ -129,17 +137,19 @@ const Setup: React.FC = () => {
     }
   }, [debouncedInput]);
 
-  const handleSelect = (groupMember: GroupMember): void => {
+  const handleSelect = (user: UserResults): void => {
     setInput("");
     setGroupMembers((prevGroupMembers) => [
       ...prevGroupMembers,
       {
-        id: groupMember.id,
-        displayName: groupMember.displayName,
+        membershipID: generateRandomID(),
+        userID: user.id,
+        displayName: user.displayName,
       },
     ]);
     setGroupMembersLoaded(true);
     setEmptyInput(false);
+    console.log(groupMembers);
   };
 
   const handleDelete = (userToDelete: GroupMember): void => {
@@ -219,7 +229,7 @@ const Setup: React.FC = () => {
               {groupMembersLoaded || groupMembers.length > 0 ? (
                 groupMembers.map((groupMember) => (
                   <SelectedBadge
-                    key={groupMember.id}
+                    key={groupMember.userID}
                     selectedItem={groupMember.displayName}
                     handleDelete={() => handleDelete(groupMember)}
                   />
