@@ -11,12 +11,13 @@ import PreviousButton from "./PreviousButton";
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
-import { currentUserID, generateRandomID } from "../globals";
+import { currentUserID, groupID, generateRandomID } from "../globals";
 
 import { UserResults, Group, GroupMembership, GroupMember } from "../types";
 import SelectedBadge from "../components/SelectedBadge";
 import CreateGroupButton from "./create-group/CreateGroupButton";
 import fetchGroupMembers from "./create-group/fetchGroupMembers";
+import { useRouter } from "next/navigation";
 
 const Setup: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -26,8 +27,10 @@ const Setup: React.FC = () => {
   const [groupMembersLoaded, setGroupMembersLoaded] = useState(false);
   const [showNoGroupMembers, setShowNoGroupMembers] = useState(false);
 
+  const router = useRouter();
+
   const group: Group = {
-    id: localStorage.getItem("groupID"),
+    id: groupID,
     creatorID: currentUserID,
   };
 
@@ -37,7 +40,6 @@ const Setup: React.FC = () => {
 
   useEffect(() => {
     console.log("group:", group);
-    const groupID: string | null = group.id;
     if (group) {
       fetchGroupMembers({
         setGroupMembers,
@@ -171,6 +173,7 @@ const Setup: React.FC = () => {
       try {
         await createGroup(group);
         await createGroupMemberships();
+        router.push(`/group/${groupID}`);
         setUsers([]);
       } catch (error) {
         console.log(error);

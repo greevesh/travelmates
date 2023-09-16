@@ -1,22 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { initializeApp } from "node_modules/firebase/app";
-import firebaseConfig from "@/firebase/config";
+import { initializeApp } from "../../../../node_modules/firebase/app";
+import firebaseConfig from "../../../../firebase/config";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 
-import rows from "./rows";
-import PreviousMonthButton from "./PreviousMonthButton";
-import NextMonthButton from "./NextMonthButton";
-import generateCalendar from "./generateCalendar";
-import { slotColumnCommonFields, months, generatedColumns } from "./columns";
-import { rootStyles } from "./rootStyles";
+import rows from "../rows";
+import PreviousMonthButton from "../PreviousMonthButton";
+import NextMonthButton from "../NextMonthButton";
+import generateCalendar from "../generateCalendar";
+import { slotColumnCommonFields, months, generatedColumns } from "../columns";
+import { rootStyles } from "../rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { CalendarDay, Row } from "src/app/types";
+import { CalendarDay, Row } from "../../../../src/app/types";
+import { currentUserID, groupID } from "../../globals";
+import { getDocs, query, collection, where } from "firebase/firestore";
+import { db } from "@root/firebase/app";
 
 initializeApp(firebaseConfig);
 
-const GroupPage: React.FC = () => {
+const GroupPage = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);

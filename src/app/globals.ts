@@ -1,4 +1,5 @@
-export const currentUserID = localStorage.getItem("userID");
+export const currentUserID: string | null = localStorage.getItem("userID");
+export const groupID: string | null = localStorage.getItem("groupID");
 
 export const generateRandomID = (): string => {
   const chars =
