@@ -70,7 +70,8 @@ const Setup: React.FC = () => {
 
           if (
             displayName.startsWith(inputLowerCase.slice(0, input.length)) &&
-            !alreadySelected(id)
+            !alreadySelected(id) &&
+            currentUserID !== id
           ) {
             return {
               id: id,
