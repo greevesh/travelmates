@@ -4,8 +4,6 @@ import { initializeApp } from "../../../../node_modules/firebase/app";
 import firebaseConfig from "../../../../firebase/config";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
-
-import rows from "../rows";
 import PreviousMonthButton from "../PreviousMonthButton";
 import NextMonthButton from "../NextMonthButton";
 import generateCalendar from "../generateCalendar";
@@ -16,6 +14,8 @@ import { CalendarDay, Row } from "../../../../src/app/types";
 import { currentUserID, groupID } from "../../globals";
 import { getDocs, query, collection, where } from "firebase/firestore";
 import { db } from "@root/firebase/app";
+import fetchRows from "../rows"; // Import the fetchRows function
+import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
 
 initializeApp(firebaseConfig);
 
@@ -26,6 +26,26 @@ const GroupPage = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
+
+  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const fetchedRows = await fetchRows();
+      const displayName = await getCurrentUserDisplayName();
+
+      setColumns(generatedColumns);
+      setCurrentMonthRows(
+        fetchedRows.map((row) => ({
+          ...row,
+          name: row.name,
+        }))
+      );
+      setUserDisplayName(displayName);
+    }
+
+    fetchData();
+  }, []);
 
   const decrementMonth = (): void => {
     if (monthIndex === 0) {
@@ -45,9 +65,9 @@ const GroupPage = () => {
     }
   };
 
-  const generateColumns = (): void => {
+  useEffect(() => {
     const calendar: CalendarDay[] = generateCalendar(currentYear, monthIndex);
-    const filteredRows: Row[] | undefined = rows.filter((row) => {
+    const filteredRows: Row[] | undefined = currentMonthRows.filter((row) => {
       return row.month === months[monthIndex] && row.year === currentYear;
     });
 
@@ -63,10 +83,6 @@ const GroupPage = () => {
     });
     setColumns(generatedColumns);
     setCurrentMonthRows(filteredRows);
-  };
-
-  useEffect(() => {
-    generateColumns();
   }, [monthIndex]);
 
   return (
