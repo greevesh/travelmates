@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { PreviousMonthButtonProps } from "src/app/types";
+import { PreviousMonthButtonProps } from "../../../src/app/types";
 
 const PreviousMonthButton: React.FC<PreviousMonthButtonProps> = ({
   decrementMonth,
