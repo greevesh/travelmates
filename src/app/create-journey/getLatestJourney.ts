@@ -7,7 +7,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "../../../firebase/app";
-import { Journey, JourneysStateParams } from "../types";
+import { Journey, JourneysStateParams } from "../create-journey/types";
 import formatDate from "./formatDate";
 import { currentUserID } from "../globals";
 

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { SelectedDate, DateRangePickerComponentProps } from "../../types";
+import {
+  SelectedDate,
+  DateRangePickerComponentProps,
+} from "../../create-journey/types";
 import { Dayjs } from "dayjs";
 import { currentUserID } from "../../globals";
 

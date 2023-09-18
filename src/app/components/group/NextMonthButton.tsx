@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { NextMonthButtonProps } from "../../types";
+import { NextMonthButtonProps } from "../../group/types";
 
 const NextMonthButton: React.FC<NextMonthButtonProps> = ({
   incrementMonth,

@@ -13,7 +13,12 @@ import { db } from "../../../firebase/app";
 
 import { currentUserID, groupID, generateRandomID } from "../globals";
 
-import { UserResults, Group, GroupMembership, GroupMember } from "../types";
+import {
+  UserResults,
+  Group,
+  GroupMembership,
+  GroupMember,
+} from "../create-group/types";
 import SelectedBadge from "../components/SelectedBadge";
 import CreateGroupButton from "../components/group-form/CreateGroupButton";
 import fetchGroupMembers from "../create-group/fetchGroupMembers";

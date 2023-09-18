@@ -8,9 +8,8 @@ import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import generateCalendar from "../generateCalendar";
 import { slotColumnCommonFields, months, generatedColumns } from "../columns";
-import { rootStyles } from "../rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { CalendarDay, Row } from "../../../../src/app/types";
+import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
 
@@ -85,7 +84,7 @@ const GroupPage = () => {
 
   return (
     <>
-      <Box sx={rootStyles}>
+      <Box>
         <DataGridPro
           columns={columns}
           rows={currentMonthRows}

@@ -9,7 +9,12 @@ import {
   Timestamp as firebaseTimestamp,
   serverTimestamp,
 } from "firebase/firestore";
-import { Journey, Timestamp, DateRange, SelectedDate } from "../../types";
+import {
+  Journey,
+  Timestamp,
+  DateRange,
+  SelectedDate,
+} from "../../create-journey/types";
 import { generateRandomID } from "../../globals";
 import fetchJourneys from "../../create-journey/fetchJourneys";
 import fetchLocation from "../../create-journey/fetchLocation";

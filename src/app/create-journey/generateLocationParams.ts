@@ -1,4 +1,4 @@
-import { GeonameURLParams } from "../types";
+import { GeonameURLParams } from "../create-journey/types";
 
 const generateLocationParams = (query: string): GeonameURLParams => {
   return {

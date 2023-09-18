@@ -1,4 +1,4 @@
-import { Row } from "../../../src/app/types";
+import { Row } from "../group/types";
 import {
   getDocs,
   query,

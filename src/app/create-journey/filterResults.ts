@@ -1,4 +1,4 @@
-import { Geoname, GeonameResponse } from "../types";
+import { Geoname, GeonameResponse } from "../create-journey/types";
 
 const filterResults = (
   data: GeonameResponse,
