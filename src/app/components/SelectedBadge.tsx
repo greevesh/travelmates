@@ -1,7 +1,7 @@
 import React from "react";
 import Badge from "react-bootstrap/Badge";
 
-import { SelectedBadgeProps } from "src/app/types";
+import { SelectedBadgeProps } from "../../../src/app/types";
 
 const SelectedBadge: React.FC<SelectedBadgeProps> = ({
   selectedItem,

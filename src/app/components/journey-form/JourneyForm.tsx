@@ -11,10 +11,10 @@ import {
 } from "firebase/firestore";
 import { Journey, Timestamp, DateRange, SelectedDate } from "../../types";
 import { generateRandomID } from "../../globals";
-import fetchJourneys from "../../journey-form/fetchJourneys";
-import fetchLocation from "../../journey-form/fetchLocation";
-import createJourney from "../../journey-form/createJourney";
-import getLatestJourney from "../../journey-form/getLatestJourney";
+import fetchJourneys from "../../create-journey/fetchJourneys";
+import fetchLocation from "../../create-journey/fetchLocation";
+import createJourney from "../../create-journey/createJourney";
+import getLatestJourney from "../../create-journey/getLatestJourney";
 import { currentUserID } from "../../globals";
 
 const Journey: React.FC = () => {

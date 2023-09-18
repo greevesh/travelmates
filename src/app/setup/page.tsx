@@ -4,9 +4,9 @@ import { useDebounce } from "react-use";
 import Card from "react-bootstrap/Card";
 import Journey from "../components/journey-form/JourneyForm";
 import styles from "../styles/auth/card-container.module.css";
-import NextButton from "./NextButton";
-import Search from "./create-group/Search";
-import PreviousButton from "./PreviousButton";
+import NextButton from "../components/setup-form/NextButton";
+import Search from "../components/group-form/Search";
+import PreviousButton from "../components/setup-form/PreviousButton";
 
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
@@ -15,8 +15,8 @@ import { currentUserID, groupID, generateRandomID } from "../globals";
 
 import { UserResults, Group, GroupMembership, GroupMember } from "../types";
 import SelectedBadge from "../components/SelectedBadge";
-import CreateGroupButton from "./create-group/CreateGroupButton";
-import fetchGroupMembers from "./create-group/fetchGroupMembers";
+import CreateGroupButton from "../components/group-form/CreateGroupButton";
+import fetchGroupMembers from "../create-group/fetchGroupMembers";
 import { useRouter } from "next/navigation";
 
 const Setup: React.FC = () => {
