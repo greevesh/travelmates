@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 
-import { UserSearchProps } from "../../create-group/types";
+import { UserSearchProps } from "../../../create-group/types";
 import Image from "next/image";
 
 const Search: React.FC<UserSearchProps> = ({

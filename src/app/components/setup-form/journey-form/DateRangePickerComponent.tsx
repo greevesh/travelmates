@@ -3,9 +3,9 @@ import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import {
   SelectedDate,
   DateRangePickerComponentProps,
-} from "../../create-journey/types";
+} from "../../../create-journey/types";
 import { Dayjs } from "dayjs";
-import { currentUserID } from "../../globals";
+import { currentUserID } from "../../../globals";
 
 const DateRangePickerComponent: React.FC<DateRangePickerComponentProps> = ({
   startDate,

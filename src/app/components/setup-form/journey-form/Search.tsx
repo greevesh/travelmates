@@ -2,7 +2,7 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-import { LocationSearchProps } from "../../create-journey/types";
+import { LocationSearchProps } from "../../../create-journey/types";
 
 const Search: React.FC<LocationSearchProps> = ({
   input,

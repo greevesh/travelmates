@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
 import Card from "react-bootstrap/Card";
-import Journey from "../components/journey-form/JourneyForm";
+import Journey from "../components/setup-form/journey-form/JourneyForm";
 import styles from "../styles/auth/card-container.module.css";
 import NextButton from "../components/setup-form/NextButton";
-import Search from "../components/group-form/Search";
+import Search from "../components/setup-form/group-form/Search";
 import PreviousButton from "../components/setup-form/PreviousButton";
 
 import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
@@ -20,7 +20,7 @@ import {
   GroupMember,
 } from "../create-group/types";
 import SelectedBadge from "../components/SelectedBadge";
-import CreateGroupButton from "../components/group-form/CreateGroupButton";
+import CreateGroupButton from "../components/setup-form/group-form/CreateGroupButton";
 import fetchGroupMembers from "../create-group/fetchGroupMembers";
 import { useRouter } from "next/navigation";
 

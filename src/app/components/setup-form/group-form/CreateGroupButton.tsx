@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { CreateGroupButtonProps } from "../../create-group/types";
+import { CreateGroupButtonProps } from "../../../create-group/types";
 
 const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
   group,

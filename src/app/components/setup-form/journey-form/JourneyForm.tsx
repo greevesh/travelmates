@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import Search from "./Search";
-import SelectedBadge from "../SelectedBadge";
+import SelectedBadge from "../../SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
 import JourneyBadge from "./JourneyBadge";
@@ -14,13 +14,13 @@ import {
   Timestamp,
   DateRange,
   SelectedDate,
-} from "../../create-journey/types";
-import { generateRandomID } from "../../globals";
-import fetchJourneys from "../../create-journey/fetchJourneys";
-import fetchLocation from "../../create-journey/fetchLocation";
-import createJourney from "../../create-journey/createJourney";
-import getLatestJourney from "../../create-journey/getLatestJourney";
-import { currentUserID } from "../../globals";
+} from "../../../create-journey/types";
+import { generateRandomID } from "../../../globals";
+import fetchJourneys from "../../../create-journey/fetchJourneys";
+import fetchLocation from "../../../create-journey/fetchLocation";
+import createJourney from "../../../create-journey/createJourney";
+import getLatestJourney from "../../../create-journey/getLatestJourney";
+import { currentUserID } from "../../../globals";
 
 const Journey: React.FC = () => {
   const [input, setInput] = useState<string>("");

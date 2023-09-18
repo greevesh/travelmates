@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import Badge from "react-bootstrap/Badge";
 
-import { JourneyBadgeProps, Journey } from "../../create-journey/types";
-import { db } from "../../../../firebase/app";
+import { JourneyBadgeProps, Journey } from "../../../create-journey/types";
+import { db } from "../../../../../firebase/app";
 import { doc, deleteDoc } from "firebase/firestore";
 
 const JourneyBadge: React.FC<JourneyBadgeProps> = ({
