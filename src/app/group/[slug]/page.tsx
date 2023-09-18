@@ -11,10 +11,7 @@ import { slotColumnCommonFields, months, generatedColumns } from "../columns";
 import { rootStyles } from "../rootStyles";
 import { GridColDef } from "@mui/x-data-grid-pro";
 import { CalendarDay, Row } from "../../../../src/app/types";
-import { currentUserID, groupID } from "../../globals";
-import { getDocs, query, collection, where } from "firebase/firestore";
-import { db } from "@root/firebase/app";
-import fetchRows from "../rows"; // Import the fetchRows function
+import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
 
 initializeApp(firebaseConfig);
@@ -33,6 +30,7 @@ const GroupPage = () => {
     async function fetchData() {
       const fetchedRows = await fetchRows();
       const displayName = await getCurrentUserDisplayName();
+      const journeys = await fetchCurrentUserJourneys();
 
       setColumns(generatedColumns);
       setCurrentMonthRows(

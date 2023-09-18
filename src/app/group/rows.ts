@@ -25,8 +25,29 @@ async function fetchUserDisplayName() {
   }
 }
 
+export const fetchCurrentUserJourneys = async () => {
+  const locations: string[] = [];
+  const q: Query<Document> = query(
+    collection(db, "journeys"),
+    where("userID", "==", currentUserID)
+  );
+
+  const journeys: QuerySnapshot<unknown> = await getDocs(q);
+  console.log("current user journeys:", journeys);
+
+  if (journeys.size > 0) {
+    journeys.forEach((doc) => {
+      const journey = doc.data();
+      locations.push(journey.location);
+    });
+  }
+  console.log(locations);
+  return locations;
+};
+
 async function fetchRows() {
   const currentUserDisplayName: string = await fetchUserDisplayName();
+  const currentUserJourneys: string[] = await fetchCurrentUserJourneys();
 
   const rows: Row[] = [
     {
@@ -34,7 +55,7 @@ async function fetchRows() {
       name: currentUserDisplayName,
       month: "August",
       year: 2023,
-      places: ["Moalboal (PH)", "Moalboal (PH)"],
+      places: currentUserJourneys,
     },
     {
       id: 2,
