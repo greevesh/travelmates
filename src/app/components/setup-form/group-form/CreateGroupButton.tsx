@@ -1,5 +1,6 @@
 import React from "react";
 import { CreateGroupButtonProps } from "../../../create-group/types";
+import Button from "@mui/material/Button";
 
 const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
   group,
@@ -7,9 +8,13 @@ const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
   emptyInput,
 }) => {
   return (
-    <button disabled={emptyInput} onClick={() => handleSubmit()}>
+    <Button
+      variant="contained"
+      disabled={emptyInput}
+      onClick={() => handleSubmit()}
+    >
       Create Group
-    </button>
+    </Button>
   );
 };
 

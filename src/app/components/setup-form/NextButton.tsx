@@ -1,8 +1,13 @@
 import React from "react";
 import { NextButtonProps } from "../../setup/types";
+import Button from "@mui/material/Button";
 
 const NextButton: React.FC<NextButtonProps> = ({ incrementStep }) => {
-  return <button onClick={incrementStep}>Next</button>;
+  return (
+    <Button variant="outlined" onClick={incrementStep}>
+      Next
+    </Button>
+  );
 };
 
 export default NextButton;

@@ -5,7 +5,11 @@ import Button from "@mui/material/Button";
 const PreviousMonthButton: React.FC<PreviousMonthButtonProps> = ({
   decrementMonth,
 }) => {
-  return <Button onClick={decrementMonth}>Previous month</Button>;
+  return (
+    <Button variant="outlined" onClick={decrementMonth}>
+      Previous month
+    </Button>
+  );
 };
 
 export default PreviousMonthButton;
