@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import Badge from "react-bootstrap/Badge";
 
 import { JourneyBadgeProps, Journey } from "../../../create-journey/types";
 import { db } from "../../../../../firebase/app";
@@ -39,13 +38,13 @@ const JourneyBadge: React.FC<JourneyBadgeProps> = ({
   };
 
   return (
-    <div ref={selectedJourneyBadge} className="mt-2">
-      <Badge bg="secondary">
+    <div ref={selectedJourneyBadge}>
+      <div>
         <b>{location}</b> - {startDate} - {endDate}
         <span className="ms-1" onClick={handleDeleteJourney}>
           X
         </span>
-      </Badge>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,4 @@
 import React from "react";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 
 import { UserSearchProps } from "../../../create-group/types";
 import Image from "next/image";
@@ -14,22 +11,21 @@ const Search: React.FC<UserSearchProps> = ({
 }) => {
   return (
     <div>
-      <form id="form" className="d-flex">
-        <Form.Control
-          type="search"
-          placeholder="Search for any user"
-          className="me-2"
-          aria-label="Search"
-          value={input}
-          onChange={(e) => handleChange(e.target.value)}
-        />
-      </form>
+      <form
+        id="form"
+        className="d-flex"
+        type="search"
+        placeholder="Search for any user"
+        aria-label="Search"
+        value={input}
+        onChange={(e) => handleChange(e.target.value)}
+      ></form>
       {input && (
-        <Card style={{ width: "18rem" }}>
-          <ListGroup variant="flush">
+        <div style={{ width: "18rem" }}>
+          <ul>
             {users && users.length > 0 ? (
               users.map((user, index) => (
-                <ListGroup.Item onClick={() => handleSelect(user)} key={index}>
+                <li onClick={() => handleSelect(user)} key={index}>
                   <Image
                     width="50"
                     height="50"
@@ -37,13 +33,13 @@ const Search: React.FC<UserSearchProps> = ({
                     alt="user profile picture"
                   />
                   {user.displayName}
-                </ListGroup.Item>
+                </li>
               ))
             ) : (
-              <ListGroup.Item>Couldn't retrieve any users</ListGroup.Item>
+              <li>Couldn't retrieve any users</li>
             )}
-          </ListGroup>
-        </Card>
+          </ul>
+        </div>
       )}
     </div>
   );

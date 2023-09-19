@@ -1,5 +1,4 @@
 import React from "react";
-import Badge from "react-bootstrap/Badge";
 
 import { SelectedBadgeProps } from "../create-group/types";
 
@@ -8,12 +7,12 @@ const SelectedBadge: React.FC<SelectedBadgeProps> = ({
   handleDelete,
 }) => {
   return (
-    <Badge className="mt-2" bg="secondary">
+    <div>
       {selectedItem}
       <span onClick={handleDelete} className="ms-1">
         X
       </span>
-    </Badge>
+    </div>
   );
 };
 

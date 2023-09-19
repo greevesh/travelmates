@@ -1,16 +1,10 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { PreviousMonthButtonProps } from "../../group/types";
 
 const PreviousMonthButton: React.FC<PreviousMonthButtonProps> = ({
   decrementMonth,
 }) => {
-  return (
-    <Button variant="primary" onClick={decrementMonth}>
-      Previous month
-    </Button>
-  );
+  return <button onClick={decrementMonth}>Previous month</button>;
 };
 
 export default PreviousMonthButton;

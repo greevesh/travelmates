@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { CreateGroupButtonProps } from "../../../create-group/types";
 
 const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
@@ -8,9 +7,9 @@ const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
   emptyInput,
 }) => {
   return (
-    <Button disabled={emptyInput} onClick={() => handleSubmit()}>
+    <button disabled={emptyInput} onClick={() => handleSubmit()}>
       Create Group
-    </Button>
+    </button>
   );
 };
 

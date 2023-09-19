@@ -1,14 +1,8 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { PreviousButtonProps } from "../../setup/types";
 
 const PreviousButton: React.FC<PreviousButtonProps> = ({ decrementStep }) => {
-  return (
-    <Button variant="primary" onClick={decrementStep}>
-      Previous
-    </Button>
-  );
+  return <button onClick={decrementStep}>Previous</button>;
 };
 
 export default PreviousButton;

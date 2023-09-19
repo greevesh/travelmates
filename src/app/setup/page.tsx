@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-use";
-import Card from "react-bootstrap/Card";
 import Journey from "../components/setup-form/journey-form/JourneyForm";
 import styles from "../styles/auth/card-container.module.css";
 import NextButton from "../components/setup-form/NextButton";
@@ -210,14 +209,12 @@ const Setup: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Card style={{ width: "22rem", height: "20rem" }}>
-        <Card.Body>
+      <div>
+        <div>
           {step === 1 ? (
             <>
-              <Card.Title>Create some Journeys (max 5)</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                So your mates will know where you&lsquo;ll be
-              </Card.Subtitle>
+              <h1>Create some Journeys (max 5)</h1>
+              <h2>So your mates will know where you&lsquo;ll be</h2>
               <Journey />
               <div className="d-flex justify-content-end">
                 <NextButton incrementStep={incrementStep} />
@@ -225,10 +222,8 @@ const Setup: React.FC = () => {
             </>
           ) : (
             <>
-              <Card.Title>Create a Group</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                So you can see where your mates are
-              </Card.Subtitle>
+              <h1>Create a Group</h1>
+              <h2>So you can see where your mates are</h2>
               <Search
                 input={input}
                 handleSelect={handleSelect}
@@ -256,13 +251,13 @@ const Setup: React.FC = () => {
               <PreviousButton decrementStep={decrementStep} />
             </>
           )}
-        </Card.Body>
+        </div>
         <div className="d-flex align-items-center">
           <div className="d-flex justify-content-center w-100">
             <p>Step {step}/2</p>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,4 @@
 import React from "react";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 import { LocationSearchProps } from "../../../create-journey/types";
 
 const Search: React.FC<LocationSearchProps> = ({
@@ -12,28 +9,27 @@ const Search: React.FC<LocationSearchProps> = ({
 }) => {
   return (
     <div>
-      <form id="form" className="d-flex">
-        <Form.Control
-          type="search"
-          placeholder="Search for any city"
-          className="me-2"
-          aria-label="Search"
-          value={input}
-          onChange={(e) => handleChange(e.target.value)}
-        />
-      </form>
+      <form
+        id="form"
+        className="d-flex"
+        type="search"
+        placeholder="Search for any city"
+        aria-label="Search"
+        value={input}
+        onChange={(e) => handleChange(e.target.value)}
+      ></form>
       {input && (
-        <Card style={{ width: "18rem" }}>
-          <ListGroup variant="flush">
+        <div style={{ width: "18rem" }}>
+          <ul>
             {geonamesList !== undefined
               ? geonamesList.map((name: string) => (
-                  <ListGroup.Item onClick={() => handleSelect(name)} key={name}>
+                  <li onClick={() => handleSelect(name)} key={name}>
                     {name}
-                  </ListGroup.Item>
+                  </li>
                 ))
               : null}
-          </ListGroup>
-        </Card>
+          </ul>
+        </div>
       )}
     </div>
   );

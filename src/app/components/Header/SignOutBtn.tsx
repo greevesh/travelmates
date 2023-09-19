@@ -5,7 +5,6 @@ import {
   type Auth,
 } from "../../../../node_modules/firebase/auth";
 import { AuthError } from "../../../../src/app/exceptions";
-import Button from "react-bootstrap/Button";
 import firebaseConfig from "../../../../firebase/config";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
@@ -29,9 +28,7 @@ const SignOutBtn = () => {
 
   return (
     <div>
-      <Button onClick={() => signOut()} variant="outline-success">
-        Sign out
-      </Button>
+      <button onClick={() => signOut()}>Sign out</button>
     </div>
   );
 };
