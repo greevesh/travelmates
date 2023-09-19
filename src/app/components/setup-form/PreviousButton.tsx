@@ -1,8 +1,9 @@
 import React from "react";
 import { PreviousButtonProps } from "../../setup/types";
+import Button from "@mui/material/Button";
 
 const PreviousButton: React.FC<PreviousButtonProps> = ({ decrementStep }) => {
-  return <button onClick={decrementStep}>Previous</button>;
+  return <Button onClick={decrementStep}>Previous</Button>;
 };
 
 export default PreviousButton;

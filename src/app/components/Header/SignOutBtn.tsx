@@ -8,6 +8,7 @@ import { AuthError } from "../../../../src/app/exceptions";
 import firebaseConfig from "../../../../firebase/config";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import Button from "@mui/material/Button";
 
 initializeApp(firebaseConfig);
 
@@ -28,7 +29,7 @@ const SignOutBtn = () => {
 
   return (
     <div>
-      <button onClick={() => signOut()}>Sign out</button>
+      <Button onClick={() => signOut()}>Sign out</Button>
     </div>
   );
 };

@@ -19,6 +19,8 @@ import styles from "src/app/styles/auth/google-sign-in-btn.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
+import Button from "@mui/material/Button";
+
 const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth();
 const db: Firestore = getFirestore(firebaseApp);
@@ -66,10 +68,10 @@ const SignInGoogleBtn = (): React.JSX.Element => {
 
   return (
     <div>
-      <button className={styles.btn} onClick={() => signInWithGoogle()}>
+      <Button className={styles.btn} onClick={() => signInWithGoogle()}>
         <FontAwesomeIcon className={styles.icon} icon={faGoogle} />
         Sign in with Google
-      </button>
+      </Button>
     </div>
   );
 };
