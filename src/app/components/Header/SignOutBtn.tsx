@@ -29,7 +29,9 @@ const SignOutBtn = () => {
 
   return (
     <div>
-      <Button onClick={() => signOut()}>Sign out</Button>
+      <Button variant="contained" onClick={() => signOut()}>
+        Sign out
+      </Button>
     </div>
   );
 };
