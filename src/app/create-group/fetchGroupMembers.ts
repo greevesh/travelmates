@@ -1,6 +1,6 @@
 import { query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase/app";
-import { GroupMember, FetchGroupMemberProps } from "../types";
+import { GroupMember, FetchGroupMemberProps } from "./types";
 import { currentUserID } from "../globals";
 
 const fetchGroupMembers = async ({

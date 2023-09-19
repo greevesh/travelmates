@@ -24,9 +24,11 @@ export interface GroupMembership {
 
 export interface UserSearchProps {
   input: string;
-  users: UserResults[];
   handleChange: (value: string) => void;
-  handleSelect: (selectedItem: UserResults) => void;
+  handleSelect: (user: UserResults) => void;
+  users: UserResults[];
+  groupMembers: GroupMember[];
+  setUsers: React.Dispatch<React.SetStateAction<UserResults[]>>;
 }
 
 export interface UserResults {

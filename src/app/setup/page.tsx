@@ -1,13 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useDebounce } from "react-use";
+import React, { useEffect, useState } from "react";
 import Journey from "../components/setup-form/journey-form/JourneyForm";
 import styles from "../styles/auth/card-container.module.css";
 import NextButton from "../components/setup-form/NextButton";
 import Search from "../components/setup-form/group-form/Search";
 import PreviousButton from "../components/setup-form/PreviousButton";
 
-import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 
 import { currentUserID, groupID, generateRandomID } from "../globals";
@@ -53,48 +52,7 @@ const Setup: React.FC = () => {
     }
   }, []);
 
-  const debouncedInput = useDebounce(input, 300);
-
   let [step, setStep] = useState<number>(1);
-
-  const fetchUsers = async (): Promise<void> => {
-    const q = query(collection(db, "users"));
-    const querySnapshot = await getDocs(q);
-
-    try {
-      const users: any = querySnapshot.docs
-        .map((doc) => {
-          const id: string = doc.data().id;
-          const displayName: string = doc.data().displayName.toLowerCase();
-          const inputLowerCase: string = input.toLowerCase();
-
-          const alreadySelected = (id: string): boolean => {
-            return groupMembers.some(
-              (groupMember) => groupMember.userID === id
-            );
-          };
-
-          if (
-            displayName.startsWith(inputLowerCase.slice(0, input.length)) &&
-            !alreadySelected(id) &&
-            currentUserID !== id
-          ) {
-            return {
-              id: id,
-              photoURL: doc.data().photoURL,
-              displayName: doc.data().displayName,
-            };
-          }
-
-          return null;
-        })
-        .filter(Boolean);
-
-      setUsers(users);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   let groupMembership: GroupMembership | null = null;
 
@@ -137,12 +95,6 @@ const Setup: React.FC = () => {
     setInput(value);
     setEmptyInput(false);
   };
-
-  useEffect(() => {
-    if (input) {
-      fetchUsers();
-    }
-  }, [debouncedInput]);
 
   const handleSelect = (user: UserResults): void => {
     setInput("");
@@ -226,9 +178,11 @@ const Setup: React.FC = () => {
               <h2>So you can see where your mates are</h2>
               <Search
                 input={input}
-                handleSelect={handleSelect}
                 handleChange={handleSearchChange}
+                handleSelect={handleSelect}
                 users={users}
+                groupMembers={groupMembers}
+                setUsers={setUsers}
               />
               {groupMembersLoaded || groupMembers.length > 0 ? (
                 groupMembers.map((groupMember) => (
