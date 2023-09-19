@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import Image from "next/image";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 import fetchUsers from "../../../create-group/fetchUsers";
 import { UserSearchProps, UserResults } from "../../../create-group/types";
 
@@ -22,11 +23,21 @@ const Search: React.FC<UserSearchProps> = ({
   return (
     <div>
       <Autocomplete
-        freeSolo
         id="search-input"
         options={users.map((user: UserResults) => user.displayName)}
         value={userInput}
         onChange={(event, newValue) => setUserInput(newValue)}
+        getOptionLabel={(option) => option}
+        renderOption={(props, option) => {
+          const user = users.find((user) => user.displayName === option);
+
+          return (
+            <li {...props}>
+              <Avatar src={user?.photoURL} alt={option} />
+              <Typography style={{ paddingLeft: "5px" }}>{option}</Typography>
+            </li>
+          );
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -38,31 +49,6 @@ const Search: React.FC<UserSearchProps> = ({
           />
         )}
       />
-      {/* {input && (
-        <div style={{ width: "18rem" }}>
-          <ul>
-            {users && users.length > 0 ? (
-              users.map((user, index) => (
-                <li
-                  onClick={() => handleSelect(user)}
-                  key={index}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Image
-                    width={50}
-                    height={50}
-                    src={user.photoURL}
-                    alt="user profile picture"
-                  />
-                  {user.displayName}
-                </li>
-              ))
-            ) : (
-              <li>Couldn't retrieve any users</li>
-            )}
-          </ul>
-        </div>
-      )} */}
     </div>
   );
 };
