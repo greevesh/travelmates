@@ -18,7 +18,7 @@ const Search: React.FC<UserSearchProps> = ({
 
   useEffect(() => {
     fetchUsers(userInput, groupMembers, setUsers);
-  }, [userInput, groupMembers, setUsers]);
+  }, [userInput]);
 
   return (
     <div>
@@ -26,8 +26,9 @@ const Search: React.FC<UserSearchProps> = ({
         id="search-input"
         options={users.map((user: UserResults) => user.displayName)}
         value={userInput}
-        onChange={(event, newValue) => setUserInput(newValue)}
-        getOptionLabel={(option) => option}
+        onChange={(event, newValue: UserResults) => {
+          handleSelect(newValue);
+        }}
         renderOption={(props, option) => {
           const user = users.find((user) => user.displayName === option);
 

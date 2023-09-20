@@ -43,13 +43,14 @@ const Setup: React.FC = () => {
 
   useEffect(() => {
     console.log("group:", group);
-    if (group) {
-      fetchGroupMembers({
-        setGroupMembers,
-        setGroupMembersLoaded,
-        groupID,
-      });
-    }
+    setGroupMembers([]);
+    // if (group) {
+    //   fetchGroupMembers({
+    //     setGroupMembers,
+    //     setGroupMembersLoaded,
+    //     groupID,
+    //   });
+    // }
   }, []);
 
   let [step, setStep] = useState<number>(1);
@@ -96,19 +97,26 @@ const Setup: React.FC = () => {
     setEmptyInput(false);
   };
 
-  const handleSelect = (user: UserResults): void => {
-    setInput("");
-    setGroupMembers((prevGroupMembers) => [
-      ...prevGroupMembers,
-      {
-        membershipID: generateRandomID(),
-        userID: user.id,
-        displayName: user.displayName,
-      },
-    ]);
-    setGroupMembersLoaded(true);
-    setEmptyInput(false);
-    console.log(groupMembers);
+  const handleSelect = (newValue: string | null): void => {
+    if (newValue) {
+      const selectedUser = users.find((user) => user.displayName === newValue);
+      console.log("user", selectedUser);
+
+      if (selectedUser) {
+        setInput("");
+        setGroupMembers((prevGroupMembers) => [
+          ...prevGroupMembers,
+          {
+            membershipID: generateRandomID(),
+            userID: selectedUser.id,
+            displayName: selectedUser.displayName,
+          },
+        ]);
+        setGroupMembersLoaded(true);
+        setEmptyInput(false);
+        console.log(groupMembers);
+      }
+    }
   };
 
   const handleDelete = (userToDelete: GroupMember): void => {
