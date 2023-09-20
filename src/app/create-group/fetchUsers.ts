@@ -18,14 +18,15 @@ const fetchUsers = async (
         const displayName: string = doc.data().displayName.toLowerCase();
         const inputLowerCase: string = input.toLowerCase();
 
-        // const alreadySelected = (id: string): boolean => {
-        //   return groupMembers.some(
-        //     (groupMember: GroupMember) => groupMember.userID === id
-        //   );
-        // };
+        const alreadySelected = (id: string): boolean => {
+          return groupMembers.some(
+            (groupMember: GroupMember) => groupMember.userID === id
+          );
+        };
 
         if (
           displayName.startsWith(inputLowerCase.slice(0, input.length)) &&
+          !alreadySelected(id) &&
           currentUserID !== id
         ) {
           return {

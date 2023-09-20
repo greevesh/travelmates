@@ -44,13 +44,13 @@ const Setup: React.FC = () => {
   useEffect(() => {
     console.log("group:", group);
     setGroupMembers([]);
-    // if (group) {
-    //   fetchGroupMembers({
-    //     setGroupMembers,
-    //     setGroupMembersLoaded,
-    //     groupID,
-    //   });
-    // }
+    if (group) {
+      fetchGroupMembers({
+        setGroupMembers,
+        setGroupMembersLoaded,
+        groupID,
+      });
+    }
   }, []);
 
   let [step, setStep] = useState<number>(1);
