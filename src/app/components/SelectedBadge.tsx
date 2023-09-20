@@ -1,5 +1,5 @@
 import React from "react";
-
+import Chip from "@mui/material/Chip";
 import { SelectedBadgeProps } from "../create-group/types";
 
 const SelectedBadge: React.FC<SelectedBadgeProps> = ({
@@ -8,10 +8,7 @@ const SelectedBadge: React.FC<SelectedBadgeProps> = ({
 }) => {
   return (
     <div>
-      {selectedItem}
-      <span onClick={handleDelete} className="ms-1">
-        X
-      </span>
+      <Chip label={selectedItem} variant="outlined" onDelete={handleDelete} />
     </div>
   );
 };
