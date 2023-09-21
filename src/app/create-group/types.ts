@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface HeadingProps {
   heading: string;
   subheading: string;
@@ -18,6 +20,12 @@ export interface CreateGroupButtonProps {
   group: Group | null;
   handleSubmit: () => void;
   emptyInput: boolean;
+}
+
+export interface CreateGroupMembershipsProps {
+  group: Group;
+  groupMembership: GroupMembership | null;
+  groupMembers: GroupMember[];
 }
 
 export interface GroupMembership {

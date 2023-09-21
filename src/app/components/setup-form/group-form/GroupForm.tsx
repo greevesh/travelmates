@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { db } from "../../../../../firebase/app";
 import Heading from "../Heading";
 import Search from "./Search";
 import CreateGroupButton from "./CreateGroupButton";
 import SelectedBadge from "../../SelectedBadge";
 import fetchGroupMembers from "../../../create-group/fetchGroupMembers";
 import createGroup from "../../../create-group/createGroup";
+import createGroupMemberships from "../../../create-group/createGroupMemberships";
 import { currentUserID, groupID, generateRandomID } from "../../../globals";
 import {
   GroupMember,
@@ -55,41 +54,6 @@ const GroupForm: React.FC = () => {
 
   let groupMembership: GroupMembership | null = null;
 
-  //   const createGroup = async (group: Group): Promise<void> => {
-  //     if (group.id) {
-  //       try {
-  //         await setDoc(doc(db, "groups", group.id), group);
-  //         console.log("group document written successfully!", group);
-  //       } catch (error) {
-  //         console.error("Error writing document: ", error);
-  //       }
-  //     } else {
-  //       console.log("group is null");
-  //     }
-  //   };
-
-  const createGroupMemberships = async (): Promise<void> => {
-    console.log("group membership:", groupMembership);
-    if (group) {
-      try {
-        groupMembers.forEach((groupMember) => {
-          const groupMembership: GroupMembership = {
-            membershipID: generateRandomID(),
-            userID: groupMember.userID,
-            groupID: group.id,
-            displayName: groupMember.displayName,
-          };
-          setDoc(
-            doc(db, "group-memberships", groupMembership.membershipID),
-            groupMembership
-          );
-        });
-      } catch (error) {
-        console.error("Error writing document: ", error);
-      }
-    }
-  };
-
   // HANDLERS - START
   const handleSearchChange = (value: string): void => {
     setInput(value);
@@ -128,7 +92,7 @@ const GroupForm: React.FC = () => {
     if (group !== undefined) {
       try {
         await createGroup(group);
-        await createGroupMemberships();
+        await createGroupMemberships({ group, groupMembership, groupMembers });
         router.push(`/group/${groupID}`);
         setUsers([]);
       } catch (error) {
