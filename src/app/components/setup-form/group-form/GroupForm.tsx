@@ -8,6 +8,7 @@ import Search from "./Search";
 import CreateGroupButton from "./CreateGroupButton";
 import SelectedBadge from "../../SelectedBadge";
 import fetchGroupMembers from "../../../create-group/fetchGroupMembers";
+import createGroup from "../../../create-group/createGroup";
 import { currentUserID, groupID, generateRandomID } from "../../../globals";
 import {
   GroupMember,
@@ -54,18 +55,18 @@ const GroupForm: React.FC = () => {
 
   let groupMembership: GroupMembership | null = null;
 
-  const createGroup = async (group: Group): Promise<void> => {
-    if (group.id) {
-      try {
-        await setDoc(doc(db, "groups", group.id), group);
-        console.log("group document written successfully!", group);
-      } catch (error) {
-        console.error("Error writing document: ", error);
-      }
-    } else {
-      console.log("group is null");
-    }
-  };
+  //   const createGroup = async (group: Group): Promise<void> => {
+  //     if (group.id) {
+  //       try {
+  //         await setDoc(doc(db, "groups", group.id), group);
+  //         console.log("group document written successfully!", group);
+  //       } catch (error) {
+  //         console.error("Error writing document: ", error);
+  //       }
+  //     } else {
+  //       console.log("group is null");
+  //     }
+  //   };
 
   const createGroupMemberships = async (): Promise<void> => {
     console.log("group membership:", groupMembership);
