@@ -55,7 +55,7 @@ const GroupForm: React.FC = () => {
   let groupMembership: GroupMembership | null = null;
 
   // HANDLERS - START
-  const handleSearchChange = (value: string): void => {
+  const handleChange = (value: string): void => {
     setInput(value);
     setEmptyInput(false);
   };
@@ -122,7 +122,7 @@ const GroupForm: React.FC = () => {
       />
       <Search
         input={input}
-        handleChange={handleSearchChange}
+        handleChange={handleChange}
         handleSelect={handleSelect}
         users={users}
         groupMembers={groupMembers}
