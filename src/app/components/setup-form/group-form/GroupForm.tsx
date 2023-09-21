@@ -5,6 +5,7 @@ import Heading from "../Heading";
 import Search from "./Search";
 import CreateGroupButton from "./CreateGroupButton";
 import SelectedBadge from "../../SelectedBadge";
+import Message from "../Message";
 import fetchGroupMembers from "../../../create-group/fetchGroupMembers";
 import createGroup from "../../../create-group/createGroup";
 import createGroupMemberships from "../../../create-group/createGroupMemberships";
@@ -137,9 +138,9 @@ const GroupForm: React.FC = () => {
           />
         ))
       ) : showNoGroupMembers ? (
-        <p>No group members added yet.</p>
+        <Message text="No group members added yet." />
       ) : (
-        <p>Searching for group members...</p>
+        <Message text="Searching for group members..." />
       )}
       <CreateGroupButton
         group={group}

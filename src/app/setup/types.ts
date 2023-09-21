@@ -1,3 +1,7 @@
+export interface MessageProps {
+  text: string;
+}
+
 export interface NextButtonProps {
   incrementStep: () => void;
 }
