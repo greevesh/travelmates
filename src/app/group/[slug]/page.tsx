@@ -1,17 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { initializeApp } from "../../../../node_modules/firebase/app";
-import firebaseConfig from "../../../../firebase/config";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
+import { GridColDef } from "@mui/x-data-grid-pro";
+import { initializeApp } from "../../../../node_modules/firebase/app";
+import firebaseConfig from "../../../../firebase/config";
 import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import generateCalendar from "../generateCalendar";
 import { slotColumnCommonFields, months, generatedColumns } from "../columns";
-import { GridColDef } from "@mui/x-data-grid-pro";
 import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
+import ModalComponent from "../../components/group/ModalComponent";
 
 initializeApp(firebaseConfig);
 
@@ -22,7 +23,6 @@ const GroupPage = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
-
   const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
 
   useEffect(() => {
@@ -98,6 +98,7 @@ const GroupPage = () => {
       </Box>
       <PreviousMonthButton decrementMonth={decrementMonth} />
       <NextMonthButton incrementMonth={incrementMonth} />
+      <ModalComponent />
       {months[monthIndex]}, {currentYear}
     </>
   );
