@@ -1,3 +1,8 @@
+export interface HeadingProps {
+  heading: string;
+  subheading: string;
+}
+
 export interface Group {
   id: string | null;
   creatorID: string | null;
