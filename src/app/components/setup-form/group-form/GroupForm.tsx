@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../../../../firebase/app";
 import Heading from "../Heading";
 import Search from "./Search";
 import SelectedBadge from "./SelectedBadge";
@@ -41,7 +43,6 @@ const GroupForm: React.FC = () => {
   }
 
   useEffect(() => {
-    // setGroupMembers([]);
     if (group) {
       fetchGroupMembers({
         setGroupMembers,
@@ -93,10 +94,17 @@ const GroupForm: React.FC = () => {
     );
   };
 
-  const handleDelete = (groupMember: GroupMember): void => {
-    setGroupMembers((prevGroupMembers) =>
-      prevGroupMembers.filter((user) => user !== groupMember)
-    );
+  const handleGroupMemberDelete = async (
+    groupMember: GroupMember
+  ): Promise<void> => {
+    try {
+      await deleteDoc(doc(db, "group-memberships", groupMember.membershipID));
+      setGroupMembers((prevGroupMembers) =>
+        prevGroupMembers.filter((user) => user !== groupMember)
+      );
+    } catch (err) {
+      console.log("Error deleting group member:", err);
+    }
   };
 
   const handleSubmit = async (): Promise<void> => {
@@ -174,7 +182,7 @@ const GroupForm: React.FC = () => {
           <SelectedBadge
             key={groupMember.userID}
             selectedItem={groupMember.displayName}
-            handleDelete={() => handleDelete(groupMember)}
+            handleDelete={() => handleGroupMemberDelete(groupMember)}
           />
         ))
       ) : showNoGroupMembers ? (
