@@ -7,18 +7,17 @@ import fetchUsers from "../../../create-group/fetchUsers";
 import { UserSearchProps, UserResults } from "../../../create-group/types";
 
 const Search: React.FC<UserSearchProps> = ({
-  input,
-  handleChange,
   handleSelect,
   users,
+  selectedUsers,
   groupMembers,
   setUsers,
 }) => {
   const [userInput, setUserInput] = useState("");
 
   useEffect(() => {
-    fetchUsers(userInput, groupMembers, setUsers);
-  }, [userInput, groupMembers]);
+    fetchUsers({ userInput, selectedUsers, groupMembers, setUsers });
+  }, [userInput, groupMembers, selectedUsers]);
 
   return (
     <div>

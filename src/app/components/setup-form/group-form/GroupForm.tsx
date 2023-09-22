@@ -145,6 +145,10 @@ const GroupForm: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("Selected users:", selectedUsers);
+  }, [selectedUsers]);
+
   return (
     <>
       <Heading
@@ -152,10 +156,9 @@ const GroupForm: React.FC = () => {
         subheading="So you can see where your mates are"
       />
       <Search
-        input={input}
-        handleChange={handleChange}
         handleSelect={handleSelect}
         users={users}
+        selectedUsers={selectedUsers}
         groupMembers={groupMembers}
         setUsers={setUsers}
       />

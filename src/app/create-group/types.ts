@@ -10,6 +10,13 @@ export interface Group {
   creatorID: string | null;
 }
 
+export interface FetchUsersProps {
+  userInput: string;
+  selectedUsers: SelectedUser[];
+  groupMembers: GroupMember[];
+  setUsers: (users: any[]) => void;
+}
+
 export interface FetchGroupMemberProps {
   groupMembers?: GroupMember[];
   setGroupMembers: React.Dispatch<React.SetStateAction<GroupMember[]>>;
@@ -25,10 +32,9 @@ export interface GroupMembership {
 }
 
 export interface UserSearchProps {
-  input: string;
-  handleChange: (value: string) => void;
   handleSelect: (user: UserResults) => void;
   users: UserResults[];
+  selectedUsers: SelectedUser[];
   groupMembers: GroupMember[];
   setUsers: React.Dispatch<React.SetStateAction<UserResults[]>>;
 }
@@ -56,7 +62,7 @@ export interface GroupMember {
   displayName: string;
 }
 
-export interface AddMembersButtonProps {
+export interface EditMembersButtonProps {
   handleSubmit: () => void;
   emptyInput: boolean;
 }

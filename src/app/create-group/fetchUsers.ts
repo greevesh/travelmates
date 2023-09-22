@@ -1,13 +1,14 @@
 import { query, collection, getDocs, DocumentData } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 import { currentUserID } from "../globals";
-import { GroupMember } from "./types";
+import { SelectedUser, GroupMember, FetchUsersProps } from "./types";
 
-const fetchUsers = async (
-  input: string,
-  groupMembers: GroupMember[],
-  setUsers: (users: any[]) => void
-): Promise<void> => {
+const fetchUsers = async ({
+  userInput,
+  selectedUsers,
+  groupMembers,
+  setUsers,
+}: FetchUsersProps): Promise<void> => {
   const q = query(collection(db, "users"));
   const querySnapshot = await getDocs(q);
 
@@ -16,17 +17,24 @@ const fetchUsers = async (
       .map((doc) => {
         const id: string = doc.data().id;
         const displayName: string = doc.data().displayName.toLowerCase();
-        const inputLowerCase: string = input.toLowerCase();
+        const inputLowerCase: string = userInput.toLowerCase();
 
         const alreadySelected = (id: string): boolean => {
+          return selectedUsers.some(
+            (selectedUser: SelectedUser) => selectedUser.id === id
+          );
+        };
+
+        const alreadyMember = (id: string): boolean => {
           return groupMembers.some(
             (groupMember: GroupMember) => groupMember.userID === id
           );
         };
 
         if (
-          displayName.startsWith(inputLowerCase.slice(0, input.length)) &&
+          displayName.startsWith(inputLowerCase.slice(0, userInput.length)) &&
           !alreadySelected(id) &&
+          !alreadyMember(id) &&
           currentUserID !== id
         ) {
           return {
