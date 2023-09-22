@@ -1,4 +1,3 @@
-import { Row } from "../group/types";
 import {
   getDocs,
   query,
@@ -7,6 +6,7 @@ import {
   type QuerySnapshot,
   type Query,
 } from "firebase/firestore";
+import { Row } from "../group/types";
 import { db } from "../../../firebase/app";
 import { currentUserID } from "../globals";
 
@@ -55,14 +55,14 @@ async function fetchRows() {
       name: currentUserDisplayName,
       month: "August",
       year: 2023,
-      places: currentUserJourneys,
+      locations: currentUserJourneys,
     },
     {
       id: 2,
       name: "Myo",
       month: "September",
       year: 2023,
-      places: ["Taipei (TW)", "Taipei (TW)"],
+      locations: ["Taipei (TW)", "Taipei (TW)"],
     },
   ];
 

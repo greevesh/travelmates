@@ -73,7 +73,7 @@ const GroupPage = () => {
       generatedColumns.push({
         field: day,
         headerName: day,
-        valueGetter: ({ row }) => row.places[day],
+        valueGetter: ({ row }) => row.locations[day],
         sortable: false,
         ...slotColumnCommonFields,
       });

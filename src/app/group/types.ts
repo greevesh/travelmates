@@ -22,7 +22,7 @@ export interface Row {
   name: string;
   month: string;
   year: number;
-  places: string[];
+  locations: string[];
 }
 
 export type Months =
