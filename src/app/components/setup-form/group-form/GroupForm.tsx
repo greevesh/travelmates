@@ -87,9 +87,15 @@ const GroupForm: React.FC = () => {
     }
   };
 
-  const handleDelete = (userToDelete: GroupMember): void => {
+  const handleSelectedUserDelete = (selectedUser: SelectedUser): void => {
+    setSelectedUsers((prevSelectedUsers) =>
+      prevSelectedUsers.filter((user) => user !== selectedUser)
+    );
+  };
+
+  const handleDelete = (groupMember: GroupMember): void => {
     setGroupMembers((prevGroupMembers) =>
-      prevGroupMembers.filter((user) => user !== userToDelete)
+      prevGroupMembers.filter((user) => user !== groupMember)
     );
   };
 
@@ -150,7 +156,7 @@ const GroupForm: React.FC = () => {
             <SelectedBadge
               key={selectedUser.id}
               selectedItem={selectedUser.displayName}
-              handleDelete={() => handleDelete(selectedUser)}
+              handleDelete={() => handleSelectedUserDelete(selectedUser)}
             />
           ))
         : null}
