@@ -16,7 +16,7 @@ const style = {
   p: 4,
 };
 
-const AddMember: React.FC = () => {
+const EditMembers: React.FC = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -24,7 +24,7 @@ const AddMember: React.FC = () => {
   return (
     <div>
       <Button variant="contained" onClick={handleOpen}>
-        Add members
+        Edit members
       </Button>
       <Modal
         open={open}
@@ -40,4 +40,4 @@ const AddMember: React.FC = () => {
   );
 };
 
-export default AddMember;
+export default EditMembers;
