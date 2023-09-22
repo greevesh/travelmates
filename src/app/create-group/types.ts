@@ -11,6 +11,7 @@ export interface Group {
 }
 
 export interface FetchGroupMemberProps {
+  groupMembers?: GroupMember[];
   setGroupMembers: React.Dispatch<React.SetStateAction<GroupMember[]>>;
   setGroupMembersLoaded: React.Dispatch<React.SetStateAction<boolean>>;
   groupID: string | null;

@@ -41,7 +41,7 @@ const GroupForm: React.FC = () => {
   }
 
   useEffect(() => {
-    setGroupMembers([]);
+    // setGroupMembers([]);
     if (group) {
       fetchGroupMembers({
         setGroupMembers,
@@ -106,6 +106,12 @@ const GroupForm: React.FC = () => {
       try {
         await createGroupMemberships({ group, groupMembership, selectedUsers });
         setSelectedUsers([]);
+        fetchGroupMembers({
+          groupMembers,
+          setGroupMembers,
+          setGroupMembersLoaded,
+          groupID,
+        });
       } catch (err) {
         console.log("Error adding members:", err);
       }

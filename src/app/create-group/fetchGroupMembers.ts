@@ -4,6 +4,7 @@ import { GroupMember, FetchGroupMemberProps } from "./types";
 import { currentUserID } from "../globals";
 
 const fetchGroupMembers = async ({
+  groupMembers,
   setGroupMembers,
   setGroupMembersLoaded,
   groupID,
@@ -15,6 +16,10 @@ const fetchGroupMembers = async ({
         where("groupID", "==", groupID)
       );
       const querySnapshot = await getDocs(q);
+
+      if (groupMembers !== undefined && groupMembers.length > 0) {
+        setGroupMembers([]);
+      }
 
       querySnapshot.forEach((doc) => {
         const { membershipID, userID, displayName } = doc.data();
