@@ -12,7 +12,7 @@ import { slotColumnCommonFields, months, generatedColumns } from "../columns";
 import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
-import ModalComponent from "../../components/group/ModalComponent";
+import ModalComponent from "../../components/group/AddMember";
 
 initializeApp(firebaseConfig);
 
