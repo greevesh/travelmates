@@ -1,6 +1,6 @@
 import React from "react";
 import Chip from "@mui/material/Chip";
-import { SelectedBadgeProps } from "../create-group/types";
+import { SelectedBadgeProps } from "../../../create-group/types";
 
 const SelectedBadge: React.FC<SelectedBadgeProps> = ({
   selectedItem,

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Heading from "../Heading";
 import Search from "./Search";
-import SelectedBadge from "../../SelectedBadge";
+import SelectedBadge from "./SelectedBadge";
 import CreateGroupButton from "./CreateGroupButton";
 import AddMembersButton from "./AddMembersButton";
 import Message from "../Message";
@@ -12,6 +12,7 @@ import createGroup from "../../../create-group/createGroup";
 import createGroupMemberships from "../../../create-group/createGroupMemberships";
 import { currentUserID, groupID, generateRandomID } from "../../../globals";
 import {
+  SelectedUser,
   GroupMember,
   Group,
   GroupMembership,
@@ -20,6 +21,7 @@ import {
 
 const GroupForm: React.FC = () => {
   const [input, setInput] = useState<string>("");
+  const [selectedUsers, setSelectedUsers] = useState<SelectedUser[]>([]);
   const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
   const [emptyInput, setEmptyInput] = useState<boolean>(true);
   const [users, setUsers] = useState<UserResults[]>([]);
@@ -50,10 +52,10 @@ const GroupForm: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (groupMembers.length === 0) {
+    if (selectedUsers.length === 0) {
       setEmptyInput(true);
     }
-  }, [groupMembers]);
+  }, [selectedUsers]);
 
   let groupMembership: GroupMembership | null = null;
 
@@ -70,17 +72,17 @@ const GroupForm: React.FC = () => {
 
       if (selectedUser) {
         setInput("");
-        setGroupMembers((prevGroupMembers) => [
-          ...prevGroupMembers,
+        setSelectedUsers((prevSelectedUsers) => [
+          ...prevSelectedUsers,
           {
             membershipID: generateRandomID(),
-            userID: selectedUser.id,
+            id: selectedUser.id,
             displayName: selectedUser.displayName,
           },
         ]);
         setGroupMembersLoaded(true);
         setEmptyInput(false);
-        console.log("Group members:", groupMembers);
+        console.log("Selected users:", selectedUsers);
       }
     }
   };
@@ -95,14 +97,15 @@ const GroupForm: React.FC = () => {
     if (group !== undefined && pathname.includes("setup")) {
       try {
         await createGroup(group);
-        await createGroupMemberships({ group, groupMembership, groupMembers });
+        await createGroupMemberships({ group, groupMembership, selectedUsers });
         router.push(`/group/${groupID}`);
       } catch (err) {
         console.log("Error creating group:", err);
       }
     } else {
       try {
-        await createGroupMemberships({ group, groupMembership, groupMembers });
+        await createGroupMemberships({ group, groupMembership, selectedUsers });
+        setSelectedUsers([]);
       } catch (err) {
         console.log("Error adding members:", err);
       }
@@ -136,6 +139,24 @@ const GroupForm: React.FC = () => {
         groupMembers={groupMembers}
         setUsers={setUsers}
       />
+      {selectedUsers.length > 0
+        ? selectedUsers.map((selectedUser: SelectedUser) => (
+            <SelectedBadge
+              key={selectedUser.id}
+              selectedItem={selectedUser.displayName}
+              handleDelete={() => handleDelete(selectedUser)}
+            />
+          ))
+        : null}
+      {pathname.includes("setup") ? (
+        <CreateGroupButton
+          group={group}
+          handleSubmit={handleSubmit}
+          emptyInput={emptyInput}
+        />
+      ) : (
+        <AddMembersButton handleSubmit={handleSubmit} emptyInput={emptyInput} />
+      )}
       {groupMembersLoaded || groupMembers.length > 0 ? (
         groupMembers.map((groupMember) => (
           <SelectedBadge
@@ -148,15 +169,6 @@ const GroupForm: React.FC = () => {
         <Message text="No group members added yet." />
       ) : (
         <Message text="Searching for group members..." />
-      )}
-      {pathname.includes("setup") ? (
-        <CreateGroupButton
-          group={group}
-          handleSubmit={handleSubmit}
-          emptyInput={emptyInput}
-        />
-      ) : (
-        <AddMembersButton handleSubmit={handleSubmit} emptyInput={emptyInput} />
       )}
     </>
   );

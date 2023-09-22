@@ -43,6 +43,12 @@ export interface SelectedBadgeProps {
   handleDelete: () => void;
 }
 
+export interface SelectedUser {
+  membershipID: string;
+  id: string;
+  displayName: string;
+}
+
 export interface GroupMember {
   membershipID: string;
   userID: string;
@@ -63,5 +69,5 @@ export interface CreateGroupButtonProps {
 export interface CreateGroupMembershipsProps {
   group: Group;
   groupMembership: GroupMembership | null;
-  groupMembers: GroupMember[];
+  selectedUsers: SelectedUser[];
 }

@@ -1,22 +1,26 @@
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 import { generateRandomID } from "../globals";
-import { CreateGroupMembershipsProps, GroupMembership } from "./types";
+import {
+  SelectedUser,
+  CreateGroupMembershipsProps,
+  GroupMembership,
+} from "./types";
 
 const createGroupMemberships = async ({
   group,
   groupMembership,
-  groupMembers,
+  selectedUsers,
 }: CreateGroupMembershipsProps): Promise<void> => {
   console.log("group membership:", groupMembership);
   if (group) {
     try {
-      groupMembers.forEach((groupMember) => {
+      selectedUsers.forEach((selectedUser: SelectedUser) => {
         const groupMembership: GroupMembership = {
           membershipID: generateRandomID(),
-          userID: groupMember.userID,
+          userID: selectedUser.id,
           groupID: group.id,
-          displayName: groupMember.displayName,
+          displayName: selectedUser.displayName,
         };
         setDoc(
           doc(db, "group-memberships", groupMembership.membershipID),

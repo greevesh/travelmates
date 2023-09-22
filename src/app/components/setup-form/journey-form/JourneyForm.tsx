@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import Search from "./Search";
-import SelectedBadge from "../../SelectedBadge";
-import DateRangePickerComponent from "./DateRangePickerComponent";
-import CreateJourneyButton from "./CreateJourneyButton";
-import JourneyBadge from "./JourneyBadge";
 import {
   Timestamp as firebaseTimestamp,
   serverTimestamp,
 } from "firebase/firestore";
+import Search from "./Search";
+import SelectedBadge from "../group-form/SelectedBadge";
+import DateRangePickerComponent from "./DateRangePickerComponent";
+import CreateJourneyButton from "./CreateJourneyButton";
+import JourneyBadge from "./JourneyBadge";
 import {
   Journey,
   Timestamp,
