@@ -12,7 +12,7 @@ import { slotColumnCommonFields, months, generatedColumns } from "../columns";
 import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
-import ModalComponent from "../../components/group/AddMember";
+import EditMembers from "../../components/group/EditMembers";
 
 initializeApp(firebaseConfig);
 
@@ -98,7 +98,7 @@ const GroupPage = () => {
       </Box>
       <PreviousMonthButton decrementMonth={decrementMonth} />
       <NextMonthButton incrementMonth={incrementMonth} />
-      <ModalComponent />
+      <EditMembers />
       {months[monthIndex]}, {currentYear}
     </>
   );
