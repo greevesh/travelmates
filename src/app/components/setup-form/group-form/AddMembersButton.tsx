@@ -1,9 +1,8 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import { CreateGroupButtonProps } from "../../../create-group/types";
+import { AddMembersButtonProps } from "../../../create-group/types";
 
-const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
-  group,
+const AddMembersButton: React.FC<AddMembersButtonProps> = ({
   handleSubmit,
   emptyInput,
 }) => {
@@ -13,9 +12,9 @@ const CreateGroupButton: React.FC<CreateGroupButtonProps> = ({
       disabled={emptyInput}
       onClick={() => handleSubmit()}
     >
-      Create Group
+      Add Members
     </Button>
   );
 };
 
-export default CreateGroupButton;
+export default AddMembersButton;

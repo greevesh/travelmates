@@ -24,7 +24,7 @@ const AddMember: React.FC = () => {
   return (
     <div>
       <Button variant="contained" onClick={handleOpen}>
-        Add member
+        Add members
       </Button>
       <Modal
         open={open}

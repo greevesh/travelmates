@@ -16,18 +16,6 @@ export interface FetchGroupMemberProps {
   groupID: string | null;
 }
 
-export interface CreateGroupButtonProps {
-  group: Group | null;
-  handleSubmit: () => void;
-  emptyInput: boolean;
-}
-
-export interface CreateGroupMembershipsProps {
-  group: Group;
-  groupMembership: GroupMembership | null;
-  groupMembers: GroupMember[];
-}
-
 export interface GroupMembership {
   membershipID: string;
   userID: string | undefined;
@@ -59,4 +47,21 @@ export interface GroupMember {
   membershipID: string;
   userID: string;
   displayName: string;
+}
+
+export interface AddMembersButtonProps {
+  handleSubmit: () => void;
+  emptyInput: boolean;
+}
+
+export interface CreateGroupButtonProps {
+  group: Group | null;
+  handleSubmit: () => void;
+  emptyInput: boolean;
+}
+
+export interface CreateGroupMembershipsProps {
+  group: Group;
+  groupMembership: GroupMembership | null;
+  groupMembers: GroupMember[];
 }
