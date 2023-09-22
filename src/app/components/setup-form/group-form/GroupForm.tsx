@@ -80,7 +80,7 @@ const GroupForm: React.FC = () => {
         ]);
         setGroupMembersLoaded(true);
         setEmptyInput(false);
-        console.log(groupMembers);
+        console.log("Group members:", groupMembers);
       }
     }
   };

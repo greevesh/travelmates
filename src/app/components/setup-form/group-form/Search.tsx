@@ -18,7 +18,7 @@ const Search: React.FC<UserSearchProps> = ({
 
   useEffect(() => {
     fetchUsers(userInput, groupMembers, setUsers);
-  }, [userInput]);
+  }, [userInput, groupMembers]);
 
   return (
     <div>

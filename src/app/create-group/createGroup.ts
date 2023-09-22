@@ -6,12 +6,12 @@ const createGroup = async (group: Group): Promise<void> => {
   if (group.id) {
     try {
       await setDoc(doc(db, "groups", group.id), group);
-      console.log("group document written successfully!", group);
+      console.log("Group document written successfully!", group);
     } catch (error) {
       console.error("Error writing document: ", error);
     }
   } else {
-    console.log("group is null");
+    console.log("Group is null");
   }
 };
 
