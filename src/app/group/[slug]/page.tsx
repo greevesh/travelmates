@@ -13,10 +13,11 @@ import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
 import EditMembers from "../../components/group/EditMembers";
+import { journeyStyles } from "../journeyStyles";
 
 initializeApp(firebaseConfig);
 
-const GroupPage = () => {
+const GroupPage: React.FC = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [monthIndex, setMonthIndex] = useState<number>(7);
@@ -86,6 +87,7 @@ const GroupPage = () => {
     <>
       <Box>
         <DataGridPro
+          sx={journeyStyles}
           columns={columns}
           rows={currentMonthRows}
           disableRowSelectionOnClick

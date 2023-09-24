@@ -85,8 +85,8 @@ export interface Journey {
   id: string | undefined;
   location: string | undefined;
   dateRange: {
-    startDate: number | Date | undefined;
-    endDate: number | Date | undefined;
+    start: number | Date | undefined;
+    end: number | Date | undefined;
   };
   userID?: string | null;
   created?: FieldValue;

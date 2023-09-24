@@ -1,5 +1,5 @@
-import { Journey } from "../create-journey/types";
 import { setDoc, doc } from "firebase/firestore";
+import { Journey } from "../create-journey/types";
 import { db } from "../../../firebase/app";
 
 const createJourney = async (journey: Journey | null): Promise<void> => {
