@@ -1,9 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { collection, getDocs, getFirestore } from "firebase/firestore";
-import firebaseConfig from "@root/firebase/config";
+import { getFirestore, Firestore, setDoc, doc } from "firebase/firestore";
+import firebaseConfig from "./config";
+import { initializeApp, FirebaseApp } from "../node_modules/firebase/app";
 
-// Initialize Firebase
-// const db = getFirestore(firebaseApp);
-
-// const querySnapshot = await getDocs(collection(db, "dates"));
-// console.log(querySnapshot.docs.map(doc => doc.data()));
+export const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
+export const db: Firestore = getFirestore(firebaseApp);

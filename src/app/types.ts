@@ -8,7 +8,7 @@ export interface FirebaseConfig {
   measurementId: string;
 }
 
-export interface UserData {
+export interface User {
   id: string;
   displayName: string | null;
   email: string | null;

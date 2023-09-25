@@ -1,11 +1,14 @@
-import { signOut as logOut, getAuth } from "firebase/auth";
-import { AuthError } from "../../exceptions";
-import Button from "react-bootstrap/Button";
-import { type Auth } from "firebase/auth";
-import firebaseConfig from "@root/firebase/config";
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "../../../../node_modules/firebase/app";
+import {
+  signOut as logOut,
+  getAuth,
+  type Auth,
+} from "../../../../node_modules/firebase/auth";
+import { AuthError } from "../../../../src/app/exceptions";
+import firebaseConfig from "../../../../firebase/config";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import Button from "@mui/material/Button";
 
 initializeApp(firebaseConfig);
 
@@ -26,7 +29,7 @@ const SignOutBtn = () => {
 
   return (
     <div>
-      <Button onClick={() => signOut()} variant="outline-success">
+      <Button variant="contained" onClick={() => signOut()}>
         Sign out
       </Button>
     </div>

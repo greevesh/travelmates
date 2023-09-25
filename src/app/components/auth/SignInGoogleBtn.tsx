@@ -1,19 +1,25 @@
 "use client";
-import { UserData } from "@root/src/app/types";
-import { FirebaseApp, initializeApp } from "firebase/app";
+import React from "react";
+import { UserData } from "../../../../src/app/types";
+import {
+  FirebaseApp,
+  initializeApp,
+} from "../../../../node_modules/firebase/app";
 import { getAuth, Auth, User } from "firebase/auth";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
-import firebaseConfig from "@root/firebase/config";
-import { AuthError } from "../../exceptions";
+import firebaseConfig from "../../../../firebase/config";
+import { AuthError } from "../../../../src/app/exceptions";
 
 import { setDoc, doc, getFirestore, Firestore } from "firebase/firestore";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
-import styles from "../../styles/auth/google-sign-in-btn.module.css";
+import styles from "src/app/styles/auth/google-sign-in-btn.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+
+import Button from "@mui/material/Button";
 
 const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
 const auth: Auth = getAuth();
@@ -25,7 +31,7 @@ const createUser = async (userData: UserData | null): Promise<void> => {
   }
 };
 
-const SignInGoogleBtn = (): JSX.Element => {
+const SignInGoogleBtn = (): React.JSX.Element => {
   const user: User | null = auth.currentUser;
   let userData: UserData | null = null;
   const router: AppRouterInstance = useRouter();
@@ -62,10 +68,10 @@ const SignInGoogleBtn = (): JSX.Element => {
 
   return (
     <div>
-      <button className={styles.btn} onClick={() => signInWithGoogle()}>
+      <Button className={styles.btn} onClick={() => signInWithGoogle()}>
         <FontAwesomeIcon className={styles.icon} icon={faGoogle} />
         Sign in with Google
-      </button>
+      </Button>
     </div>
   );
 };
