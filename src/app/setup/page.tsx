@@ -2,9 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Journey from "../components/setup-form/journey-form/JourneyForm";
 import styles from "../styles/auth/card-container.module.css";
+import withAuth from "../components/hocs/withAuth";
 import NextButton from "../components/setup-form/NextButton";
 import PreviousButton from "../components/setup-form/PreviousButton";
-
 import GroupForm from "../components/setup-form/group-form/GroupForm";
 
 const SetupPage: React.FC = () => {
@@ -53,4 +53,4 @@ const SetupPage: React.FC = () => {
   );
 };
 
-export default SetupPage;
+export default withAuth(SetupPage);

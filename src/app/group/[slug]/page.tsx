@@ -5,6 +5,7 @@ import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridColDef } from "@mui/x-data-grid-pro";
 import { initializeApp } from "../../../../node_modules/firebase/app";
 import firebaseConfig from "../../../../firebase/config";
+import withAuth from "../../components/hocs/withAuth";
 import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import generateCalendar from "../generateCalendar";
@@ -106,4 +107,4 @@ const GroupPage: React.FC = () => {
   );
 };
 
-export default GroupPage;
+export default withAuth(GroupPage);
