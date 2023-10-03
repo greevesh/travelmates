@@ -10,11 +10,9 @@ const Header: React.FC = () => {
   const [user, setUser] = useState<User | null>(auth.currentUser);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
-
-    return () => unsubscribe();
   }, []);
 
   return (
