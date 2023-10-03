@@ -21,7 +21,7 @@ initializeApp(firebaseConfig);
 const GroupPage: React.FC = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
-  const [monthIndex, setMonthIndex] = useState<number>(7);
+  const [monthIndex, setMonthIndex] = useState<number>(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
