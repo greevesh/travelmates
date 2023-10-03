@@ -1,5 +1,5 @@
 "use client";
-import SignOutBtn from "./SignOutBtn";
+import SignOutBtn from "./SignOutButton";
 
 const Header: React.FC = () => {
   return (

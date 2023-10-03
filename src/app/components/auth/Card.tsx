@@ -1,6 +1,6 @@
 "use client";
 import styles from "src/app/styles/auth/card-container.module.css";
-import SignInGoogleBtn from "../../../../src/app/components/auth/SignInGoogleBtn";
+import SignInGoogleBtn from "./SignInGoogleButton";
 
 const AuthCard = () => {
   return (
