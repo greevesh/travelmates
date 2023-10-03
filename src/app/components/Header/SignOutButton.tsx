@@ -4,7 +4,6 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import Button from "@mui/material/Button";
 import { signOut as logOut } from "firebase/auth";
 import { auth } from "../../../../firebase/auth";
-import { AuthError } from "../../exceptions";
 
 const SignOutButton: React.FC = (): React.JSX.Element => {
   const router: AppRouterInstance = useRouter();
@@ -20,7 +19,7 @@ const SignOutButton: React.FC = (): React.JSX.Element => {
         console.log("signed out", auth.currentUser);
       });
     } catch (error) {
-      throw new AuthError("There was an error signing out.");
+      console.log("There was an error signing out.");
     }
   };
 
