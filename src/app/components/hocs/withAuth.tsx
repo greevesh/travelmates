@@ -13,7 +13,13 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
     useEffect(() => {
       if (!loading && !user) {
         router.push("/");
-      } else if (!loading && user && pathname === "/") {
+      }
+      // prevents user from accessing home page from /setup page
+      else if (!loading && user && pathname === "/") {
+        router.back();
+      }
+      // prevents user from accessing setup page once group is created
+      else if (!loading && user && !pathname.startsWith("/group")) {
         router.back();
       }
     }, [user, loading, router]);
