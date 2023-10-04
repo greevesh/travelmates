@@ -8,11 +8,9 @@ import firebaseConfig from "../../../../firebase/config";
 import withAuth from "../../components/hocs/withAuth";
 import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
-import generateCalendar from "../generateCalendar";
-import { slotColumnCommonFields, months, generatedColumns } from "../columns";
-import { CalendarDay, Row } from "../../group/types";
-import fetchRows, { fetchCurrentUserJourneys } from "../rows";
-import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
+import { slotColumnCommonFields, months } from "../columns";
+import { Row } from "../../group/types";
+import fetchGridData from "../fetchGridData";
 import renderColumns from "../renderColumns";
 import renderRows from "../renderRows";
 import EditMembers from "../../components/group/EditMembers";
@@ -32,22 +30,7 @@ const GroupPage: React.FC = () => {
   const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchData() {
-      const fetchedRows = await fetchRows();
-      const displayName = await getCurrentUserDisplayName();
-      const journeys = await fetchCurrentUserJourneys();
-
-      setColumns(generatedColumns);
-      setCurrentMonthRows(
-        fetchedRows.map((row) => ({
-          ...row,
-          name: row.name,
-        }))
-      );
-      setUserDisplayName(displayName);
-    }
-
-    fetchData();
+    fetchGridData({ setColumns, setCurrentMonthRows, setUserDisplayName });
   }, []);
 
   const decrementMonth = (): void => {
