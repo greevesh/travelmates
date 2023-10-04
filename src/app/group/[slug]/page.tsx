@@ -14,6 +14,7 @@ import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
 import renderColumns from "../renderColumns";
+import renderRows from "../renderRows";
 import EditMembers from "../../components/group/EditMembers";
 import { journeyStyles } from "../journeyStyles";
 
@@ -67,34 +68,15 @@ const GroupPage: React.FC = () => {
     }
   };
 
-  const renderRows = () => {
-    const filteredRows: Row[] | undefined = currentMonthRows.filter((row) => {
-      return row.month === months[currentMonth] && row.year === currentYear;
-    });
-
-    setCurrentMonthRows(filteredRows);
-  };
-
   useEffect(() => {
     renderColumns({ currentYear, currentMonth, slotColumnCommonFields });
-    renderRows();
-    // const calendar: CalendarDay[] = generateCalendar(currentYear, currentMonth);
-    // const filteredRows: Row[] | undefined = currentMonthRows.filter((row) => {
-    //   return row.month === months[currentMonth] && row.year === currentYear;
-    // });
-
-    // calendar.forEach((date) => {
-    //   const day: string = date.day.toString();
-    //   generatedColumns.push({
-    //     field: day,
-    //     headerName: day,
-    //     valueGetter: ({ row }) => row.locations[day],
-    //     sortable: false,
-    //     ...slotColumnCommonFields,
-    //   });
-    // });
-    // setColumns(generatedColumns);
-    // setCurrentMonthRows(filteredRows);
+    renderRows({
+      currentMonthRows,
+      months,
+      currentMonth,
+      currentYear,
+      setCurrentMonthRows,
+    });
   }, [currentMonth]);
 
   return (
