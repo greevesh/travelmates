@@ -1,16 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
-import { GridColDef } from "@mui/x-data-grid-pro";
 import fetchRows from "./rows";
 import getCurrentUserDisplayName from "./getCurrentUserDisplayName";
 import { fetchCurrentUserJourneys } from "./rows";
 import { generatedColumns } from "./columns";
-import { Row } from "./types";
-
-interface FetchGridDataProps {
-  setColumns: Dispatch<SetStateAction<GridColDef[]>>;
-  setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
-  setUserDisplayName: Dispatch<SetStateAction<string | null>>;
-}
+import { FetchGridDataProps } from "./types";
 
 const fetchGridData = async ({
   setColumns,

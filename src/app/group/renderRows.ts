@@ -1,13 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
-import { Row, Months } from "./types";
-
-interface RenderRowsProps {
-  currentMonthRows: Row[];
-  months: Months[];
-  currentMonth: number;
-  currentYear: number;
-  setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
-}
+import { Row, RenderRowsProps } from "./types";
 
 const renderRows = ({
   currentMonthRows,
