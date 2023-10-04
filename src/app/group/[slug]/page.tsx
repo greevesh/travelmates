@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import { GridColDef } from "@mui/x-data-grid-pro";
-import { initializeApp } from "../../../../node_modules/firebase/app";
-import firebaseConfig from "../../../../firebase/config";
 import withAuth from "../../components/hocs/withAuth";
 import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
@@ -17,8 +15,6 @@ import incrementMonth from "../incrementMonth";
 import EditMembers from "../../components/group/EditMembers";
 import { journeyStyles } from "../journeyStyles";
 import decrementMonth from "../decrementMonth";
-
-initializeApp(firebaseConfig);
 
 const GroupPage: React.FC = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
