@@ -1,7 +1,15 @@
+import { GridColDef } from "@mui/x-data-grid-pro";
+
 export interface ColumnData {
   field: string;
   headerName: number;
   width: number;
+}
+
+export interface RenderColumnsProps {
+  currentYear: number;
+  currentMonth: number;
+  slotColumnCommonFields: Partial<GridColDef>;
 }
 
 export interface Journeys {

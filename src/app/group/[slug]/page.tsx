@@ -13,6 +13,7 @@ import { slotColumnCommonFields, months, generatedColumns } from "../columns";
 import { CalendarDay, Row } from "../../group/types";
 import fetchRows, { fetchCurrentUserJourneys } from "../rows";
 import getCurrentUserDisplayName from "../getCurrentUserDisplayName";
+import renderColumns from "../renderColumns";
 import EditMembers from "../../components/group/EditMembers";
 import { journeyStyles } from "../journeyStyles";
 
@@ -21,7 +22,9 @@ initializeApp(firebaseConfig);
 const GroupPage: React.FC = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
-  const [monthIndex, setMonthIndex] = useState<number>(new Date().getMonth());
+  const [currentMonth, setCurrentMonth] = useState<number>(
+    new Date().getMonth()
+  );
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
@@ -47,42 +50,52 @@ const GroupPage: React.FC = () => {
   }, []);
 
   const decrementMonth = (): void => {
-    if (monthIndex === 0) {
-      setMonthIndex(11);
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
       setCurrentYear(currentYear - 1);
     } else {
-      setMonthIndex(monthIndex - 1);
+      setCurrentMonth(currentMonth - 1);
     }
   };
 
   const incrementMonth = (): void => {
-    if (monthIndex === 11) {
-      setMonthIndex(0);
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
       setCurrentYear(currentYear + 1);
     } else {
-      setMonthIndex(monthIndex + 1);
+      setCurrentMonth(currentMonth + 1);
     }
   };
 
-  useEffect(() => {
-    const calendar: CalendarDay[] = generateCalendar(currentYear, monthIndex);
+  const renderRows = () => {
     const filteredRows: Row[] | undefined = currentMonthRows.filter((row) => {
-      return row.month === months[monthIndex] && row.year === currentYear;
+      return row.month === months[currentMonth] && row.year === currentYear;
     });
 
-    calendar.forEach((date) => {
-      const day: string = date.day.toString();
-      generatedColumns.push({
-        field: day,
-        headerName: day,
-        valueGetter: ({ row }) => row.locations[day],
-        sortable: false,
-        ...slotColumnCommonFields,
-      });
-    });
-    setColumns(generatedColumns);
     setCurrentMonthRows(filteredRows);
-  }, [monthIndex]);
+  };
+
+  useEffect(() => {
+    renderColumns({ currentYear, currentMonth, slotColumnCommonFields });
+    renderRows();
+    // const calendar: CalendarDay[] = generateCalendar(currentYear, currentMonth);
+    // const filteredRows: Row[] | undefined = currentMonthRows.filter((row) => {
+    //   return row.month === months[currentMonth] && row.year === currentYear;
+    // });
+
+    // calendar.forEach((date) => {
+    //   const day: string = date.day.toString();
+    //   generatedColumns.push({
+    //     field: day,
+    //     headerName: day,
+    //     valueGetter: ({ row }) => row.locations[day],
+    //     sortable: false,
+    //     ...slotColumnCommonFields,
+    //   });
+    // });
+    // setColumns(generatedColumns);
+    // setCurrentMonthRows(filteredRows);
+  }, [currentMonth]);
 
   return (
     <>
@@ -102,7 +115,7 @@ const GroupPage: React.FC = () => {
       <PreviousMonthButton decrementMonth={decrementMonth} />
       <NextMonthButton incrementMonth={incrementMonth} />
       <EditMembers />
-      {months[monthIndex]}, {currentYear}
+      {months[currentMonth]}, {currentYear}
     </>
   );
 };
