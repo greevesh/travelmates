@@ -9,12 +9,14 @@ import withAuth from "../../components/hocs/withAuth";
 import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import { slotColumnCommonFields, months } from "../columns";
-import { Row } from "../../group/types";
+import { MonthProps, Row } from "../../group/types";
 import fetchGridData from "../fetchGridData";
 import renderColumns from "../renderColumns";
 import renderRows from "../renderRows";
+import incrementMonth from "../incrementMonth";
 import EditMembers from "../../components/group/EditMembers";
 import { journeyStyles } from "../journeyStyles";
+import decrementMonth from "../decrementMonth";
 
 initializeApp(firebaseConfig);
 
@@ -29,27 +31,16 @@ const GroupPage: React.FC = () => {
   );
   const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
 
+  const monthProps: MonthProps = {
+    currentMonth,
+    currentYear,
+    setCurrentMonth,
+    setCurrentYear,
+  };
+
   useEffect(() => {
     fetchGridData({ setColumns, setCurrentMonthRows, setUserDisplayName });
   }, []);
-
-  const decrementMonth = (): void => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
-
-  const incrementMonth = (): void => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
 
   useEffect(() => {
     renderColumns({ currentYear, currentMonth, slotColumnCommonFields });
@@ -77,8 +68,8 @@ const GroupPage: React.FC = () => {
           disableColumnMenu
         />
       </Box>
-      <PreviousMonthButton decrementMonth={decrementMonth} />
-      <NextMonthButton incrementMonth={incrementMonth} />
+      <PreviousMonthButton decrementMonth={() => decrementMonth(monthProps)} />
+      <NextMonthButton incrementMonth={() => incrementMonth(monthProps)} />
       <EditMembers />
       {months[currentMonth]}, {currentYear}
     </>

@@ -62,6 +62,13 @@ export type Months =
   | "November"
   | "December";
 
+export interface MonthProps {
+  currentMonth: number;
+  currentYear: number;
+  setCurrentMonth: Dispatch<SetStateAction<number>>;
+  setCurrentYear: Dispatch<SetStateAction<number>>;
+}
+
 export interface NextMonthButtonProps {
   incrementMonth: () => void;
 }
