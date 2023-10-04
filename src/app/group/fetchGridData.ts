@@ -9,18 +9,22 @@ const fetchGridData = async ({
   setCurrentMonthRows,
   setUserDisplayName,
 }: FetchGridDataProps): Promise<void> => {
-  const fetchedRows = await fetchRows();
-  const displayName = await getCurrentUserDisplayName();
-  const journeys = await fetchCurrentUserJourneys();
+  try {
+    const fetchedRows = await fetchRows();
+    const displayName = await getCurrentUserDisplayName();
+    const journeys = await fetchCurrentUserJourneys();
 
-  setColumns(generatedColumns);
-  setCurrentMonthRows(
-    fetchedRows.map((row) => ({
-      ...row,
-      name: row.name,
-    }))
-  );
-  setUserDisplayName(displayName);
+    setColumns(generatedColumns);
+    setCurrentMonthRows(
+      fetchedRows.map((row) => ({
+        ...row,
+        name: row.name,
+      }))
+    );
+    setUserDisplayName(displayName);
+  } catch (err) {
+    console.log("Error: ", "Couldn't retrieve grid data");
+  }
 };
 
 export default fetchGridData;
