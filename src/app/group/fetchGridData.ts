@@ -1,5 +1,5 @@
 import fetchRows from "./rows";
-import getCurrentUserDisplayName from "./getCurrentUserDisplayName";
+import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
 import { fetchCurrentUserJourneys } from "./rows";
 import { generatedColumns } from "./columns";
 import { FetchGridDataProps } from "./types";
@@ -11,7 +11,7 @@ const fetchGridData = async ({
 }: FetchGridDataProps): Promise<void> => {
   try {
     const fetchedRows = await fetchRows();
-    const displayName = await getCurrentUserDisplayName();
+    const displayName = await fetchCurrentUserDisplayName();
     const journeys = await fetchCurrentUserJourneys();
 
     setColumns(generatedColumns);

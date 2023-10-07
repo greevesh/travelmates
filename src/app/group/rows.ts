@@ -13,21 +13,22 @@ import { Journey } from "../create-journey/types";
 import { Row } from "../group/types";
 
 import { currentUserID } from "../globals";
+import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
 
-async function fetchUserDisplayName() {
-  const q: Query<Document> = query(
-    collection(db, "users"),
-    where("id", "==", currentUserID)
-  );
-  const querySnapshot: QuerySnapshot<unknown> = await getDocs(q);
+// async function fetchUserDisplayName() {
+//   const q: Query<Document> = query(
+//     collection(db, "users"),
+//     where("id", "==", currentUserID)
+//   );
+//   const querySnapshot: QuerySnapshot<unknown> = await getDocs(q);
 
-  if (querySnapshot.size === 1) {
-    const user = querySnapshot.docs[0].data();
-    return user.displayName;
-  } else {
-    return "N/A";
-  }
-}
+//   if (querySnapshot.size === 1) {
+//     const user = querySnapshot.docs[0].data();
+//     return user.displayName;
+//   } else {
+//     return "N/A";
+//   }
+// }
 
 export const fetchCurrentUserJourneys = async () => {
   const locations: string[] = [];
@@ -97,7 +98,7 @@ export const fetchJourneyDateRangeLengths = async () => {
 };
 
 async function fetchRows() {
-  const currentUserDisplayName: string = await fetchUserDisplayName();
+  const currentUserDisplayName: string = await fetchCurrentUserDisplayName();
   const currentUserJourneys: string[] = await fetchCurrentUserJourneys();
   const currentDateRangeLengths: number[] =
     await fetchJourneyDateRangeLengths();

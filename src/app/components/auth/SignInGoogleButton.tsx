@@ -11,6 +11,7 @@ import { type User } from "firebase/auth";
 import { auth } from "../../../../firebase/auth";
 import { AppUser } from "../../types";
 import getGroupID from "../../auth/getGroupID";
+import getCurrentUserID from "../../auth/getCurrentUserID";
 
 const SignInGoogleButton: React.FC = (): React.JSX.Element => {
   const [groupID, setGroupID] = useState<string | null>(null);
@@ -35,6 +36,7 @@ const SignInGoogleButton: React.FC = (): React.JSX.Element => {
       try {
         await getGroupID(setGroupID);
         setRetrievedGroupID(true);
+        await getCurrentUserID();
       } catch (err) {
         console.error("Error fetching data:", err);
       }
