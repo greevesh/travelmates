@@ -4,6 +4,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 import Button from "@mui/material/Button";
 import { signOut as logOut } from "firebase/auth";
 import { auth } from "../../../../firebase/auth";
+import "../../styles/globals.css";
 
 const SignOutButton: React.FC = (): React.JSX.Element => {
   const router: AppRouterInstance = useRouter();
@@ -24,7 +25,11 @@ const SignOutButton: React.FC = (): React.JSX.Element => {
   };
 
   return (
-    <Button variant="contained" onClick={() => signOut()}>
+    <Button
+      sx={{ backgroundColor: "white", color: "#1976d2", fontWeight: 500 }}
+      variant="contained"
+      onClick={() => signOut()}
+    >
       Sign out
     </Button>
   );
