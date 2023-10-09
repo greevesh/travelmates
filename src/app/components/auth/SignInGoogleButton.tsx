@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { type AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 import Button from "@mui/material/Button";
+import GoogleIcon from "@mui/icons-material/Google";
 import { type User } from "firebase/auth";
 import { auth } from "../../../../firebase/auth";
 import { AppUser } from "../../types";
@@ -53,7 +54,10 @@ const SignInGoogleButton: React.FC = (): React.JSX.Element => {
 
   return (
     <div>
-      <Button onClick={() => signInWithGoogle()}>Sign in with Google</Button>
+      <Button variant="contained" onClick={() => signInWithGoogle()}>
+        <GoogleIcon sx={{ marginRight: 1 }} />
+        Continue with Google
+      </Button>
     </div>
   );
 };

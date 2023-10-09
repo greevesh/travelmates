@@ -1,5 +1,5 @@
 "use client";
-import AuthCard from "./components/auth/Card";
+import AuthCard from "./components/auth/AuthCard";
 import withAuth from "./components/hocs/withAuth";
 
 const HomePage = () => {
