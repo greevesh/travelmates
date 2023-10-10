@@ -151,10 +151,14 @@ const GroupForm: React.FC = () => {
 
   return (
     <>
-      <Heading
-        heading="Create a Group"
-        subheading="So you can see where your mates are"
-      />
+      {pathname.includes("/setup") ? (
+        <Heading
+          heading="Create a Group"
+          subheading="So you can see where your mates are"
+        />
+      ) : (
+        <Heading heading="Edit Members" subheading="Add or remove members" />
+      )}
       <Search
         handleSelect={handleSelect}
         users={users}

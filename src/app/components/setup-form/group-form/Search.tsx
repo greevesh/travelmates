@@ -22,6 +22,7 @@ const Search: React.FC<UserSearchProps> = ({
   return (
     <div>
       <Autocomplete
+        sx={{ marginBottom: "7px" }}
         id="search-input"
         options={users.map((user: UserResults) => user.displayName)}
         value={userInput}

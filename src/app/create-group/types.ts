@@ -62,7 +62,7 @@ export interface GroupMember {
   displayName: string;
 }
 
-export interface EditMembersButtonProps {
+export interface MembersButtonProps {
   handleSubmit: () => void;
   emptyInput: boolean;
 }

@@ -8,7 +8,12 @@ const SelectedBadge: React.FC<SelectedBadgeProps> = ({
 }) => {
   return (
     <div>
-      <Chip label={selectedItem} variant="outlined" onDelete={handleDelete} />
+      <Chip
+        sx={{ marginTop: "5px" }}
+        label={selectedItem}
+        variant="outlined"
+        onDelete={handleDelete}
+      />
     </div>
   );
 };
