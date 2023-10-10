@@ -5,6 +5,7 @@ export interface FetchGridDataProps {
   setColumns: Dispatch<SetStateAction<GridColDef[]>>;
   setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
   setUserDisplayName: Dispatch<SetStateAction<string | null>>;
+  setFetchedGridData: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface ColumnData {

@@ -8,6 +8,7 @@ const fetchGridData = async ({
   setColumns,
   setCurrentMonthRows,
   setUserDisplayName,
+  setFetchedGridData,
 }: FetchGridDataProps): Promise<void> => {
   try {
     const fetchedRows = await fetchRows();
@@ -22,6 +23,7 @@ const fetchGridData = async ({
       }))
     );
     setUserDisplayName(displayName);
+    setFetchedGridData(true);
   } catch (err) {
     console.log("Error: ", err);
   }
