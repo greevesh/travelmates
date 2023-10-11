@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { GridColDef } from "@mui/x-data-grid-pro";
 
 export interface FetchGridDataProps {
@@ -68,6 +68,13 @@ export interface MonthProps {
   currentYear: number;
   setCurrentMonth: Dispatch<SetStateAction<number>>;
   setCurrentYear: Dispatch<SetStateAction<number>>;
+}
+
+export interface FlexContainerProps {
+  children: React.ReactNode;
+  display?: string;
+  justifyContent?: string;
+  marginTop?: string;
 }
 
 export interface NextMonthButtonProps {
