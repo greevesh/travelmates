@@ -1,10 +1,11 @@
 "use client";
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
 const error = ({ error, reset }: { error: Error; reset: () => void }) => {
   return (
     <div>
-      <h1>{"Something went wrong."}</h1>
+      <Typography variant="h4">{"Something went wrong"}</Typography>
       <Button variant="contained" onClick={() => reset()}>
         Try again
       </Button>
