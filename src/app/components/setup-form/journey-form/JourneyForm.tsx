@@ -4,11 +4,13 @@ import {
   Timestamp as firebaseTimestamp,
   serverTimestamp,
 } from "firebase/firestore";
+import { usePathname } from "next/navigation";
 import Search from "./Search";
 import SelectedBadge from "../group-form/SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
 import JourneyBadge from "./JourneyBadge";
+import Heading from "../Heading";
 import {
   Journey,
   Timestamp,
@@ -22,7 +24,7 @@ import createJourney from "../../../create-journey/createJourney";
 import getLatestJourney from "../../../create-journey/getLatestJourney";
 import { currentUserID } from "../../../globals";
 
-const Journey: React.FC = () => {
+const JourneyForm: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [geonamesList, setGeonamesList] = useState<string[]>([]);
   const [selectedItem, setSelectedItem] = useState<string>("");
@@ -45,6 +47,8 @@ const Journey: React.FC = () => {
   const [disabledDateRanges, setDisabledDateRanges] = useState<
     { start: Date; end: Date }[]
   >([]);
+
+  const pathname = usePathname();
 
   useEffect(() => {
     fetchJourneys({ setJourneys, setJourneysLoaded });
@@ -132,12 +136,6 @@ const Journey: React.FC = () => {
     });
   };
 
-  console.log(
-    "Latest Journey End Date:",
-    new Date(journeys[journeys.length - 1]?.dateRange.endDate)
-  );
-  console.log("Disabled Date Ranges:", disabledDateRanges);
-
   const handleSubmit = async (): Promise<void> => {
     try {
       setSpinnerVisible(true);
@@ -174,6 +172,14 @@ const Journey: React.FC = () => {
 
   return (
     <div>
+      {pathname.includes("/setup") ? (
+        <Heading
+          heading="Create Some Journeys"
+          subheading="So your mates will know where you are"
+        />
+      ) : (
+        <Heading heading="Edit Journeys" subheading="Add or remove journeys" />
+      )}
       <Search
         input={input}
         geonamesList={geonamesList}
@@ -231,4 +237,4 @@ const Journey: React.FC = () => {
   );
 };
 
-export default Journey;
+export default JourneyForm;

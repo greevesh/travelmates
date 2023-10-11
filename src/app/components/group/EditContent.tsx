@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import GroupForm from "../setup-form/group-form/GroupForm";
 
 const style = {
   position: "absolute" as "absolute",
@@ -15,7 +14,12 @@ const style = {
   p: 4,
 };
 
-const EditMembers: React.FC = () => {
+interface EditContentProps {
+  buttonText: string;
+  form: React.ReactElement;
+}
+
+const EditContent: React.FC<EditContentProps> = ({ buttonText, form }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -23,7 +27,7 @@ const EditMembers: React.FC = () => {
   return (
     <div>
       <Button variant="contained" onClick={handleOpen}>
-        Edit members
+        {buttonText}
       </Button>
       <Modal
         open={open}
@@ -31,12 +35,10 @@ const EditMembers: React.FC = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <GroupForm />
-        </Box>
+        <Box sx={style}>{form}</Box>
       </Modal>
     </div>
   );
 };
 
-export default EditMembers;
+export default EditContent;
