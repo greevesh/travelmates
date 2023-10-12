@@ -85,6 +85,11 @@ export interface PreviousMonthButtonProps {
   decrementMonth: () => void;
 }
 
+export interface EditContentProps {
+  buttonText: string;
+  form: React.ReactElement;
+}
+
 export interface JourneyStyles {
   width: string;
   "& .Cebu": {

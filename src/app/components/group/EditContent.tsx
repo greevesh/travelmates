@@ -3,11 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { useTheme } from "@mui/material/styles";
-
-interface EditContentProps {
-  buttonText: string;
-  form: React.ReactElement;
-}
+import { EditContentProps } from "../../group/types";
 
 const EditContent: React.FC<EditContentProps> = ({ buttonText, form }) => {
   const [open, setOpen] = useState(false);
