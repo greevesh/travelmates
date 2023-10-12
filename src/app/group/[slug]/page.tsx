@@ -53,9 +53,6 @@ const GroupPage: React.FC = () => {
       setUserDisplayName,
       setFetchedGridData,
     });
-  }, []);
-
-  useEffect(() => {
     renderColumns({ currentYear, currentMonth, slotColumnCommonFields });
     renderRows({
       currentMonthRows,
