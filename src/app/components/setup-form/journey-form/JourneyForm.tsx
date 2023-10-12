@@ -9,6 +9,7 @@ import Search from "./Search";
 import SelectedBadge from "../group-form/SelectedBadge";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 import CreateJourneyButton from "./CreateJourneyButton";
+import Message from "../Message";
 import JourneyBadge from "./JourneyBadge";
 import Heading from "../Heading";
 import {
@@ -229,9 +230,9 @@ const JourneyForm: React.FC = () => {
           />
         ))
       ) : showNoJourneys ? (
-        <p>No journeys found.</p>
+        <Message text="No journeys found."></Message>
       ) : (
-        <p>Loading journeys...</p>
+        <Message text="Searching for journeys..."></Message>
       )}
     </div>
   );

@@ -1,10 +1,11 @@
 import React from "react";
+import Typography from "@mui/material/Typography";
 import { MessageProps } from "../../setup/types";
 
 const Message = ({ text }: MessageProps) => {
   return (
     <>
-      <p>{text}</p>
+      <Typography color="textSecondary">{text}</Typography>
     </>
   );
 };
