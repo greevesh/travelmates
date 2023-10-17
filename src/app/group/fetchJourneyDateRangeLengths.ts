@@ -7,25 +7,56 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 import formatDate from "../create-journey/formatDate";
+import { Journey } from "../create-journey/types";
 
 const fetchJourneyDateRangeLengths = async () => {
+  const journeys: Journey[] = [];
+  const journeyData: { journey: Journey; length: number }[] = [];
   const dateRangeLengths: number[] = [];
   const q: Query<Document> = query(collection(db, "journeys"));
 
-  const journeys: QuerySnapshot<unknown> = await getDocs(q);
+  const journeysSnapshot: QuerySnapshot<unknown> = await getDocs(q);
 
-  if (journeys.size > 0) {
-    journeys.forEach((doc) => {
+  if (journeysSnapshot.size > 0) {
+    journeysSnapshot.forEach((doc) => {
       const journey = doc.data();
       const { start, end } = journey.dateRange;
       const startDate: Date = formatDate(start.seconds);
       const endDate: Date = formatDate(end.seconds);
       const daysInBetween: number = endDate - startDate;
       const formattedDays = Math.floor(daysInBetween / (24 * 60 * 60 * 1000));
-      dateRangeLengths.push(formattedDays);
+      journeys.push(journey);
+      journeyData.push({ journey, length: formattedDays });
     });
   }
 
+  const filteredJourneysSet = new Set(
+    journeys.filter((journey) => typeof journey !== "string")
+  );
+
+  console.log("Journeys: ", journeys);
+  console.log("Unordered filtered journeys set: ", filteredJourneysSet);
+
+  journeyData.sort((a, b) => {
+    const dateA =
+      a.journey.dateRange.start instanceof Date
+        ? a.journey.dateRange.start.getTime()
+        : a.journey.dateRange.start || 0;
+
+    const dateB =
+      b.journey.dateRange.start instanceof Date
+        ? b.journey.dateRange.start.getTime()
+        : b.journey.dateRange.start || 0;
+
+    return dateA - dateB;
+  });
+
+  journeyData.forEach((journey) => {
+    dateRangeLengths.push(journey.length);
+  });
+
+  console.log("Ordered journey data: ", journeyData);
+  console.log("Ordered lengths: ", dateRangeLengths);
   return dateRangeLengths;
 };
 
