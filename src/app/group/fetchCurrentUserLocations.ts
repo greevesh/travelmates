@@ -12,7 +12,6 @@ import { Journey } from "../create-journey/types";
 
 const fetchCurrentUserLocations = async () => {
   const journeys: Journey[] = [];
-  const locations: string[] = [];
   const filteredLocations: string[] = [];
   const startDates: number[] = [];
 
@@ -22,20 +21,14 @@ const fetchCurrentUserLocations = async () => {
   );
 
   const journeysSnapshot: QuerySnapshot<unknown> = await getDocs(q);
-  const journeyDateRangeLengths = await fetchJourneyDateRangeLengths();
   const journeyDateRanges = await fetchJourneyDateRanges();
-  // const journeyStartDay: number = journeyDateRanges[0].start.getDate();
 
   if (journeysSnapshot.size > 0) {
     journeysSnapshot.forEach((doc) => {
       const journey = doc.data();
-      // for (let i = 0; i < journeyStartDay; i++) {
-      //   filteredLocations.push("");
-      // }
+
       for (let i = 0; i <= journey.location.length; i++) {
-        // locations.push(journey.location);
         journeys.push(journey);
-        // console.log("Journey start day: ", journeyStartDay);
       }
     });
   }
@@ -43,8 +36,6 @@ const fetchCurrentUserLocations = async () => {
   const filteredJourneysSet = new Set(
     journeys.filter((journey) => typeof journey !== "string")
   );
-
-  console.log("Filtered Journeys Set: ", filteredJourneysSet);
 
   const filteredJourneys = [...filteredJourneysSet];
 
@@ -62,27 +53,12 @@ const fetchCurrentUserLocations = async () => {
     return dateA - dateB;
   });
 
-  console.log("Ordered filtered journeys: ", filteredJourneys);
-
   const dateRangeLengths = await fetchJourneyDateRangeLengths();
-  console.log("Date Range Lengths: ", dateRangeLengths);
 
   const fetchStartDates = () => {
     journeyDateRanges.forEach((range) => {
       startDates.push(range.start.getDate());
     });
-  };
-
-  const handleEmptyColumns = () => {
-    let index: number = 0;
-    const journeyStartDay: number = startDates[index];
-    for (let i = 0; i < journeyStartDay; i++) {
-      filteredLocations.push("");
-    }
-    // index++;
-    // for (let i = 0; i < startDates[index] - startDates[index] - 1; i++) {
-    //   filteredLocations.push("");
-    // }
   };
 
   const mapLocationToDateRangeLength = () => {
@@ -104,7 +80,6 @@ const fetchCurrentUserLocations = async () => {
           i < journeyStartDay;
           i++
         ) {
-          console.log(journeyStartDay - 1);
           filteredLocations.push("");
         }
       }
@@ -124,19 +99,14 @@ const fetchCurrentUserLocations = async () => {
         filteredLocations.push(filteredJourneys[journeyIndex].location);
       }
 
-      console.log("Journey Start Day: ", journeyStartDay);
       lengthIndex++;
       journeyIndex++;
     }
   };
 
   fetchStartDates();
-  // handleEmptyColumns();
   mapLocationToDateRangeLength();
 
-  console.log("Locations: ", locations);
-  console.log("Filtered Locations: ", filteredLocations);
-  console.log("Start Dates: ", startDates);
   return filteredLocations;
 };
 
