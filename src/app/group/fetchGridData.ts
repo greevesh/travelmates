@@ -1,6 +1,6 @@
 import fetchRows from "./rows";
 import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
-import fetchCurrentUserJourneys from "./fetchCurrentUserJourneys";
+import fetchCurrentUserJourneys from "./fetchCurrentUserLocations";
 import { generatedColumns } from "./columns";
 import { FetchGridDataProps } from "./types";
 
@@ -25,7 +25,7 @@ const fetchGridData = async ({
     setUserDisplayName(displayName);
     setFetchedGridData(true);
   } catch (err) {
-    console.log("Error: ", err);
+    console.log("Error fetching grid data: ", err);
   }
 };
 
