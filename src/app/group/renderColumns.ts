@@ -9,6 +9,8 @@ const renderColumns = ({
 }: RenderColumnsProps): void => {
   const calendar: CalendarDay[] = generateCalendar(currentYear, currentMonth);
 
+  generatedColumns.length = 0;
+
   calendar.forEach((date) => {
     const day: string = date.day.toString();
     generatedColumns.push({
