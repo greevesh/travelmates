@@ -74,13 +74,15 @@ const fetchCurrentUserLocations = async () => {
           filteredLocations.push("");
         }
       } else {
-        for (
-          let i =
-            startDates[startDateIndex - 1] + dateRangeLengths[lengthIndex - 1];
-          i < journeyStartDay;
-          i++
-        ) {
-          filteredLocations.push("");
+        const previousEnd =
+          startDates[startDateIndex - 1] + dateRangeLengths[lengthIndex - 1];
+
+        // Check if the end of the previous journey is the day before the start of the current journey
+        if (previousEnd < journeyStartDay - 1) {
+          // Add empty slots if there is a day gap
+          for (let i = previousEnd + 1; i < journeyStartDay; i++) {
+            filteredLocations.push("");
+          }
         }
       }
 
@@ -93,7 +95,7 @@ const fetchCurrentUserLocations = async () => {
 
       for (
         let j = journeyStartDay;
-        j < journeyStartDay + dateRangeLengths[lengthIndex];
+        j <= journeyStartDay + dateRangeLengths[lengthIndex];
         j++
       ) {
         filteredLocations.push(filteredJourneys[journeyIndex].location);
