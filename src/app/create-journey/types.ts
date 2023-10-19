@@ -92,6 +92,11 @@ export interface Journey {
   created?: FieldValue;
 }
 
+export interface JourneyLength {
+  journey: Journey;
+  length: number;
+}
+
 export interface JourneysStateParams {
   setJourneys: React.Dispatch<React.SetStateAction<Journey[]>>;
   setJourneysLoaded: React.Dispatch<React.SetStateAction<boolean>>;

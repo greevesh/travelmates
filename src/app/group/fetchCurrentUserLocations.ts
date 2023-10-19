@@ -8,6 +8,7 @@ import {
 import fetchJourneyDateRangeLengths from "./fetchJourneyDateRangeLengths";
 import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
 import { db } from "../../../firebase/app";
+import sortDateRanges from "./sortDateRanges";
 import { Journey } from "../create-journey/types";
 
 const fetchCurrentUserLocations = async () => {
@@ -39,19 +40,7 @@ const fetchCurrentUserLocations = async () => {
 
   const filteredJourneys = [...filteredJourneysSet];
 
-  filteredJourneys.sort((a, b) => {
-    const dateA =
-      a.dateRange.start instanceof Date
-        ? a.dateRange.start.getTime()
-        : a.dateRange.start || 0;
-
-    const dateB =
-      b.dateRange.start instanceof Date
-        ? b.dateRange.start.getTime()
-        : b.dateRange.start || 0;
-
-    return dateA - dateB;
-  });
+  sortDateRanges(filteredJourneys);
 
   const dateRangeLengths = await fetchJourneyDateRangeLengths();
 
@@ -66,7 +55,7 @@ const fetchCurrentUserLocations = async () => {
     let journeyIndex: number = 0;
     let startDateIndex: number = 0;
 
-    const runFirstLoop = () => {
+    const handleEmptySlots = () => {
       const journeyStartDay: number = startDates[startDateIndex];
 
       if (startDateIndex === 0) {
@@ -91,7 +80,7 @@ const fetchCurrentUserLocations = async () => {
     };
 
     for (let i = 0; i < dateRangeLengths.length; i++) {
-      const journeyStartDay: number = runFirstLoop();
+      const journeyStartDay: number = handleEmptySlots();
 
       for (
         let j = journeyStartDay;

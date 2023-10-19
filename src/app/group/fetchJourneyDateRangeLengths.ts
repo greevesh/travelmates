@@ -8,10 +8,11 @@ import {
 import { db } from "../../../firebase/app";
 import formatDate from "../create-journey/formatDate";
 import { Journey } from "../create-journey/types";
+import sortDateRanges from "./sortDateRanges";
 
 const fetchJourneyDateRangeLengths = async () => {
   const journeys: Journey[] = [];
-  const journeyData: { journey: Journey; length: number }[] = [];
+  const journeyLengths: { journey: Journey; length: number }[] = [];
   const dateRangeLengths: number[] = [];
   const q: Query<Document> = query(collection(db, "journeys"));
 
@@ -26,7 +27,7 @@ const fetchJourneyDateRangeLengths = async () => {
       const daysInBetween: number = endDate - startDate;
       const formattedDays = Math.floor(daysInBetween / (24 * 60 * 60 * 1000));
       journeys.push(journey);
-      journeyData.push({ journey, length: formattedDays });
+      journeyLengths.push({ journey, length: formattedDays });
     });
   }
 
@@ -37,25 +38,13 @@ const fetchJourneyDateRangeLengths = async () => {
   console.log("Journeys: ", journeys);
   console.log("Unordered filtered journeys set: ", filteredJourneysSet);
 
-  journeyData.sort((a, b) => {
-    const dateA =
-      a.journey.dateRange.start instanceof Date
-        ? a.journey.dateRange.start.getTime()
-        : a.journey.dateRange.start || 0;
+  sortDateRanges(journeyLengths);
 
-    const dateB =
-      b.journey.dateRange.start instanceof Date
-        ? b.journey.dateRange.start.getTime()
-        : b.journey.dateRange.start || 0;
-
-    return dateA - dateB;
-  });
-
-  journeyData.forEach((journey) => {
+  journeyLengths.forEach((journey) => {
     dateRangeLengths.push(journey.length);
   });
 
-  console.log("Ordered journey data: ", journeyData);
+  console.log("Ordered journey data: ", journeyLengths);
   console.log("Ordered lengths: ", dateRangeLengths);
   return dateRangeLengths;
 };
