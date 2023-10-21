@@ -47,24 +47,31 @@ const GroupPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataAndRender = async () => {
       await fetchGridData({
         setColumns,
         setCurrentMonthRows,
         setUserDisplayName,
         setFetchedGridData,
       });
-    };
-    fetchData();
 
-    renderColumns({ currentYear, currentMonth, slotColumnCommonFields });
-    renderRows({
-      currentMonthRows,
-      months,
-      currentMonth,
-      currentYear,
-      setCurrentMonthRows,
-    });
+      renderColumns({
+        currentYear,
+        currentMonth,
+        slotColumnCommonFields,
+        setColumns,
+      });
+
+      renderRows({
+        currentMonthRows,
+        months,
+        currentMonth,
+        currentYear,
+        setCurrentMonthRows,
+      });
+    };
+
+    fetchDataAndRender();
   }, [currentMonth]);
 
   const renderProgress = () => (

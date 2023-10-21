@@ -17,7 +17,9 @@ export interface ColumnData {
 export interface RenderColumnsProps {
   currentYear: number;
   currentMonth: number;
+  // currentMonthLength: number;
   slotColumnCommonFields: Partial<GridColDef>;
+  setColumns: Dispatch<SetStateAction<GridColDef[]>>;
 }
 
 export interface Journeys {
