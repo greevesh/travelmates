@@ -35,7 +35,9 @@ const GroupPage: React.FC = () => {
   const [currentYear, setCurrentYear] = useState<number>(
     new Date().getFullYear()
   );
-  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
+  const [currentUserDisplayName, setCurrentUserDisplayName] = useState<
+    string | null
+  >(null);
   const [fetchedRows, setFetchedRows] = useState<boolean>(false);
 
   const monthProps: MonthProps = {
@@ -46,22 +48,19 @@ const GroupPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchDataAndRender = async () => {
-      await renderRows({
-        setCurrentMonthRows,
-        setUserDisplayName,
-        setFetchedRows,
-      });
-
+    (() => {
       renderColumns({
         currentYear,
         currentMonth,
         slotColumnCommonFields,
         setColumns,
       });
-    };
-
-    fetchDataAndRender();
+      renderRows({
+        setCurrentMonthRows,
+        setCurrentUserDisplayName,
+        setFetchedRows,
+      });
+    })();
   }, [currentMonth]);
 
   const renderProgress = () => (

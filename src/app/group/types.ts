@@ -3,7 +3,7 @@ import { GridColDef } from "@mui/x-data-grid-pro";
 
 export interface RenderRowsProps {
   setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
-  setUserDisplayName: Dispatch<SetStateAction<string | null>>;
+  setCurrentUserDisplayName: Dispatch<SetStateAction<string | null>>;
   setFetchedRows: Dispatch<SetStateAction<boolean>>;
 }
 
