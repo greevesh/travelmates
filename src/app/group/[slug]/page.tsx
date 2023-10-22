@@ -9,7 +9,8 @@ import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import { slotColumnCommonFields, months } from "../columns";
 import { MonthProps, Row, FlexContainerProps } from "../../group/types";
-import renderColumns from "../renderColumns";
+import renderBaseColumns from "../renderBaseColumns";
+import renderExtraColumns from "../renderExtraColumns";
 import renderRows from "../renderRows";
 import incrementMonth from "../incrementMonth";
 import Progress from "../../components/group/Progress";
@@ -27,7 +28,8 @@ const FlexContainer: React.FC<FlexContainerProps> = ({
 }) => <div style={{ display, justifyContent, marginTop }}>{children}</div>;
 
 const GroupPage: React.FC = () => {
-  const [columns, setColumns] = useState<GridColDef[]>([]);
+  const [baseColumns, setBaseColumns] = useState<GridColDef[]>([]);
+  const [extraColumns, setExtraColumns] = useState<GridColDef[]>([]);
   const [currentMonthRows, setCurrentMonthRows] = useState<Row[]>([]);
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
@@ -48,12 +50,19 @@ const GroupPage: React.FC = () => {
   };
 
   useEffect(() => {
+    renderBaseColumns({
+      slotColumnCommonFields,
+      setBaseColumns,
+    });
+  }, []);
+
+  useEffect(() => {
     (() => {
-      renderColumns({
+      renderExtraColumns({
         currentYear,
         currentMonth,
         slotColumnCommonFields,
-        setColumns,
+        setExtraColumns,
       });
       renderRows({
         setCurrentMonthRows,
@@ -91,7 +100,7 @@ const GroupPage: React.FC = () => {
           </FlexContainer>
           <DataGridPro
             sx={journeyStyles}
-            columns={columns}
+            columns={[...baseColumns, ...extraColumns]}
             rows={currentMonthRows}
             disableRowSelectionOnClick
             hideFooter

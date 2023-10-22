@@ -13,12 +13,16 @@ export interface ColumnData {
   width: number;
 }
 
-export interface RenderColumnsProps {
+export interface RenderBaseColumnsProps {
+  slotColumnCommonFields: Partial<GridColDef>;
+  setBaseColumns: Dispatch<SetStateAction<GridColDef[]>>;
+}
+
+export interface RenderExtraColumnsProps {
   currentYear: number;
   currentMonth: number;
-  // currentMonthLength: number;
   slotColumnCommonFields: Partial<GridColDef>;
-  setColumns: Dispatch<SetStateAction<GridColDef[]>>;
+  setExtraColumns: Dispatch<SetStateAction<GridColDef[]>>;
 }
 
 export interface Journeys {
