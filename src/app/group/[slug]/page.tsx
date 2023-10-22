@@ -9,7 +9,6 @@ import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import { slotColumnCommonFields, months } from "../columns";
 import { MonthProps, Row, FlexContainerProps } from "../../group/types";
-import fetchGridData from "../fetchGridData";
 import renderColumns from "../renderColumns";
 import renderRows from "../renderRows";
 import incrementMonth from "../incrementMonth";
@@ -37,7 +36,7 @@ const GroupPage: React.FC = () => {
     new Date().getFullYear()
   );
   const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
-  const [fetchedGridData, setFetchedGridData] = useState<boolean>(false);
+  const [fetchedRows, setFetchedRows] = useState<boolean>(false);
 
   const monthProps: MonthProps = {
     currentMonth,
@@ -48,11 +47,10 @@ const GroupPage: React.FC = () => {
 
   useEffect(() => {
     const fetchDataAndRender = async () => {
-      await fetchGridData({
-        setColumns,
+      await renderRows({
         setCurrentMonthRows,
         setUserDisplayName,
-        setFetchedGridData,
+        setFetchedRows,
       });
 
       renderColumns({
@@ -60,14 +58,6 @@ const GroupPage: React.FC = () => {
         currentMonth,
         slotColumnCommonFields,
         setColumns,
-      });
-
-      renderRows({
-        currentMonthRows,
-        months,
-        currentMonth,
-        currentYear,
-        setCurrentMonthRows,
       });
     };
 
@@ -85,7 +75,7 @@ const GroupPage: React.FC = () => {
 
   return (
     <>
-      {fetchedGridData ? (
+      {fetchedRows ? (
         <Box>
           <Typography color="textSecondary" variant="h6" component="div">
             {months[currentMonth]}, {currentYear}

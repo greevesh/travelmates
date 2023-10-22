@@ -1,17 +1,29 @@
-import { Row, RenderRowsProps } from "./types";
+import fetchRows from "./rows";
+import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
+import fetchCurrentUserJourneys from "./fetchCurrentUserLocations";
+import { RenderRowsProps } from "./types";
 
-const renderRows = ({
-  currentMonthRows,
-  months,
-  currentMonth,
-  currentYear,
+const renderRows = async ({
   setCurrentMonthRows,
-}: RenderRowsProps): void => {
-  const filteredRows: Row[] | undefined = currentMonthRows.filter((row) => {
-    return row.month === months[currentMonth] && row.year === currentYear;
-  });
+  setUserDisplayName,
+  setFetchedRows,
+}: RenderRowsProps): Promise<void> => {
+  try {
+    const fetchedRows = await fetchRows();
+    const displayName = await fetchCurrentUserDisplayName();
+    const journeys = await fetchCurrentUserJourneys();
 
-  setCurrentMonthRows(filteredRows);
+    setCurrentMonthRows(
+      fetchedRows.map((row) => ({
+        ...row,
+        name: row.name,
+      }))
+    );
+    setUserDisplayName(displayName);
+    setFetchedRows(true);
+  } catch (err) {
+    console.log("Error Fetching Row Data: ", err);
+  }
 };
 
 export default renderRows;
