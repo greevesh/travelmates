@@ -5,11 +5,11 @@ import {
   type Query,
   type QuerySnapshot,
 } from "firebase/firestore";
-import { Journey } from "../create-journey/types";
+import { FetchRowDataProps } from "./types";
 import formatDate from "../create-journey/formatDate";
 import { db } from "../../../firebase/app";
 
-const fetchJourneyDateRanges = async (journey?: Journey) => {
+const fetchJourneyDateRanges = async ({ currentMonth }: FetchRowDataProps) => {
   const dateRanges: { start: Date; end: Date }[] = [];
   const q: Query<Document> = query(collection(db, "journeys"));
 
@@ -25,9 +25,15 @@ const fetchJourneyDateRanges = async (journey?: Journey) => {
     });
   }
 
-  dateRanges.sort((a, b) => a.start.getTime() - b.start.getTime());
+  let filteredDateRanges = dateRanges.filter(
+    (dateRange) => dateRange.start.getMonth() === currentMonth
+  );
 
-  return dateRanges;
+  filteredDateRanges.length > 1
+    ? filteredDateRanges.sort((a, b) => a.start.getTime() - b.start.getTime())
+    : null;
+
+  return filteredDateRanges;
 };
 
 export default fetchJourneyDateRanges;

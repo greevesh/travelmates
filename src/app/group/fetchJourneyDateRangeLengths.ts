@@ -9,8 +9,11 @@ import { db } from "../../../firebase/app";
 import formatDate from "../create-journey/formatDate";
 import { Journey } from "../create-journey/types";
 import sortDateRanges from "./sortDateRanges";
+import { FetchRowDataProps } from "./types";
 
-const fetchJourneyDateRangeLengths = async () => {
+const fetchJourneyDateRangeLengths = async ({
+  currentMonth,
+}: FetchRowDataProps) => {
   const journeys: Journey[] = [];
   const journeyLengths: { journey: Journey; length: number }[] = [];
   const dateRangeLengths: number[] = [];
@@ -31,21 +34,17 @@ const fetchJourneyDateRangeLengths = async () => {
     });
   }
 
-  const filteredJourneysSet = new Set(
-    journeys.filter((journey) => typeof journey !== "string")
+  let filteredDateRangeLengths = journeyLengths.filter(
+    (journeyLength) =>
+      journeyLength.journey.dateRange.start.toDate().getMonth() === currentMonth
   );
 
-  console.log("Journeys: ", journeys);
-  console.log("Unordered filtered journeys set: ", filteredJourneysSet);
+  filteredDateRangeLengths.length > 1 ? sortDateRanges(journeyLengths) : null;
 
-  sortDateRanges(journeyLengths);
-
-  journeyLengths.forEach((journey) => {
-    dateRangeLengths.push(journey.length);
+  filteredDateRangeLengths.forEach((journeyLength) => {
+    dateRangeLengths.push(journeyLength.length);
   });
 
-  console.log("Ordered journey data: ", journeyLengths);
-  console.log("Ordered lengths: ", dateRangeLengths);
   return dateRangeLengths;
 };
 

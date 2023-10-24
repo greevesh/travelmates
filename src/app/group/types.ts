@@ -5,6 +5,7 @@ export interface RenderRowsProps {
   setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
   setCurrentUserDisplayName: Dispatch<SetStateAction<string | null>>;
   setFetchedRows: Dispatch<SetStateAction<boolean>>;
+  currentMonth: number;
 }
 
 export interface ColumnData {
@@ -44,6 +45,10 @@ export interface Row {
   month: string;
   year: number;
   locations: string[];
+}
+
+export interface FetchRowDataProps {
+  currentMonth: number;
 }
 
 export type Months =

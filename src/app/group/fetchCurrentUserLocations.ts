@@ -10,8 +10,11 @@ import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
 import { db } from "../../../firebase/app";
 import sortDateRanges from "./sortDateRanges";
 import { Journey } from "../create-journey/types";
+import { FetchRowDataProps } from "./types";
 
-const fetchCurrentUserLocations = async () => {
+const fetchCurrentUserLocations = async ({
+  currentMonth,
+}: FetchRowDataProps) => {
   const journeys: Journey[] = [];
   const filteredLocations: string[] = [];
   const startDates: number[] = [];
@@ -22,7 +25,7 @@ const fetchCurrentUserLocations = async () => {
   );
 
   const journeysSnapshot: QuerySnapshot<unknown> = await getDocs(q);
-  const journeyDateRanges = await fetchJourneyDateRanges();
+  const journeyDateRanges = await fetchJourneyDateRanges({ currentMonth });
 
   if (journeysSnapshot.size > 0) {
     journeysSnapshot.forEach((doc) => {
@@ -38,11 +41,15 @@ const fetchCurrentUserLocations = async () => {
     journeys.filter((journey) => typeof journey !== "string")
   );
 
-  const filteredJourneys = [...filteredJourneysSet];
+  let filteredJourneys = [...filteredJourneysSet];
 
-  sortDateRanges(filteredJourneys);
+  filteredJourneys = filteredJourneys.filter(
+    (journey) => journey.dateRange.start.toDate().getMonth() === currentMonth
+  );
 
-  const dateRangeLengths = await fetchJourneyDateRangeLengths();
+  filteredJourneys.length > 1 ? sortDateRanges(filteredJourneys) : null;
+
+  const dateRangeLengths = await fetchJourneyDateRangeLengths({ currentMonth });
 
   const fetchStartDates = () => {
     journeyDateRanges.forEach((range) => {
@@ -82,12 +89,14 @@ const fetchCurrentUserLocations = async () => {
     for (let i = 0; i < dateRangeLengths.length; i++) {
       const journeyStartDay: number = handleEmptySlots();
 
-      for (
-        let j = journeyStartDay;
-        j <= journeyStartDay + dateRangeLengths[lengthIndex];
-        j++
-      ) {
-        filteredLocations.push(filteredJourneys[journeyIndex].location);
+      if (filteredJourneys.length > 0) {
+        for (
+          let j = journeyStartDay;
+          j <= journeyStartDay + dateRangeLengths[lengthIndex];
+          j++
+        ) {
+          filteredLocations.push(filteredJourneys[journeyIndex].location);
+        }
       }
 
       lengthIndex++;

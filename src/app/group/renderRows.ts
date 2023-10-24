@@ -6,9 +6,10 @@ const renderRows = async ({
   setCurrentMonthRows,
   setCurrentUserDisplayName,
   setFetchedRows,
+  currentMonth,
 }: RenderRowsProps): Promise<void> => {
   try {
-    const fetchedRows = await fetchRows();
+    const fetchedRows = await fetchRows({ currentMonth });
     const displayName = await fetchCurrentUserDisplayName();
 
     setCurrentMonthRows(

@@ -68,6 +68,7 @@ const GroupPage: React.FC = () => {
         setCurrentMonthRows,
         setCurrentUserDisplayName,
         setFetchedRows,
+        currentMonth,
       });
     })();
   }, [currentMonth]);

@@ -3,14 +3,14 @@ import { Row } from "../group/types";
 
 import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
 import fetchCurrentUserLocations from "./fetchCurrentUserLocations";
-import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
+import { FetchRowDataProps } from "../group/types";
 
-const fetchRows = async () => {
+const fetchRows = async ({ currentMonth }: FetchRowDataProps) => {
   const currentUserDisplayName: string = await fetchCurrentUserDisplayName();
-  const currentUserLocations: string[] = await fetchCurrentUserLocations();
-  const journeyDateRanges = await fetchJourneyDateRanges();
-  const currentMonth: number = journeyDateRanges[0].start.getMonth();
-  const currentYear: number = journeyDateRanges[0].start.getFullYear();
+  const currentUserLocations: string[] = await fetchCurrentUserLocations({
+    currentMonth,
+  });
+  const currentYear: number = new Date().getFullYear();
 
   const rows: Row[] = [
     {
@@ -22,8 +22,6 @@ const fetchRows = async () => {
     },
   ];
 
-  console.log("Current user locations: ", currentUserLocations);
-  console.log("Journey date ranges: ", journeyDateRanges);
   return rows;
 };
 
