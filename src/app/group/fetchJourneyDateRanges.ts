@@ -9,7 +9,10 @@ import { FetchRowDataProps } from "./types";
 import formatDate from "../create-journey/formatDate";
 import { db } from "../../../firebase/app";
 
-const fetchJourneyDateRanges = async ({ currentMonth }: FetchRowDataProps) => {
+const fetchJourneyDateRanges = async ({
+  currentMonth,
+  currentYear,
+}: FetchRowDataProps) => {
   const dateRanges: { start: Date; end: Date }[] = [];
   const q: Query<Document> = query(collection(db, "journeys"));
 
@@ -26,7 +29,9 @@ const fetchJourneyDateRanges = async ({ currentMonth }: FetchRowDataProps) => {
   }
 
   let filteredDateRanges = dateRanges.filter(
-    (dateRange) => dateRange.start.getMonth() === currentMonth
+    (dateRange) =>
+      dateRange.start.getMonth() === currentMonth &&
+      dateRange.start.getFullYear() === currentYear
   );
 
   filteredDateRanges.length > 1

@@ -14,6 +14,7 @@ import { FetchRowDataProps } from "./types";
 
 const fetchCurrentUserLocations = async ({
   currentMonth,
+  currentYear,
 }: FetchRowDataProps) => {
   const journeys: Journey[] = [];
   const filteredLocations: string[] = [];
@@ -25,7 +26,10 @@ const fetchCurrentUserLocations = async ({
   );
 
   const journeysSnapshot: QuerySnapshot<unknown> = await getDocs(q);
-  const journeyDateRanges = await fetchJourneyDateRanges({ currentMonth });
+  const journeyDateRanges = await fetchJourneyDateRanges({
+    currentMonth,
+    currentYear,
+  });
 
   if (journeysSnapshot.size > 0) {
     journeysSnapshot.forEach((doc) => {
@@ -44,12 +48,17 @@ const fetchCurrentUserLocations = async ({
   let filteredJourneys = [...filteredJourneysSet];
 
   filteredJourneys = filteredJourneys.filter(
-    (journey) => journey.dateRange.start.toDate().getMonth() === currentMonth
+    (journey) =>
+      journey.dateRange.start.toDate().getMonth() === currentMonth &&
+      journey.dateRange.start.toDate().getFullYear() === currentYear
   );
 
   filteredJourneys.length > 1 ? sortDateRanges(filteredJourneys) : null;
 
-  const dateRangeLengths = await fetchJourneyDateRangeLengths({ currentMonth });
+  const dateRangeLengths = await fetchJourneyDateRangeLengths({
+    currentMonth,
+    currentYear,
+  });
 
   const fetchStartDates = () => {
     journeyDateRanges.forEach((range) => {

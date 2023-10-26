@@ -5,12 +5,12 @@ import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
 import fetchCurrentUserLocations from "./fetchCurrentUserLocations";
 import { FetchRowDataProps } from "../group/types";
 
-const fetchRows = async ({ currentMonth }: FetchRowDataProps) => {
+const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataProps) => {
   const currentUserDisplayName: string = await fetchCurrentUserDisplayName();
   const currentUserLocations: string[] = await fetchCurrentUserLocations({
     currentMonth,
+    currentYear,
   });
-  const currentYear: number = new Date().getFullYear();
 
   const rows: Row[] = [
     {

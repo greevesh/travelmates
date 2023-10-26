@@ -13,6 +13,7 @@ import { FetchRowDataProps } from "./types";
 
 const fetchJourneyDateRangeLengths = async ({
   currentMonth,
+  currentYear,
 }: FetchRowDataProps) => {
   const journeys: Journey[] = [];
   const journeyLengths: { journey: Journey; length: number }[] = [];
@@ -36,7 +37,10 @@ const fetchJourneyDateRangeLengths = async ({
 
   let filteredDateRangeLengths = journeyLengths.filter(
     (journeyLength) =>
-      journeyLength.journey.dateRange.start.toDate().getMonth() === currentMonth
+      journeyLength.journey.dateRange.start.toDate().getMonth() ===
+        currentMonth &&
+      journeyLength.journey.dateRange.start.toDate().getFullYear() ===
+        currentYear
   );
 
   filteredDateRangeLengths.length > 1
