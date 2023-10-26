@@ -39,7 +39,9 @@ const fetchJourneyDateRangeLengths = async ({
       journeyLength.journey.dateRange.start.toDate().getMonth() === currentMonth
   );
 
-  filteredDateRangeLengths.length > 1 ? sortDateRanges(journeyLengths) : null;
+  filteredDateRangeLengths.length > 1
+    ? sortDateRanges(filteredDateRangeLengths)
+    : null;
 
   filteredDateRangeLengths.forEach((journeyLength) => {
     dateRangeLengths.push(journeyLength.length);
