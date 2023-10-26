@@ -69,7 +69,7 @@ const fetchCurrentUserLocations = async ({
         for (let i = 0; i < journeyStartDay; i++) {
           filteredLocations.push("");
         }
-      } else {
+      } else if (dateRangeLengths.length > 1) {
         const previousEnd =
           startDates[startDateIndex - 1] + dateRangeLengths[lengthIndex - 1];
 
@@ -88,17 +88,24 @@ const fetchCurrentUserLocations = async ({
 
     for (let i = 0; i < dateRangeLengths.length; i++) {
       const journeyStartDay: number = handleEmptySlots();
+      const journeyEndDay: number =
+        journeyStartDay + dateRangeLengths[lengthIndex];
 
       if (filteredJourneys.length > 0) {
-        for (
-          let j = journeyStartDay;
-          j <= journeyStartDay + dateRangeLengths[lengthIndex];
-          j++
-        ) {
+        for (let j = journeyStartDay; j <= journeyEndDay; j++) {
           filteredLocations.push(filteredJourneys[journeyIndex].location);
         }
       }
-
+      if (
+        dateRangeLengths.indexOf(dateRangeLengths[lengthIndex]) ===
+        dateRangeLengths.length - 1
+      ) {
+        const today = new Date();
+        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        for (let i = journeyEndDay; i < lastDay.getDate(); i++) {
+          filteredLocations.push("");
+        }
+      }
       lengthIndex++;
       journeyIndex++;
     }
