@@ -38,9 +38,11 @@ const fetchJourneyDateRangeLengths = async ({
   let filteredDateRangeLengths = journeyLengths.filter(
     (journeyLength) =>
       journeyLength.journey.dateRange.start.toDate().getMonth() ===
+        currentMonth ||
+      (journeyLength.journey.dateRange.end.toDate().getMonth() ===
         currentMonth &&
-      journeyLength.journey.dateRange.start.toDate().getFullYear() ===
-        currentYear
+        journeyLength.journey.dateRange.start.toDate().getFullYear() ===
+          currentYear)
   );
 
   filteredDateRangeLengths.length > 1

@@ -30,8 +30,9 @@ const fetchJourneyDateRanges = async ({
 
   let filteredDateRanges = dateRanges.filter(
     (dateRange) =>
-      dateRange.start.getMonth() === currentMonth &&
-      dateRange.start.getFullYear() === currentYear
+      dateRange.start.getMonth() === currentMonth ||
+      (dateRange.end.getMonth() === currentMonth &&
+        dateRange.start.getFullYear() === currentYear)
   );
 
   filteredDateRanges.length > 1
