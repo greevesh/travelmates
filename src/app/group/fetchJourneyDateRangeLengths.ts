@@ -7,8 +7,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 import formatDate from "../create-journey/formatDate";
-import { Journey } from "../create-journey/types";
 import sortDateRanges from "./sortDateRanges";
+import { fetchMonth, fetchYear } from "../globals";
+import { Journey } from "../create-journey/types";
 import { FetchRowDataProps } from "./types";
 
 const fetchJourneyDateRangeLengths = async ({
@@ -35,21 +36,26 @@ const fetchJourneyDateRangeLengths = async ({
     });
   }
 
-  let filteredDateRangeLengths = journeyLengths.filter(
-    (journeyLength) =>
-      journeyLength.journey.dateRange.start.toDate().getMonth() ===
-        currentMonth ||
-      (journeyLength.journey.dateRange.end.toDate().getMonth() ===
-        currentMonth &&
-        journeyLength.journey.dateRange.start.toDate().getFullYear() ===
-          currentYear)
+  const currentMonthDateRangeLengths = journeyLengths.filter(
+    (dateRangeLength) => {
+      const { start, end } = dateRangeLength.journey.dateRange;
+      return (
+        fetchMonth(start) === currentMonth || fetchMonth(end) === currentMonth
+      );
+    }
   );
 
-  filteredDateRangeLengths.length > 1
-    ? sortDateRanges(filteredDateRangeLengths)
+  const currentMonthAndYearDateRangeLengths =
+    currentMonthDateRangeLengths.filter((dateRangeLength) => {
+      const { start, end } = dateRangeLength.journey.dateRange;
+      return fetchYear(start) === currentYear || fetchYear(end) === currentYear;
+    });
+
+  currentMonthAndYearDateRangeLengths.length > 1
+    ? sortDateRanges(currentMonthAndYearDateRangeLengths)
     : null;
 
-  filteredDateRangeLengths.forEach((journeyLength) => {
+  currentMonthAndYearDateRangeLengths.map((journeyLength) => {
     dateRangeLengths.push(journeyLength.length);
   });
 
