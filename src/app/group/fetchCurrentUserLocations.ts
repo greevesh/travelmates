@@ -12,6 +12,7 @@ import sortDateRanges from "./sortDateRanges";
 import { Journey } from "../create-journey/types";
 import { FetchRowDataProps } from "./types";
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
+import { fetchMonth, fetchYear } from "../globals";
 
 const fetchCurrentUserLocations = async ({
   currentMonth,
@@ -49,15 +50,21 @@ const fetchCurrentUserLocations = async ({
 
   let filteredJourneys = [...filteredJourneysSet];
 
-  filteredJourneys = filteredJourneys.filter(
-    (journey) =>
-      journey.dateRange.start.toDate().getMonth() === currentMonth ||
-      (journey.dateRange.end.toDate().getMonth() === currentMonth &&
-        journey.dateRange.start.toDate().getFullYear() === currentYear)
-  );
+  const currentMonthJourneys = filteredJourneys.filter((journey) => {
+    const { start, end } = journey.dateRange;
+    return (
+      fetchMonth(start) === currentMonth || fetchMonth(end) === currentMonth
+    );
+  });
 
-  console.log("Filtered Journeys: ", filteredJourneys);
-  filteredJourneys.length > 1 ? sortDateRanges(filteredJourneys) : null;
+  const currentMonthAndYearJourneys = currentMonthJourneys.filter((journey) => {
+    const { start, end } = journey.dateRange;
+    return fetchYear(start) === currentYear || fetchYear(end) === currentYear;
+  });
+
+  currentMonthAndYearJourneys.length > 1
+    ? sortDateRanges(currentMonthAndYearJourneys)
+    : null;
 
   const dateRangeLengths = await fetchJourneyDateRangeLengths({
     currentMonth,
@@ -144,7 +151,7 @@ const fetchCurrentUserLocations = async ({
         journeyStartDay + dateRangeLengths[lengthIndex];
       const lastDay = new Date(currentYear, currentMonth + 1, 0);
 
-      if (filteredJourneys.length > 0) {
+      if (currentMonthAndYearJourneys.length > 0) {
         let daysLeft: number = 0;
         for (let j = journeyStartDay; j <= journeyEndDay; j++) {
           if (j > lastDay.getDate()) {
@@ -153,12 +160,16 @@ const fetchCurrentUserLocations = async ({
             }
             break;
           }
-          filteredLocations.push(filteredJourneys[journeyIndex].location);
+          filteredLocations.push(
+            currentMonthAndYearJourneys[journeyIndex].location
+          );
         }
         if (startFromFirstIndex) {
           filteredLocations.length = 0;
           for (let j = 0; j <= daysLeft; j++) {
-            filteredLocations.push(filteredJourneys[journeyIndex].location);
+            filteredLocations.push(
+              currentMonthAndYearJourneys[journeyIndex].location
+            );
           }
         }
       }
