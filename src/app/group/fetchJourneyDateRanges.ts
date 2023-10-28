@@ -28,18 +28,27 @@ const fetchJourneyDateRanges = async ({
     });
   }
 
-  let filteredDateRanges = dateRanges.filter(
-    (dateRange) =>
-      dateRange.start.getMonth() === currentMonth ||
-      (dateRange.end.getMonth() === currentMonth &&
-        dateRange.start.getFullYear() === currentYear)
+  const currentMonthDateRanges = dateRanges.filter((dateRange) => {
+    const { start, end } = dateRange;
+    return start.getMonth() === currentMonth || end.getMonth() === currentMonth;
+  });
+
+  const currentMonthAndYearDateRanges = currentMonthDateRanges.filter(
+    (dateRange) => {
+      const { start, end } = dateRange;
+      return (
+        start.getFullYear() === currentYear || end.getFullYear() === currentYear
+      );
+    }
   );
 
-  filteredDateRanges.length > 1
-    ? filteredDateRanges.sort((a, b) => a.start.getTime() - b.start.getTime())
+  currentMonthAndYearDateRanges.length > 1
+    ? currentMonthAndYearDateRanges.sort(
+        (a, b) => a.start.getTime() - b.start.getTime()
+      )
     : null;
 
-  return filteredDateRanges;
+  return currentMonthAndYearDateRanges;
 };
 
 export default fetchJourneyDateRanges;
