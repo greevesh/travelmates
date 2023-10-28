@@ -10,3 +10,6 @@ export const generateRandomID = (): string => {
   }
   return result;
 };
+
+export const fetchMonth = (date: any) => date.toDate().getMonth();
+export const fetchYear = (date: any) => date.toDate().getFullYear();
