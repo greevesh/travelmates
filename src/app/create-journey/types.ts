@@ -57,8 +57,8 @@ export interface SelectedDate extends Date {
 }
 
 export interface DateRange {
-  start: SelectedDate | null;
-  end: SelectedDate | null;
+  start: SelectedDate | Date | null;
+  end: SelectedDate | Date | null;
 }
 
 export interface DateRangePickerComponentProps {

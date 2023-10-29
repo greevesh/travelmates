@@ -2,34 +2,32 @@ import {
   query,
   collection,
   getDocs,
-  type Query,
-  type QuerySnapshot,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
 } from "firebase/firestore";
+import { db } from "../../../firebase/app";
+import eachDayOfInterval from "date-fns/eachDayOfInterval";
+import { Journey, DateRange } from "../create-journey/types";
+import { fetchMonth, fetchYear } from "../globals";
 import fetchJourneyDateRangeLengths from "./fetchJourneyDateRangeLengths";
 import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
-import { db } from "../../../firebase/app";
 import sortDateRanges from "./sortDateRanges";
-import { Journey } from "../create-journey/types";
 import { FetchRowDataProps } from "./types";
-import eachDayOfInterval from "date-fns/eachDayOfInterval";
-import { fetchMonth, fetchYear } from "../globals";
 
 const fetchCurrentUserLocations = async ({
   currentMonth,
   currentYear,
-}: FetchRowDataProps) => {
+}: FetchRowDataProps): Promise<string[]> => {
   const journeys: Journey[] = [];
   const filteredLocations: string[] = [];
   const startDates: number[] = [];
   const endDates: number[] = [];
   let startFromFirstIndex: boolean = false;
 
-  const q: Query<Document> = query(
-    collection(db, "journeys")
-    // where("userID", "==", currentUserID)
-  );
+  const journeysCollection = collection(db, "journeys");
+  const journeysSnapshot: QuerySnapshot<QueryDocumentSnapshot<Journey>> =
+    await getDocs(query(journeysCollection));
 
-  const journeysSnapshot: QuerySnapshot<unknown> = await getDocs(q);
   const journeyDateRanges = await fetchJourneyDateRanges({
     currentMonth,
     currentYear,
@@ -37,10 +35,7 @@ const fetchCurrentUserLocations = async ({
 
   if (journeysSnapshot.size > 0) {
     journeysSnapshot.forEach((doc) => {
-      const journey = doc.data();
-      for (let i = 0; i <= journey.location.length; i++) {
-        journeys.push(journey);
-      }
+      journeys.push(doc.data());
     });
   }
 
@@ -48,7 +43,7 @@ const fetchCurrentUserLocations = async ({
     journeys.filter((journey) => typeof journey !== "string")
   );
 
-  let filteredJourneys = [...filteredJourneysSet];
+  const filteredJourneys = [...filteredJourneysSet];
 
   const currentMonthJourneys = filteredJourneys.filter((journey) => {
     const { start, end } = journey.dateRange;
@@ -62,9 +57,9 @@ const fetchCurrentUserLocations = async ({
     return fetchYear(start) === currentYear || fetchYear(end) === currentYear;
   });
 
-  currentMonthAndYearJourneys.length > 1
-    ? sortDateRanges(currentMonthAndYearJourneys)
-    : null;
+  if (currentMonthAndYearJourneys.length > 1) {
+    sortDateRanges(currentMonthAndYearJourneys);
+  }
 
   const dateRangeLengths = await fetchJourneyDateRangeLengths({
     currentMonth,
@@ -72,28 +67,27 @@ const fetchCurrentUserLocations = async ({
   });
 
   const fetchStartDates = () => {
-    journeyDateRanges.forEach((range) => {
-      startDates.push(range.start.getDate());
+    journeyDateRanges.forEach(({ start }) => {
+      startDates.push(start.getDate());
     });
   };
 
   const fetchEndDates = () => {
-    journeyDateRanges.forEach((range) => {
-      endDates.push(range.end.getDate());
+    journeyDateRanges.forEach(({ end }) => {
+      endDates.push(end.getDate());
     });
   };
 
   fetchStartDates();
   fetchEndDates();
 
-  const multipleMonthDateRanges = journeyDateRanges.filter((jdr) => {
-    return jdr.start.getMonth() !== jdr.end.getMonth();
-  });
+  const multipleMonthDateRanges = journeyDateRanges.filter(
+    ({ start, end }: DateRange) =>
+      start && end ? start.getMonth() !== end.getMonth() : null
+  );
 
   const multipleMonthDateRangeDays: Date[] = multipleMonthDateRanges
-    .map((dateRange) =>
-      eachDayOfInterval({ start: dateRange.start, end: dateRange.end })
-    )
+    .map(({ start, end }) => eachDayOfInterval({ start, end }))
     .flat();
 
   const lastDayOfPreviousMonth = new Date(
@@ -111,9 +105,7 @@ const fetchCurrentUserLocations = async ({
         day.getDate() === lastDayOfPreviousMonth &&
         day.getMonth() === currentMonth - 1
     );
-    hasCurrentMonthFirstDay && hasLastMonthLastDay
-      ? (startFromFirstIndex = true)
-      : null;
+    startFromFirstIndex = hasCurrentMonthFirstDay && hasLastMonthLastDay;
   }
 
   const mapLocationToDateRangeLength = () => {
@@ -132,9 +124,7 @@ const fetchCurrentUserLocations = async ({
         const previousEnd =
           startDates[startDateIndex - 1] + dateRangeLengths[lengthIndex - 1];
 
-        // Check if the end of the previous journey is the day before the start of the current journey
         if (previousEnd < journeyStartDay - 1) {
-          // Add empty slots if there is at least one day between the two journeys
           for (let i = previousEnd + 1; i < journeyStartDay; i++) {
             filteredLocations.push("");
           }
@@ -160,16 +150,18 @@ const fetchCurrentUserLocations = async ({
             }
             break;
           }
-          filteredLocations.push(
-            currentMonthAndYearJourneys[journeyIndex].location
-          );
+          const location = currentMonthAndYearJourneys[journeyIndex].location;
+          if (location !== undefined) {
+            filteredLocations.push(location);
+          }
         }
         if (startFromFirstIndex) {
           filteredLocations.length = 0;
           for (let j = 0; j <= daysLeft; j++) {
-            filteredLocations.push(
-              currentMonthAndYearJourneys[journeyIndex].location
-            );
+            const location = currentMonthAndYearJourneys[journeyIndex].location;
+            if (location !== undefined) {
+              filteredLocations.push(location);
+            }
           }
         }
       }
