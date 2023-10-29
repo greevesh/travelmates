@@ -1,14 +1,7 @@
-import {
-  query,
-  collection,
-  getDocs,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
-} from "firebase/firestore";
-import { db } from "../../../firebase/app";
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import { Journey, DateRange } from "../create-journey/types";
 import { fetchMonth, fetchYear, startDates } from "../globals";
+import { fetchJourneys } from "./fetchJourneys";
 import fetchJourneyDateRangeLengths from "./fetchJourneyDateRangeLengths";
 import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
 import sortDateRanges from "./sortDateRanges";
@@ -19,24 +12,14 @@ const fetchCurrentUserLocations = async ({
   currentMonth,
   currentYear,
 }: FetchRowDataProps): Promise<string[]> => {
-  const journeys: Journey[] = [];
   const endDates: number[] = [];
   let startFromFirstIndex: boolean = false;
-
-  const journeysCollection = collection(db, "journeys");
-  const journeysSnapshot: QuerySnapshot<QueryDocumentSnapshot<Journey>> =
-    await getDocs(query(journeysCollection));
-
   const journeyDateRanges = await fetchJourneyDateRanges({
     currentMonth,
     currentYear,
   });
 
-  if (journeysSnapshot.size > 0) {
-    journeysSnapshot.forEach((doc) => {
-      journeys.push(doc.data());
-    });
-  }
+  const journeys: Journey[] = await fetchJourneys();
 
   const filteredJourneysSet = new Set(
     journeys.filter((journey) => typeof journey !== "string")
@@ -107,13 +90,13 @@ const fetchCurrentUserLocations = async ({
     startFromFirstIndex = hasCurrentMonthFirstDay && hasLastMonthLastDay;
   }
 
-  const filteredLocations = processLocations(
+  const locations = processLocations(
     currentMonthAndYearJourneys,
     dateRangeLengths
   );
 
-  console.log("Locations: ", filteredLocations);
-  return filteredLocations;
+  console.log("Locations: ", locations);
+  return locations;
 };
 
 export default fetchCurrentUserLocations;
