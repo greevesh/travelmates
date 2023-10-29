@@ -13,3 +13,7 @@ export const generateRandomID = (): string => {
 
 export const fetchMonth = (date: any) => date.toDate().getMonth();
 export const fetchYear = (date: any) => date.toDate().getFullYear();
+
+export const startDates: number[] = [];
+export const currentYear: number = new Date().getFullYear();
+export const currentMonth: number = new Date().getMonth();

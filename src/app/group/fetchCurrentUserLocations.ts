@@ -8,19 +8,18 @@ import {
 import { db } from "../../../firebase/app";
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import { Journey, DateRange } from "../create-journey/types";
-import { fetchMonth, fetchYear } from "../globals";
+import { fetchMonth, fetchYear, startDates } from "../globals";
 import fetchJourneyDateRangeLengths from "./fetchJourneyDateRangeLengths";
 import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
 import sortDateRanges from "./sortDateRanges";
 import { FetchRowDataProps } from "./types";
+import processLocations from "./locationProcessing";
 
 const fetchCurrentUserLocations = async ({
   currentMonth,
   currentYear,
 }: FetchRowDataProps): Promise<string[]> => {
   const journeys: Journey[] = [];
-  const filteredLocations: string[] = [];
-  const startDates: number[] = [];
   const endDates: number[] = [];
   let startFromFirstIndex: boolean = false;
 
@@ -108,78 +107,10 @@ const fetchCurrentUserLocations = async ({
     startFromFirstIndex = hasCurrentMonthFirstDay && hasLastMonthLastDay;
   }
 
-  const mapLocationToDateRangeLength = () => {
-    let lengthIndex: number = 0;
-    let journeyIndex: number = 0;
-    let startDateIndex: number = 0;
-
-    const handleEmptySlots = () => {
-      const journeyStartDay: number = startDates[startDateIndex];
-
-      if (startDateIndex === 0) {
-        for (let i = 0; i < journeyStartDay; i++) {
-          filteredLocations.push("");
-        }
-      } else if (dateRangeLengths.length > 1) {
-        const previousEnd =
-          startDates[startDateIndex - 1] + dateRangeLengths[lengthIndex - 1];
-
-        if (previousEnd < journeyStartDay - 1) {
-          for (let i = previousEnd + 1; i < journeyStartDay; i++) {
-            filteredLocations.push("");
-          }
-        }
-      }
-
-      startDateIndex++;
-      return journeyStartDay;
-    };
-
-    for (let i = 0; i < dateRangeLengths.length; i++) {
-      let journeyStartDay: number = handleEmptySlots();
-      const journeyEndDay: number =
-        journeyStartDay + dateRangeLengths[lengthIndex];
-      const lastDay = new Date(currentYear, currentMonth + 1, 0);
-
-      if (currentMonthAndYearJourneys.length > 0) {
-        let daysLeft: number = 0;
-        for (let j = journeyStartDay; j <= journeyEndDay; j++) {
-          if (j > lastDay.getDate()) {
-            for (let k = j + 1; k <= journeyEndDay; k++) {
-              daysLeft++;
-            }
-            break;
-          }
-          const location = currentMonthAndYearJourneys[journeyIndex].location;
-          if (location !== undefined) {
-            filteredLocations.push(location);
-          }
-        }
-        if (startFromFirstIndex) {
-          filteredLocations.length = 0;
-          for (let j = 0; j <= daysLeft; j++) {
-            const location = currentMonthAndYearJourneys[journeyIndex].location;
-            if (location !== undefined) {
-              filteredLocations.push(location);
-            }
-          }
-        }
-      }
-      if (
-        dateRangeLengths.indexOf(dateRangeLengths[lengthIndex]) ===
-        dateRangeLengths.length - 1
-      ) {
-        for (let i = journeyEndDay; i < lastDay.getDate(); i++) {
-          filteredLocations.push("");
-        }
-      }
-      lengthIndex++;
-      journeyIndex++;
-    }
-  };
-
-  fetchStartDates();
-  mapLocationToDateRangeLength();
+  const filteredLocations = processLocations(
+    currentMonthAndYearJourneys,
+    dateRangeLengths
+  );
 
   console.log("Locations: ", filteredLocations);
   return filteredLocations;
