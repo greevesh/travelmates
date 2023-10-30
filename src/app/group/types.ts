@@ -1,18 +1,18 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { GridColDef } from "@mui/x-data-grid-pro";
 
+export interface ColumnData {
+  field: string;
+  headerName: number;
+  width: number;
+}
+
 export interface RenderRowsProps {
   setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
   setCurrentUserDisplayName: Dispatch<SetStateAction<string | null>>;
   setFetchedRows: Dispatch<SetStateAction<boolean>>;
   currentMonth: number;
   currentYear: number;
-}
-
-export interface ColumnData {
-  field: string;
-  headerName: number;
-  width: number;
 }
 
 export interface RenderBaseColumnsProps {
@@ -51,6 +51,14 @@ export interface Row {
 export interface FetchRowDataProps {
   currentMonth: number;
   currentYear: number;
+}
+
+export interface ProcessDateRangesProps {
+  startDates: number[];
+  endDates: number[];
+  threeMonthsOrMoreDateRanges: Date[];
+  startFromFirstIndex: boolean;
+  lastDayOfPreviousMonth: number;
 }
 
 export type Months =

@@ -14,6 +14,7 @@ const processLocations = (
 
   const handleEmptySlots = (startDay: number) => {
     if (startDateIndex === 0) {
+      console.log("Start Day: ", startDay);
       for (let i = 0; i < startDay; i++) {
         locations.push("");
       }
@@ -42,7 +43,7 @@ const processLocations = (
       let daysLeft: number = 0;
       for (let j = startDay; j <= endDay; j++) {
         // If the end day exceeds the final day of the current month, store the remaining
-        // days from the next months
+        // days for the next months
         if (j > lastDay.getDate()) {
           for (let k = j + 1; k <= endDay; k++) {
             daysLeft++;
@@ -51,7 +52,8 @@ const processLocations = (
         }
         locations.push(journeys[journeyIndex]?.location || "");
       }
-      // If a journey is continuing to span from the previous month onto the current one
+      // If a journey is continuing to span from the previous month onto the current one,
+      // start from column one
       if (daysLeft > 0 && startDateIndex === 0) {
         startFromColumnOne = true;
       }

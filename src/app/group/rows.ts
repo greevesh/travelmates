@@ -2,7 +2,7 @@ import { months } from "./columns";
 import { Row } from "../group/types";
 
 import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
-import fetchCurrentUserLocations from "./fetchCurrentUserLocations";
+import fetchCurrentUserLocations from "./fetchLocations";
 import { FetchRowDataProps } from "../group/types";
 
 const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataProps) => {
