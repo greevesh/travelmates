@@ -9,7 +9,7 @@ const isJourneys = (
 };
 
 const sortDateRanges = (arr: Journey[] | JourneyLength[]) => {
-  // if arr of journeys no need to reference journey obj
+  // If arr of journeys no need to reference journey obj
   if (isJourneys(arr)) {
     arr.sort((a, b) => {
       const dateA =
@@ -25,7 +25,7 @@ const sortDateRanges = (arr: Journey[] | JourneyLength[]) => {
       return dateA - dateB;
     });
   }
-  // if arr of journey lengths reference journey obj
+  // If arr of journey lengths reference journey obj
   else {
     arr.sort((a, b) => {
       const dateA =

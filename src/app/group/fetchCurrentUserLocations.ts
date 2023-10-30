@@ -5,8 +5,9 @@ import { fetchJourneys } from "./fetchJourneys";
 import fetchJourneyDateRangeLengths from "./fetchJourneyDateRangeLengths";
 import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
 import sortDateRanges from "./sortDateRanges";
-import { FetchRowDataProps } from "./types";
 import processLocations from "./locationProcessing";
+import filterJourneysByMonthAndYear from "./filterJourneys";
+import { FetchRowDataProps } from "./types";
 
 const fetchCurrentUserLocations = async ({
   currentMonth,
@@ -14,36 +15,18 @@ const fetchCurrentUserLocations = async ({
 }: FetchRowDataProps): Promise<string[]> => {
   const endDates: number[] = [];
   let startFromFirstIndex: boolean = false;
-  const journeyDateRanges = await fetchJourneyDateRanges({
-    currentMonth,
-    currentYear,
-  });
 
   const journeys: Journey[] = await fetchJourneys();
 
-  const filteredJourneysSet = new Set(
-    journeys.filter((journey) => typeof journey !== "string")
-  );
+  const filterJourneys = filterJourneysByMonthAndYear();
 
-  const filteredJourneys = [...filteredJourneysSet];
+  const filteredJourneys = filterJourneys(journeys, currentMonth, currentYear);
 
-  const currentMonthJourneys = filteredJourneys.filter((journey) => {
-    const { start, end } = journey.dateRange;
-    return (
-      fetchMonth(start) === currentMonth || fetchMonth(end) === currentMonth
-    );
-  });
-
-  const currentMonthAndYearJourneys = currentMonthJourneys.filter((journey) => {
-    const { start, end } = journey.dateRange;
-    return fetchYear(start) === currentYear || fetchYear(end) === currentYear;
-  });
-
-  if (currentMonthAndYearJourneys.length > 1) {
-    sortDateRanges(currentMonthAndYearJourneys);
+  if (filteredJourneys.length > 1) {
+    sortDateRanges(filteredJourneys);
   }
 
-  const dateRangeLengths = await fetchJourneyDateRangeLengths({
+  const journeyDateRanges = await fetchJourneyDateRanges({
     currentMonth,
     currentYear,
   });
@@ -90,10 +73,12 @@ const fetchCurrentUserLocations = async ({
     startFromFirstIndex = hasCurrentMonthFirstDay && hasLastMonthLastDay;
   }
 
-  const locations = processLocations(
-    currentMonthAndYearJourneys,
-    dateRangeLengths
-  );
+  const dateRangeLengths = await fetchJourneyDateRangeLengths({
+    currentMonth,
+    currentYear,
+  });
+
+  const locations = processLocations(filteredJourneys, dateRangeLengths);
 
   console.log("Locations: ", locations);
   return locations;
