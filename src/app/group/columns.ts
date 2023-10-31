@@ -2,7 +2,6 @@ import { GridColDef, GridCellParams } from "@mui/x-data-grid";
 import { Months } from "../group/types";
 
 export const slotColumnCommonFields: Partial<GridColDef> = {
-  maxWidth: 10,
   cellClassName: (params) => params.value,
   colSpan: ({ row, field, value }: GridCellParams) => {
     const index: number = Number(field);

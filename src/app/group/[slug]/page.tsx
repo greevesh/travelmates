@@ -85,7 +85,7 @@ const GroupPage: React.FC = () => {
   return (
     <>
       {fetchedRows ? (
-        <Box>
+        <Box style={{ maxWidth: "98%" }}>
           <Typography color="textSecondary" variant="h6" component="div">
             {months[currentMonth]}, {currentYear}
           </Typography>

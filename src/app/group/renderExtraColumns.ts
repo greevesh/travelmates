@@ -20,6 +20,7 @@ const renderExtraColumns = ({
       return {
         field: day,
         headerName: day,
+        maxWidth: 20,
         valueGetter: ({ row }) => row.locations[day],
         sortable: false,
         ...slotColumnCommonFields,
