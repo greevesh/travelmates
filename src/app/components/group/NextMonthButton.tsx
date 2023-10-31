@@ -1,12 +1,16 @@
 import React from "react";
-import { NextMonthButtonProps } from "../../group/types";
 import Button from "@mui/material/Button";
+import { NextMonthButtonProps } from "../../group/types";
 
 const NextMonthButton: React.FC<NextMonthButtonProps> = ({
   incrementMonth,
 }) => {
   return (
-    <Button variant="outlined" onClick={incrementMonth}>
+    <Button
+      style={{ marginBottom: "5px", marginLeft: "5px" }}
+      variant="contained"
+      onClick={incrementMonth}
+    >
       Next month
     </Button>
   );

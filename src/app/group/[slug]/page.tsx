@@ -24,8 +24,7 @@ const FlexContainer: React.FC<FlexContainerProps> = ({
   children,
   display = "flex",
   justifyContent = "flex-start",
-  marginTop = "5px",
-}) => <div style={{ display, justifyContent, marginTop }}>{children}</div>;
+}) => <div style={{ display, justifyContent }}>{children}</div>;
 
 const GroupPage: React.FC = () => {
   const [baseColumns, setBaseColumns] = useState<GridColDef[]>([]);
@@ -94,11 +93,9 @@ const GroupPage: React.FC = () => {
             <PreviousMonthButton
               decrementMonth={() => decrementMonth(monthProps)}
             />
-            <div style={{ marginLeft: "5px" }}>
-              <NextMonthButton
-                incrementMonth={() => incrementMonth(monthProps)}
-              />
-            </div>
+            <NextMonthButton
+              incrementMonth={() => incrementMonth(monthProps)}
+            />
           </FlexContainer>
           <DataGridPro
             sx={journeyStyles}
@@ -112,9 +109,9 @@ const GroupPage: React.FC = () => {
             disableColumnMenu
           />
           <FlexContainer>
-            <EditContent buttonText="Edit members" form={<GroupForm />} />
+            <EditContent buttonText="edit members" form={<GroupForm />} />
             <div style={{ marginLeft: "5px" }}>
-              <EditContent buttonText="Edit journeys" form={<JourneyForm />} />
+              <EditContent buttonText="edit journeys" form={<JourneyForm />} />
             </div>
           </FlexContainer>
         </Box>

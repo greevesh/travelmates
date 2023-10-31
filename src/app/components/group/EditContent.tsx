@@ -28,7 +28,11 @@ const EditContent: React.FC<EditContentProps> = ({ buttonText, form }) => {
 
   return (
     <div>
-      <Button variant="contained" onClick={handleOpen}>
+      <Button
+        style={{ marginTop: "5px" }}
+        variant="contained"
+        onClick={handleOpen}
+      >
         {buttonText}
       </Button>
       <Modal
