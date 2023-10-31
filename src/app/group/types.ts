@@ -55,7 +55,6 @@ export interface FetchRowDataProps {
 
 export interface ProcessDateRangesProps {
   startDates: number[];
-  endDates: number[];
   threeMonthsOrMoreDateRanges: Date[];
   startFromFirstIndex: boolean;
   lastDayOfPreviousMonth: number;

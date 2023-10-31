@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
-import { startDates, endDates } from "../globals";
+import { startDates } from "../globals";
 import { DateRange } from "../create-journey/types";
 import { ProcessDateRangesProps } from "./types";
 
@@ -11,19 +11,13 @@ const processDateRanges = (
 ): ProcessDateRangesProps => {
   const fetchDates = (dates: number[], accessor: (date: Date) => number) =>
     dateRanges.forEach(({ start, end }) => {
-      if (start && end) {
-        dates.push(accessor(start));
-        dates.push(accessor(end));
-      }
+      start ? dates.push(accessor(start)) : null;
     });
 
   const fetchStartDates = () =>
     fetchDates(startDates, (date) => date.getDate());
 
-  const fetchEndDates = () => fetchDates(endDates, (date) => date.getDate());
-
   fetchStartDates();
-  fetchEndDates();
 
   const threeMonthsOrMoreDateRanges = dateRanges.filter(
     ({ start, end }: DateRange) =>
@@ -54,7 +48,6 @@ const processDateRanges = (
 
   return {
     startDates,
-    endDates,
     threeMonthsOrMoreDateRanges,
     startFromColumnOne,
     lastDayOfPreviousMonth,
