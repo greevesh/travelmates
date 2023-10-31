@@ -42,6 +42,7 @@ export interface CalendarDay {
 
 export interface Row {
   id: number;
+  photoURL: string;
   name: string;
   month: string;
   year: number;

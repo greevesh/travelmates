@@ -15,6 +15,8 @@ const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataProps) => {
   const rows: Row[] = [
     {
       id: 1,
+      photoURL:
+        "https://lh3.googleusercontent.com/a/AAcHTtdHw1hx0h-_MhWLPT7lw9jom3nIZLOJok8fQ0U_=s96-c",
       name: currentUserDisplayName,
       month: months[currentMonth],
       year: currentYear,
