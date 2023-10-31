@@ -1,6 +1,6 @@
 import { fetchJourneys } from "./fetchJourneys";
-import fetchJourneyDateRangeLengths from "./fetchJourneyDateRangeLengths";
-import fetchJourneyDateRanges from "./fetchJourneyDateRanges";
+import fetchJourneyDateRangeLengths from "./fetchDateRangeLengths";
+import fetchJourneyDateRanges from "./fetchDateRanges";
 import processDateRanges from "./processDateRanges";
 import sortDateRanges from "./sortDateRanges";
 import processLocations from "./processLocations";

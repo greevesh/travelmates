@@ -12,7 +12,7 @@ import { fetchMonth, fetchYear } from "../globals";
 import { Journey } from "../create-journey/types";
 import { FetchRowDataProps } from "./types";
 
-const fetchJourneyDateRangeLengths = async ({
+const fetchDateRangeLengths = async ({
   currentMonth,
   currentYear,
 }: FetchRowDataProps) => {
@@ -62,4 +62,4 @@ const fetchJourneyDateRangeLengths = async ({
   return dateRangeLengths;
 };
 
-export default fetchJourneyDateRangeLengths;
+export default fetchDateRangeLengths;

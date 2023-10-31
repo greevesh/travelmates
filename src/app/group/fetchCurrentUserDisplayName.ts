@@ -23,8 +23,6 @@ const fetchCurrentUserDisplayName = async (): Promise<string> => {
 
     const userDoc: QueryDocumentSnapshot<DocumentData> = querySnapshot.docs[0];
     displayName = userDoc?.data().displayName;
-
-    console.log("Successfully fetched display name");
   } catch (err) {
     console.log("Error retrieving current user's display name:", err);
   }

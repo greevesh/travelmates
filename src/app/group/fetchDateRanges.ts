@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
   query,
   collection,
@@ -5,11 +6,11 @@ import {
   type Query,
   type QuerySnapshot,
 } from "firebase/firestore";
-import { FetchRowDataProps } from "./types";
 import formatDate from "../create-journey/formatDate";
 import { db } from "../../../firebase/app";
+import { FetchRowDataProps } from "./types";
 
-const fetchJourneyDateRanges = async ({
+const fetchDateRanges = async ({
   currentMonth,
   currentYear,
 }: FetchRowDataProps) => {
@@ -51,4 +52,4 @@ const fetchJourneyDateRanges = async ({
   return currentMonthAndYearDateRanges;
 };
 
-export default fetchJourneyDateRanges;
+export default fetchDateRanges;
