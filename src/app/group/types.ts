@@ -103,26 +103,19 @@ export interface EditContentProps {
 }
 
 export interface JourneyStyles {
-  width: string;
-  "& .Cebu": {
+  "& .journey-1": {
     backgroundColor: string;
   };
-  "& .Moalboal": {
+  "& .journey-2": {
     backgroundColor: string;
   };
-  "& .Hanoi": {
+  "& .journey-3": {
     backgroundColor: string;
   };
-  "& .Taipei": {
+  "& .journey-4": {
     backgroundColor: string;
   };
-  "& .Brisbane": {
-    backgroundColor: string;
-  };
-  "& .Tokyo": {
-    backgroundColor: string;
-  };
-  "& .Singapore": {
+  "& .journey-5": {
     backgroundColor: string;
   };
 }

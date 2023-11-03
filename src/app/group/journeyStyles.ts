@@ -1,26 +1,19 @@
 import { JourneyStyles } from "./types";
 
 export const journeyStyles: JourneyStyles = {
-  width: "100%",
-  "& .Cebu": {
-    backgroundColor: "rgba(157, 255, 118, 0.49)",
+  "& .journey-1": {
+    backgroundColor: "rgba(255, 165, 0, 0.7)",
   },
-  "& .Moalboal": {
-    backgroundColor: "rgba(255, 255, 10, 0.49)",
+  "& .journey-2": {
+    backgroundColor: "rgba(52, 235, 128, 0.7)",
   },
-  "& .Hanoi": {
-    backgroundColor: "rgba(150, 150, 150, 0.49)",
+  "& .journey-3": {
+    backgroundColor: "rgba(52, 211, 235, 0.7)",
   },
-  "& .Taipei": {
-    backgroundColor: "rgba(255, 150, 150, 0.49)",
+  "& .journey-4": {
+    backgroundColor: "rgba(235, 217, 52, 0.7)",
   },
-  "& .Brisbane": {
-    backgroundColor: "rgba(10, 150, 255, 0.49)",
-  },
-  "& .Tokyo": {
-    backgroundColor: "rgba(224, 183, 60, 0.55)",
-  },
-  "& .Singapore": {
-    backgroundColor: "rgba(122, 153, 60, 0.49)",
+  "& .journey-5": {
+    backgroundColor: "rgba(52, 162, 235, 0.7)",
   },
 };

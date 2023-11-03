@@ -8,7 +8,6 @@ import withAuth from "../../components/hocs/withAuth";
 import PreviousMonthButton from "../../components/group/PreviousMonthButton";
 import NextMonthButton from "../../components/group/NextMonthButton";
 import { slotColumnCommonFields, months } from "../columns";
-import { MonthProps, Row, FlexContainerProps } from "../../group/types";
 import renderBaseColumns from "../renderBaseColumns";
 import renderExtraColumns from "../renderExtraColumns";
 import renderRows from "../renderRows";
@@ -17,8 +16,10 @@ import Progress from "../../components/group/Progress";
 import EditContent from "../../components/group/EditContent";
 import { journeyStyles } from "../journeyStyles";
 import decrementMonth from "../decrementMonth";
+import mapColorsToJourneys from "../mapColorsToJourneys";
 import GroupForm from "../../components/setup-form/group-form/GroupForm";
 import JourneyForm from "../../components/setup-form/journey-form/JourneyForm";
+import { MonthProps, Row, FlexContainerProps } from "../../group/types";
 
 const FlexContainer: React.FC<FlexContainerProps> = ({
   children,
@@ -77,7 +78,7 @@ const GroupPage: React.FC = () => {
     <>
       <Progress />
       <Typography color="textSecondary" variant="h6" component="div">
-        Give us a minute
+        Loading journeys...
       </Typography>
     </>
   );
@@ -99,6 +100,9 @@ const GroupPage: React.FC = () => {
           </FlexContainer>
           <DataGridPro
             sx={journeyStyles}
+            getCellClassName={(params) =>
+              mapColorsToJourneys(params, currentMonthRows)
+            }
             columns={[...baseColumns, ...extraColumns]}
             rows={currentMonthRows}
             disableRowSelectionOnClick
