@@ -41,6 +41,7 @@ const GroupPage: React.FC = () => {
     string | null
   >(null);
   const [fetchedRows, setFetchedRows] = useState<boolean>(false);
+  const [fetchedJourneys, setFetchedJourneys] = useState<boolean>(false);
 
   const monthProps: MonthProps = {
     currentMonth,
@@ -58,6 +59,7 @@ const GroupPage: React.FC = () => {
 
   useEffect(() => {
     (() => {
+      setFetchedJourneys(false);
       renderExtraColumns({
         currentYear,
         currentMonth,
@@ -70,6 +72,9 @@ const GroupPage: React.FC = () => {
         setFetchedRows,
         currentMonth,
         currentYear,
+      }).then(() => {
+        setFetchedRows(true);
+        setFetchedJourneys(true);
       });
     })();
   }, [currentMonth]);
@@ -85,7 +90,7 @@ const GroupPage: React.FC = () => {
 
   return (
     <>
-      {fetchedRows ? (
+      {fetchedRows && fetchedJourneys ? (
         <Box style={{ maxWidth: "98%" }}>
           <Typography color="textSecondary" variant="h6" component="div">
             {months[currentMonth]}, {currentYear}
