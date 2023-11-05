@@ -2,9 +2,9 @@ export const currentUserID: string | null = localStorage.getItem("userID");
 export const groupID: string | null = localStorage.getItem("groupID");
 
 export const generateRandomID = (): string => {
-  const chars =
+  const chars: string =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
+  let result: string = "";
   for (let i = 0; i < 20; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
