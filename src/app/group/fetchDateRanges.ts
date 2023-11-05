@@ -1,33 +1,22 @@
 /* eslint-disable indent */
-import {
-  query,
-  collection,
-  getDocs,
-  type Query,
-  type QuerySnapshot,
-} from "firebase/firestore";
 import formatDate from "../create-journey/formatDate";
-import { db } from "../../../firebase/app";
 import { FetchRowDataProps } from "./types";
+import { fetchJourneys } from "./fetchJourneys";
+import { Journey } from "../create-journey/types";
 
 const fetchDateRanges = async ({
   currentMonth,
   currentYear,
-}: FetchRowDataProps) => {
+}: FetchRowDataProps): Promise<{ start: Date; end: Date }[]> => {
   const dateRanges: { start: Date; end: Date }[] = [];
-  const q: Query<Document> = query(collection(db, "journeys"));
+  const journeys = await fetchJourneys();
 
-  const journeys: QuerySnapshot<unknown> = await getDocs(q);
-
-  if (journeys.size > 0) {
-    journeys.forEach((doc) => {
-      const journey = doc.data();
-      const { start, end } = journey.dateRange;
-      const startDate: Date = formatDate(start.seconds);
-      const endDate: Date = formatDate(end.seconds);
-      dateRanges.push({ start: startDate, end: endDate });
-    });
-  }
+  journeys.forEach((journey: Journey) => {
+    const { start, end } = journey.dateRange;
+    const startDate: Date = formatDate(start.seconds);
+    const endDate: Date = formatDate(end.seconds);
+    dateRanges.push({ start: startDate, end: endDate });
+  });
 
   const currentMonthDateRanges = dateRanges.filter((dateRange) => {
     const { start, end } = dateRange;
@@ -43,11 +32,11 @@ const fetchDateRanges = async ({
     }
   );
 
-  currentMonthAndYearDateRanges.length > 1
-    ? currentMonthAndYearDateRanges.sort(
-        (a, b) => a.start.getTime() - b.start.getTime()
-      )
-    : null;
+  if (currentMonthAndYearDateRanges.length > 1) {
+    currentMonthAndYearDateRanges.sort(
+      (a, b) => a.start.getTime() - b.start.getTime()
+    );
+  }
 
   return currentMonthAndYearDateRanges;
 };

@@ -14,7 +14,6 @@ const processLocations = (
 
   const handleEmptySlots = (startDay: number) => {
     if (startDateIndex === 0) {
-      console.log("Start Day: ", startDay);
       for (let i = 0; i < startDay; i++) {
         locations.push("");
       }
