@@ -60,7 +60,7 @@ const processLocations = ({
       }
       if (startFromColumnOne) {
         locations.length = 0;
-        for (let j = 0; j <= daysLeft + 1; j++) {
+        for (let j = 0; j <= daysLeft; j++) {
           locations.push(filteredJourneys[journeyIndex]?.location || "");
         }
       }
