@@ -1,5 +1,5 @@
 import fetchRows from "./rows";
-import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
+import fetchCurrentUserDisplayName from "./fetch/fetchCurrentUserDisplayName";
 import { RenderRowsParams } from "./types";
 
 const renderRows = async ({

@@ -5,8 +5,8 @@ import {
   QueryDocumentSnapshot,
   QuerySnapshot,
 } from "firebase/firestore";
-import { db } from "../../../firebase/app";
-import { Journey } from "../create-journey/types";
+import { db } from "../../../../firebase/app";
+import { Journey } from "../../create-journey/types";
 
 export const fetchJourneys = async (): Promise<Journey[]> => {
   const journeysCollection = collection(db, "journeys");

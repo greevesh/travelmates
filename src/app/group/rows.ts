@@ -1,8 +1,8 @@
 import { months } from "./columns";
 import { Row } from "../group/types";
 
-import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
-import fetchCurrentUserLocations from "./fetchLocations";
+import fetchCurrentUserDisplayName from "./fetch/fetchCurrentUserDisplayName";
+import fetchCurrentUserLocations from "./fetch/fetchLocations";
 import { FetchRowDataParams } from "../group/types";
 
 const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataParams) => {

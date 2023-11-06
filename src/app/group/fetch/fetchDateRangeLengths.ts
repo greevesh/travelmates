@@ -1,8 +1,8 @@
-import formatDate from "../create-journey/formatDate";
-import sortDateRanges from "./sortDateRanges";
+import formatDate from "../../create-journey/formatDate";
+import sortDateRanges from "../sortDateRanges";
 import { fetchJourneys } from "./fetchJourneys";
-import { fetchMonth, fetchYear } from "../globals";
-import { FetchRowDataParams } from "./types";
+import { fetchMonth, fetchYear } from "../../globals";
+import { FetchRowDataParams } from "../types";
 
 const calculateDaysBetween = (start: Date, end: Date): number =>
   Math.floor((end - start) / (24 * 60 * 60 * 1000));

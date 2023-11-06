@@ -8,7 +8,7 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 import { QueryDocumentSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase/app";
+import { db } from "../../../../firebase/app";
 
 export let displayName: string = "";
 

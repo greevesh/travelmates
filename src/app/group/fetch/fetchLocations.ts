@@ -1,12 +1,12 @@
 import { fetchJourneys } from "./fetchJourneys";
 import fetchJourneyDateRangeLengths from "./fetchDateRangeLengths";
 import fetchJourneyDateRanges from "./fetchDateRanges";
-import processDateRanges from "./processDateRanges";
-import sortDateRanges from "./sortDateRanges";
-import processLocations from "./processLocations";
-import filterJourneysByMonthAndYear from "./filterJourneys";
-import { FetchRowDataParams } from "./types";
-import { Journey } from "../create-journey/types";
+import processDateRanges from "../processDateRanges";
+import sortDateRanges from "../sortDateRanges";
+import processLocations from "../processLocations";
+import filterJourneysByMonthAndYear from "../filterJourneys";
+import { FetchRowDataParams } from "../types";
+import { Journey } from "../../create-journey/types";
 
 const fetchLocations = async ({
   currentMonth,

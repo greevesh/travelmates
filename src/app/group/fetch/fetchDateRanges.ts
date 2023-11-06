@@ -1,8 +1,8 @@
 /* eslint-disable indent */
-import formatDate from "../create-journey/formatDate";
-import { FetchRowDataParams } from "./types";
+import formatDate from "../../create-journey/formatDate";
+import { FetchRowDataParams } from "../types";
 import { fetchJourneys } from "./fetchJourneys";
-import { Journey } from "../create-journey/types";
+import { Journey } from "../../create-journey/types";
 
 const fetchDateRanges = async ({
   currentMonth,
