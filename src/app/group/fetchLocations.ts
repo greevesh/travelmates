@@ -16,7 +16,11 @@ const fetchLocations = async ({
 
   const filterJourneys = filterJourneysByMonthAndYear();
 
-  const filteredJourneys = filterJourneys(journeys, currentMonth, currentYear);
+  const filteredJourneys: Journey[] = filterJourneys(
+    journeys,
+    currentMonth,
+    currentYear
+  );
 
   if (filteredJourneys.length > 1) {
     sortDateRanges(filteredJourneys);
@@ -34,7 +38,12 @@ const fetchLocations = async ({
     currentYear,
   });
 
-  const locations = processLocations(filteredJourneys, dateRangeLengths);
+  const locations = processLocations({
+    filteredJourneys,
+    dateRangeLengths,
+    currentMonth,
+    currentYear,
+  });
 
   return locations;
 };

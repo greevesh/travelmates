@@ -1,10 +1,12 @@
-import { Journey } from "../create-journey/types";
-import { startDates, currentMonth, currentYear } from "../globals";
+import { startDates } from "../globals";
+import { ProcessLocationsProps } from "./types";
 
-const processLocations = (
-  journeys: Journey[],
-  dateRangeLengths: number[]
-): string[] => {
+const processLocations = ({
+  filteredJourneys,
+  dateRangeLengths,
+  currentMonth,
+  currentYear,
+}: ProcessLocationsProps): string[] => {
   const locations: string[] = [];
 
   let lengthIndex: number = 0;
@@ -38,7 +40,7 @@ const processLocations = (
     const endDay: number = startDay + dateRangeLengths[lengthIndex];
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
 
-    if (journeys.length > 0) {
+    if (filteredJourneys.length > 0) {
       let daysLeft: number = 0;
       for (let j = startDay; j <= endDay; j++) {
         // If the end day exceeds the final day of the current month, store the remaining
@@ -49,7 +51,7 @@ const processLocations = (
           }
           break;
         }
-        locations.push(journeys[journeyIndex]?.location || "");
+        locations.push(filteredJourneys[journeyIndex]?.location || "");
       }
       // If a journey is continuing to span from the previous month onto the current one,
       // start from column one
@@ -59,7 +61,7 @@ const processLocations = (
       if (startFromColumnOne) {
         locations.length = 0;
         for (let j = 0; j <= daysLeft + 1; j++) {
-          locations.push(journeys[journeyIndex]?.location || "");
+          locations.push(filteredJourneys[journeyIndex]?.location || "");
         }
       }
     }

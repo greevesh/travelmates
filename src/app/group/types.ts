@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { GridColDef } from "@mui/x-data-grid-pro";
+import { Journey } from "../create-journey/types";
 
 export interface ColumnData {
   field: string;
@@ -59,6 +60,13 @@ export interface ProcessDateRangesProps {
   threeMonthsOrMoreDateRanges: Date[];
   startFromFirstIndex: boolean;
   lastDayOfPreviousMonth: number;
+}
+
+export interface ProcessLocationsProps {
+  filteredJourneys: Journey[];
+  dateRangeLengths: number[];
+  currentMonth: number;
+  currentYear: number;
 }
 
 export type Months =
