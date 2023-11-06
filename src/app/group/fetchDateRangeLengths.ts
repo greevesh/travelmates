@@ -2,7 +2,7 @@ import formatDate from "../create-journey/formatDate";
 import sortDateRanges from "./sortDateRanges";
 import { fetchJourneys } from "./fetchJourneys";
 import { fetchMonth, fetchYear } from "../globals";
-import { FetchRowDataProps } from "./types";
+import { FetchRowDataParams } from "./types";
 
 const calculateDaysBetween = (start: Date, end: Date): number =>
   Math.floor((end - start) / (24 * 60 * 60 * 1000));
@@ -10,7 +10,7 @@ const calculateDaysBetween = (start: Date, end: Date): number =>
 const fetchDateRangeLengths = async ({
   currentMonth,
   currentYear,
-}: FetchRowDataProps): Promise<number[]> => {
+}: FetchRowDataParams): Promise<number[]> => {
   const journeys = await fetchJourneys();
 
   const currentMonthAndYearDateRangeLengths = journeys

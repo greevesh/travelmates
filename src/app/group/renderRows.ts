@@ -1,6 +1,6 @@
 import fetchRows from "./rows";
 import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
-import { RenderRowsProps } from "./types";
+import { RenderRowsParams } from "./types";
 
 const renderRows = async ({
   setCurrentMonthRows,
@@ -8,7 +8,7 @@ const renderRows = async ({
   setFetchedRows,
   currentMonth,
   currentYear,
-}: RenderRowsProps): Promise<void> => {
+}: RenderRowsParams): Promise<void> => {
   try {
     const fetchedRows = await fetchRows({ currentMonth, currentYear });
     const displayName = await fetchCurrentUserDisplayName();

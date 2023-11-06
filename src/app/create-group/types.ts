@@ -10,14 +10,14 @@ export interface Group {
   creatorID: string | null;
 }
 
-export interface FetchUsersProps {
+export interface FetchUsersParams {
   userInput: string;
   selectedUsers: SelectedUser[];
   groupMembers: GroupMember[];
   setUsers: (users: any[]) => void;
 }
 
-export interface FetchGroupMemberProps {
+export interface FetchGroupMemberParams {
   groupMembers?: GroupMember[];
   setGroupMembers: React.Dispatch<React.SetStateAction<GroupMember[]>>;
   setGroupMembersLoaded: React.Dispatch<React.SetStateAction<boolean>>;

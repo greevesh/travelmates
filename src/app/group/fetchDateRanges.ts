@@ -1,13 +1,13 @@
 /* eslint-disable indent */
 import formatDate from "../create-journey/formatDate";
-import { FetchRowDataProps } from "./types";
+import { FetchRowDataParams } from "./types";
 import { fetchJourneys } from "./fetchJourneys";
 import { Journey } from "../create-journey/types";
 
 const fetchDateRanges = async ({
   currentMonth,
   currentYear,
-}: FetchRowDataProps): Promise<{ start: Date; end: Date }[]> => {
+}: FetchRowDataParams): Promise<{ start: Date; end: Date }[]> => {
   const dateRanges: { start: Date; end: Date }[] = [];
   const journeys = await fetchJourneys();
 

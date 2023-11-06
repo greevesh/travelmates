@@ -1,12 +1,12 @@
 import { startDates } from "../globals";
-import { ProcessLocationsProps } from "./types";
+import { ProcessLocationsParams } from "./types";
 
 const processLocations = ({
   filteredJourneys,
   dateRangeLengths,
   currentMonth,
   currentYear,
-}: ProcessLocationsProps): string[] => {
+}: ProcessLocationsParams): string[] => {
   const locations: string[] = [];
 
   let lengthIndex: number = 0;

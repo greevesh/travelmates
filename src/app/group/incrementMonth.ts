@@ -1,11 +1,11 @@
-import { MonthProps } from "./types";
+import { MonthParams } from "./types";
 
 const incrementMonth = ({
   currentMonth,
   currentYear,
   setCurrentMonth,
   setCurrentYear,
-}: MonthProps): void => {
+}: MonthParams): void => {
   if (currentMonth === 11) {
     setCurrentMonth(0);
     setCurrentYear(currentYear + 1);

@@ -1,14 +1,14 @@
 import { query, collection, getDocs, DocumentData } from "firebase/firestore";
 import { db } from "../../../firebase/app";
 import { currentUserID } from "../globals";
-import { SelectedUser, GroupMember, FetchUsersProps } from "./types";
+import { SelectedUser, GroupMember, FetchUsersParams } from "./types";
 
 const fetchUsers = async ({
   userInput,
   selectedUsers,
   groupMembers,
   setUsers,
-}: FetchUsersProps): Promise<void> => {
+}: FetchUsersParams): Promise<void> => {
   const q = query(collection(db, "users"));
   const querySnapshot = await getDocs(q);
 

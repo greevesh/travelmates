@@ -1,12 +1,12 @@
 import generateCalendar from "./generateCalendar";
-import { RenderExtraColumnsProps } from "./types";
+import { RenderExtraColumnsParams } from "./types";
 
 const renderExtraColumns = ({
   currentYear,
   currentMonth,
   slotColumnCommonFields,
   setExtraColumns,
-}: RenderExtraColumnsProps) => {
+}: RenderExtraColumnsParams) => {
   const { daysInMonth } = generateCalendar(currentYear, currentMonth);
 
   const startIndex: number = 29;

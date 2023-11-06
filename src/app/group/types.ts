@@ -8,7 +8,7 @@ export interface ColumnData {
   width: number;
 }
 
-export interface RenderRowsProps {
+export interface RenderRowsParams {
   setCurrentMonthRows: Dispatch<SetStateAction<Row[]>>;
   setCurrentUserDisplayName: Dispatch<SetStateAction<string | null>>;
   setFetchedRows: Dispatch<SetStateAction<boolean>>;
@@ -16,12 +16,12 @@ export interface RenderRowsProps {
   currentYear: number;
 }
 
-export interface RenderBaseColumnsProps {
+export interface RenderBaseColumnsParams {
   slotColumnCommonFields: Partial<GridColDef>;
   setBaseColumns: Dispatch<SetStateAction<GridColDef[]>>;
 }
 
-export interface RenderExtraColumnsProps {
+export interface RenderExtraColumnsParams {
   currentYear: number;
   currentMonth: number;
   slotColumnCommonFields: Partial<GridColDef>;
@@ -50,19 +50,19 @@ export interface Row {
   locations: string[];
 }
 
-export interface FetchRowDataProps {
+export interface FetchRowDataParams {
   currentMonth: number;
   currentYear: number;
 }
 
-export interface ProcessDateRangesProps {
+export interface ProcessDateRangesParams {
   startDates: number[];
   threeMonthsOrMoreDateRanges: Date[];
   startFromFirstIndex: boolean;
   lastDayOfPreviousMonth: number;
 }
 
-export interface ProcessLocationsProps {
+export interface ProcessLocationsParams {
   filteredJourneys: Journey[];
   dateRangeLengths: number[];
   currentMonth: number;
@@ -83,7 +83,7 @@ export type Months =
   | "November"
   | "December";
 
-export interface MonthProps {
+export interface MonthParams {
   currentMonth: number;
   currentYear: number;
   setCurrentMonth: Dispatch<SetStateAction<number>>;

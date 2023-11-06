@@ -1,6 +1,6 @@
 import { query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase/app";
-import { GroupMember, FetchGroupMemberProps } from "./types";
+import { GroupMember, FetchGroupMemberParams } from "./types";
 import { currentUserID } from "../globals";
 
 const fetchGroupMembers = async ({
@@ -8,7 +8,7 @@ const fetchGroupMembers = async ({
   setGroupMembers,
   setGroupMembersLoaded,
   groupID,
-}: FetchGroupMemberProps): Promise<void> => {
+}: FetchGroupMemberParams): Promise<void> => {
   if (currentUserID) {
     try {
       const q = query(

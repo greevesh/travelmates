@@ -5,13 +5,13 @@ import processDateRanges from "./processDateRanges";
 import sortDateRanges from "./sortDateRanges";
 import processLocations from "./processLocations";
 import filterJourneysByMonthAndYear from "./filterJourneys";
-import { FetchRowDataProps } from "./types";
+import { FetchRowDataParams } from "./types";
 import { Journey } from "../create-journey/types";
 
 const fetchLocations = async ({
   currentMonth,
   currentYear,
-}: FetchRowDataProps): Promise<string[]> => {
+}: FetchRowDataParams): Promise<string[]> => {
   const journeys: Journey[] = await fetchJourneys();
 
   const filterJourneys = filterJourneysByMonthAndYear();

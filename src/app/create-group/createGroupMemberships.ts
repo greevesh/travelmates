@@ -3,7 +3,7 @@ import { db } from "../../../firebase/app";
 import { generateRandomID } from "../globals";
 import {
   SelectedUser,
-  CreateGroupMembershipsProps,
+  CreateGroupMembershipsParams,
   GroupMembership,
 } from "./types";
 
@@ -11,7 +11,7 @@ const createGroupMemberships = async ({
   group,
   groupMembership,
   selectedUsers,
-}: CreateGroupMembershipsProps): Promise<void> => {
+}: CreateGroupMembershipsParams): Promise<void> => {
   console.log("group membership:", groupMembership);
   if (group) {
     try {

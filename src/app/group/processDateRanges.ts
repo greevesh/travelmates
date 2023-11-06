@@ -2,13 +2,13 @@
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import { startDates } from "../globals";
 import { DateRange } from "../create-journey/types";
-import { ProcessDateRangesProps } from "./types";
+import { ProcessDateRangesParams } from "./types";
 
 const processDateRanges = (
   dateRanges: DateRange[],
   currentMonth: number,
   currentYear: number
-): ProcessDateRangesProps => {
+): ProcessDateRangesParams => {
   const fetchDates = (dates: number[], accessor: (date: Date) => number) =>
     dateRanges.forEach(({ start, end }) => {
       start ? dates.push(accessor(start)) : null;

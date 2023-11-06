@@ -3,9 +3,9 @@ import { Row } from "../group/types";
 
 import fetchCurrentUserDisplayName from "./fetchCurrentUserDisplayName";
 import fetchCurrentUserLocations from "./fetchLocations";
-import { FetchRowDataProps } from "../group/types";
+import { FetchRowDataParams } from "../group/types";
 
-const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataProps) => {
+const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataParams) => {
   const currentUserDisplayName: string = await fetchCurrentUserDisplayName();
   const currentUserLocations: string[] = await fetchCurrentUserLocations({
     currentMonth,
