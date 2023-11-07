@@ -8,7 +8,7 @@ import filterJourneysByMonthAndYear from "../filterJourneys";
 import { FetchRowDataParams } from "../types";
 import { Journey } from "../../create-journey/types";
 
-const fetchLocations = async ({
+const fetchJourneyLocations = async ({
   currentMonth,
   currentYear,
 }: FetchRowDataParams): Promise<string[]> => {
@@ -48,4 +48,4 @@ const fetchLocations = async ({
   return locations;
 };
 
-export default fetchLocations;
+export default fetchJourneyLocations;
