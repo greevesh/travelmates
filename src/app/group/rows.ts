@@ -1,28 +1,27 @@
+import { DocumentData } from "@firebase/firestore";
 import { months } from "./columns";
-import { Row } from "../group/types";
 
-import fetchCurrentUserDisplayName from "./fetch/fetchCurrentUserDisplayName";
 import fetchCurrentUserLocations from "./fetch/fetchLocations";
 import { FetchRowDataParams } from "../group/types";
+import fetchGroupMembers from "./fetch/fetchGroupMembers";
 
 const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataParams) => {
-  const currentUserDisplayName: string = await fetchCurrentUserDisplayName();
+  const groupMembers = await fetchGroupMembers();
   const currentUserLocations: string[] = await fetchCurrentUserLocations({
     currentMonth,
     currentYear,
   });
 
-  const rows: Row[] = [
-    {
-      id: 1,
-      photoURL:
-        "https://lh3.googleusercontent.com/a/AAcHTtdHw1hx0h-_MhWLPT7lw9jom3nIZLOJok8fQ0U_=s96-c",
-      name: currentUserDisplayName,
+  const rows = groupMembers.map((member: DocumentData) => {
+    return {
+      id: member.id,
+      photoUrl: member.photoURL,
+      name: member.displayName,
       month: months[currentMonth],
       year: currentYear,
       locations: currentUserLocations,
-    },
-  ];
+    };
+  });
 
   return rows;
 };
