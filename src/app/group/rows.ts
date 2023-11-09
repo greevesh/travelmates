@@ -4,9 +4,17 @@ import { months } from "./columns";
 import fetchJourneyLocations from "./fetch/fetchJourneyLocations";
 import { FetchRowDataParams } from "../group/types";
 import fetchGroupMembers from "./fetch/fetchGroupMembers";
+import filterJourneys from "./filterJourneys";
+import { fetchJourneys } from "./fetch/fetchJourneys";
 
 const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataParams) => {
   const groupMembers = await fetchGroupMembers();
+  const journeys = await fetchJourneys();
+  const filteredJourneys = await filterJourneys(
+    journeys,
+    currentMonth,
+    currentYear
+  );
   const locations: string[] = await fetchJourneyLocations({
     currentMonth,
     currentYear,
@@ -19,10 +27,15 @@ const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataParams) => {
       name: member.displayName,
       month: months[currentMonth],
       year: currentYear,
-      locations: locations,
+      locations: filteredJourneys
+        .filter((journey) => journey.userID === member.id)
+        .flatMap((journey) =>
+          locations.filter(
+            (location) => location === journey.location || location === ""
+          )
+        ),
     };
   });
-
   return rows;
 };
 
