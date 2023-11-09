@@ -26,10 +26,6 @@ const filterJourneys = async (
       groupMemberIds.includes(journey.userID)
     );
 
-    console.log("Group Memberships: ", groupMemberships);
-    console.log("IDs: ", groupMemberIds);
-    console.log("Filtered Journeys: ", filteredJourneys);
-
     filteredJourneys = filteredJourneys.filter((journey) => {
       const { start, end } = journey.dateRange;
       const currentMonthMatch: boolean =

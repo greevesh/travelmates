@@ -43,7 +43,6 @@ const fetchJourneyLocations = async ({
     currentYear,
   });
 
-  console.log("Locations: ", locations);
   return locations;
 };
 
