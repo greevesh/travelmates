@@ -5,12 +5,11 @@ import Autocomplete from "@mui/material/Autocomplete";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import AutosuggestHighlightParse from "autosuggest-highlight/parse";
+import parse from "autosuggest-highlight/parse";
 import { debounce } from "@mui/material/utils";
 
-// This key was created specifically for the demo in mui.com.
-// You need to create a new one for your application.
-const GOOGLE_MAPS_API_KEY = "AIzaSyC3aviU6KHXAjoSnxcw6qbOhjnFctbxPkE";
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+console.log("Key: ", GOOGLE_MAPS_API_KEY);
 
 function loadScript(src: string, position: HTMLElement | null, id: string) {
   if (!position) {
@@ -49,7 +48,7 @@ export default function GoogleMaps() {
   if (typeof window !== "undefined" && !loaded.current) {
     if (!document.querySelector("#google-maps")) {
       loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`,
+        `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=Function.prototype&libraries=places`,
         document.querySelector("head"),
         "google-maps"
       );
