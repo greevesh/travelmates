@@ -1,21 +1,32 @@
 /* eslint-disable indent */
-import { Journey } from "../create-journey/types";
+import { DocumentData } from "firebase/firestore";
 import { fetchMonth, fetchYear } from "../globals";
+import { Journey } from "../create-journey/types";
+import fetchGroupMemberships from "./fetch/fetchGroupMemberships";
 
-const filterJourneys =
-  () =>
-  (
-    journeys: Journey[],
-    currentMonth: number,
-    currentYear: number
-  ): Journey[] => {
+const filterJourneys = async (
+  journeys: Journey[],
+  currentMonth: number,
+  currentYear: number
+): Promise<Journey[]> => {
+  try {
+    const groupMemberships: DocumentData[] = await fetchGroupMemberships();
+    const groupMemberIds = groupMemberships.map(
+      (membership: DocumentData) => membership.userID
+    );
+
     const journeysSet = new Set(
       journeys.filter((journey) => typeof journey !== "string")
     );
 
-    const filteredJourneys = [...journeysSet];
+    let filteredJourneys = [...journeysSet];
 
-    return filteredJourneys.filter((journey) => {
+    // Filter journeys that have been created by group members
+    filteredJourneys = filteredJourneys.filter((journey) =>
+      groupMemberIds.includes(journey.userID)
+    );
+
+    filteredJourneys = filteredJourneys.filter((journey) => {
       const { start, end } = journey.dateRange;
       const currentMonthMatch: boolean =
         fetchMonth(start) === currentMonth || fetchMonth(end) === currentMonth;
@@ -23,6 +34,12 @@ const filterJourneys =
         fetchYear(start) === currentYear || fetchYear(end) === currentYear;
       return currentMonthMatch && currentYearMatch;
     });
-  };
+
+    return filteredJourneys;
+  } catch (err) {
+    console.log("Error filtering journeys: ", err);
+  }
+  return [];
+};
 
 export default filterJourneys;

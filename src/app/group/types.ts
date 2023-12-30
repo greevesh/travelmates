@@ -50,6 +50,11 @@ export interface Row {
   locations: string[];
 }
 
+export interface GroupMemberRow {
+  memberId: string | null | undefined;
+  journeys: Journey[];
+}
+
 export interface FetchRowDataParams {
   currentMonth: number;
   currentYear: number;

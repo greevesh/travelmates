@@ -26,12 +26,12 @@ const renderBaseColumns = ({
       headerName: "Group Members",
       minWidth: 180,
       renderCell: ({ row }) => {
-        const { name, photoURL } = row;
+        const { name, photoUrl } = row;
         return (
           <div style={{ display: "flex", alignItems: "center" }}>
-            {photoURL && (
+            {photoUrl && (
               <Avatar
-                src={photoURL}
+                src={photoUrl}
                 alt={name}
                 style={{
                   marginRight: 8,

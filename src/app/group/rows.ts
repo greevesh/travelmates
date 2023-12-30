@@ -1,29 +1,41 @@
+import { DocumentData } from "@firebase/firestore";
 import { months } from "./columns";
-import { Row } from "../group/types";
 
-import fetchCurrentUserDisplayName from "./fetch/fetchCurrentUserDisplayName";
-import fetchCurrentUserLocations from "./fetch/fetchLocations";
+import fetchJourneyLocations from "./fetch/fetchJourneyLocations";
 import { FetchRowDataParams } from "../group/types";
+import fetchGroupMembers from "./fetch/fetchGroupMembers";
+import filterJourneys from "./filterJourneys";
+import { fetchJourneys } from "./fetch/fetchJourneys";
 
 const fetchRows = async ({ currentMonth, currentYear }: FetchRowDataParams) => {
-  const currentUserDisplayName: string = await fetchCurrentUserDisplayName();
-  const currentUserLocations: string[] = await fetchCurrentUserLocations({
+  const groupMembers = await fetchGroupMembers();
+  const journeys = await fetchJourneys();
+  const filteredJourneys = await filterJourneys(
+    journeys,
+    currentMonth,
+    currentYear
+  );
+  const locations: string[] = await fetchJourneyLocations({
     currentMonth,
     currentYear,
   });
 
-  const rows: Row[] = [
-    {
-      id: 1,
-      photoURL:
-        "https://lh3.googleusercontent.com/a/AAcHTtdHw1hx0h-_MhWLPT7lw9jom3nIZLOJok8fQ0U_=s96-c",
-      name: currentUserDisplayName,
+  const rows = groupMembers.map((member: DocumentData) => {
+    return {
+      id: member.id,
+      photoUrl: member.photoURL,
+      name: member.displayName,
       month: months[currentMonth],
       year: currentYear,
-      locations: currentUserLocations,
-    },
-  ];
-
+      locations: filteredJourneys
+        .filter((journey) => journey.userID === member.id)
+        .flatMap((journey) =>
+          locations.filter(
+            (location) => location === journey.location || location === ""
+          )
+        ),
+    };
+  });
   return rows;
 };
 

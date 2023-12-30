@@ -1,5 +1,4 @@
 import fetchRows from "./rows";
-import fetchCurrentUserDisplayName from "./fetch/fetchCurrentUserDisplayName";
 import { RenderRowsParams } from "./types";
 
 const renderRows = async ({
@@ -11,7 +10,6 @@ const renderRows = async ({
 }: RenderRowsParams): Promise<void> => {
   try {
     const fetchedRows = await fetchRows({ currentMonth, currentYear });
-    const displayName = await fetchCurrentUserDisplayName();
 
     setCurrentMonthRows(
       fetchedRows.map((row) => ({
@@ -19,7 +17,6 @@ const renderRows = async ({
         name: row.name,
       }))
     );
-    setCurrentUserDisplayName(displayName);
     setFetchedRows(true);
   } catch (err) {
     console.log("Error Fetching Row Data: ", err);

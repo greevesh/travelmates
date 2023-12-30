@@ -1,5 +1,10 @@
 import { startDates } from "../globals";
-import { ProcessLocationsParams } from "./types";
+import generateRowData from "./generateRowData";
+import {
+  ProcessLocationsParams,
+  GroupMemberRow,
+  MemberJourneys,
+} from "./types";
 
 const processLocations = ({
   filteredJourneys,
@@ -8,6 +13,10 @@ const processLocations = ({
   currentYear,
 }: ProcessLocationsParams): string[] => {
   const locations: string[] = [];
+
+  const groupMemberRows = generateRowData(filteredJourneys);
+
+  console.log("Group Member Rows: ", groupMemberRows);
 
   let lengthIndex: number = 0;
   let journeyIndex: number = 0;
@@ -26,7 +35,13 @@ const processLocations = ({
       // Check if the end of the previous journey is the day before the start of the current journey
       if (previousEnd < startDay - 1) {
         // Add empty slots if there is at least one day between the two journeys
-        for (let i = previousEnd + 1; i < startDay; i++) {
+        console.log(startDates[startDateIndex]);
+        // locations.length = 0;
+        for (
+          let i = startDates[startDateIndex - 1];
+          i < startDates[startDateIndex];
+          i++
+        ) {
           locations.push("");
         }
       }
@@ -82,6 +97,8 @@ const processLocations = ({
   // Reset startDates array once the current month has changed
   startDates.length = 0;
 
+  console.log("Filtered Journeys: ", filteredJourneys);
+  console.log("Locations: ", locations);
   return locations;
 };
 
