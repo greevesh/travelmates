@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "jest": {
     "preset": "jest-expo",
@@ -32,6 +33,10 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.67",
     "@types/react-test-renderer": "^18.0.7",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
     "typescript": "^5.4.3"
   },
   "private": true
