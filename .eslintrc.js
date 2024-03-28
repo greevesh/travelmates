@@ -47,5 +47,6 @@ module.exports = {
 			'error',
 			'never'
 		],
+		'no-undef': 'none'
 	}
 }
