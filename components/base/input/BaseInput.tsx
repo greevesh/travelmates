@@ -5,9 +5,10 @@ import { TextInput } from 'react-native-paper'
 interface IBaseInputProps {
     placeholder: string
     secureText: boolean
+	testId: string
 }
 
-export default function BaseInput({placeholder, secureText}: IBaseInputProps) {
+export default function BaseInput({placeholder, secureText, testId}: IBaseInputProps) {
 	const [text, setText] = useState('')
 
 	const styles = StyleSheet.create({
@@ -17,6 +18,6 @@ export default function BaseInput({placeholder, secureText}: IBaseInputProps) {
 	})
 
 	return (
-		<TextInput placeholder={placeholder} secureTextEntry={secureText} style={styles.input} value={text} onChangeText={setText} testID='base-input' />
+		<TextInput placeholder={placeholder} secureTextEntry={secureText} style={styles.input} value={text} onChangeText={setText} testID={testId} />
 	)
 }

@@ -3,6 +3,6 @@ import BaseInput from '../../../../../base/input/BaseInput'
 
 export default function PasswordConfirmationInput() {
 	return (
-		<BaseInput placeholder='Confirm password' secureText={true} />
+		<BaseInput placeholder='Confirm password' secureText={true} testId='password-confirmation-input'/>
 	)
 }

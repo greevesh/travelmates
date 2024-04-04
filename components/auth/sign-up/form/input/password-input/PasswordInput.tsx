@@ -3,6 +3,6 @@ import BaseInput from '../../../../../base/input/BaseInput'
 
 export default function PasswordInput() {
 	return (
-		<BaseInput placeholder='Password' secureText={true} />
+		<BaseInput placeholder='Password' secureText={true} testId='password-input' />
 	)
 }
