@@ -1,9 +1,10 @@
 import { Text } from 'react-native'
 
 interface IBaseTitleProps {
-  children: string;
+  children: string
+  testId: string
 }
 
-export default function BaseTitle({children}: IBaseTitleProps) {
-	return <Text style={{fontSize: 28}}>{children}</Text>
+export default function BaseTitle({children, testId}: IBaseTitleProps) {
+	return <Text style={{fontSize: 28}} testID={testId}>{children}</Text>
 }
