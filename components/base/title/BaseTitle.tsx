@@ -1,10 +1,11 @@
-import { Text } from 'react-native'
+import { StyleProp, Text, TextStyle } from 'react-native'
 
 interface IBaseTitleProps {
   children: string
+  style?: StyleProp<TextStyle>
   testId: string
 }
 
-export default function BaseTitle({children, testId}: IBaseTitleProps) {
-	return <Text style={{fontSize: 28}} testID={testId}>{children}</Text>
+export default function BaseTitle({children, style, testId}: IBaseTitleProps) {
+	return <Text style={style} testID={testId}>{children}</Text>
 }
