@@ -4,13 +4,15 @@ import AuthCard from './AuthCard'
 jest.useFakeTimers()
 
 describe('AuthCard', () => {
-	it('contains title, inputs, forgot password, and button', () => {
+	it('contains necessary children', () => {
 		const { getByTestId } = render(<AuthCard />)
+		const authImg = getByTestId('auth-img')
 		const signUpTitle = getByTestId('sign-up-title')
 		const signUpInputRows = getByTestId('sign-up-rows')
-		const forgotPassword = getByTestId('forgot-password')
+		const forgotPassword = getByTestId('already-have-account')
 		const signUpButton = getByTestId('sign-up-button')
 
+		expect(authImg).toBeDefined()
 		expect(signUpTitle).toBeDefined()
 		expect(signUpInputRows).toBeDefined()
 		expect(forgotPassword).toBeDefined()
