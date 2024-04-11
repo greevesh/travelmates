@@ -11,11 +11,13 @@ describe('AuthCard', () => {
 		const signUpInputRows = getByTestId('sign-up-rows')
 		const forgotPassword = getByTestId('already-have-account')
 		const signUpButton = getByTestId('sign-up-button')
+		const googleSignUpButton = getByTestId('google-sign-up')
 
 		expect(authImg).toBeDefined()
 		expect(signUpTitle).toBeDefined()
 		expect(signUpInputRows).toBeDefined()
 		expect(forgotPassword).toBeDefined()
 		expect(signUpButton).toBeDefined()
+		expect(googleSignUpButton).toBeDefined()
 	})
 })
