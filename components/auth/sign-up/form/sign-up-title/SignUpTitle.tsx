@@ -9,8 +9,7 @@ export default function SignUpTitle() {
 
 const styles = StyleSheet.create({
 	title: {
-		display: 'flex',
-		justifyContent: 'center',
+		textAlign: 'center',
 		fontSize: 28,
 	},
 })

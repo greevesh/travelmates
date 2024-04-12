@@ -8,8 +8,7 @@ export default function ForgotPassword() {
 
 const styles = StyleSheet.create({
 	text: {
-		display: 'flex',
-		justifyContent: 'center',
+		alignItems: 'center',
 		marginVertical: 24,
 		color: '#006994',
 	}

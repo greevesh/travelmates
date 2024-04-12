@@ -8,8 +8,7 @@ export default function AlreadyHaveAccount() {
 
 const styles = StyleSheet.create({
 	text: {
-		display: 'flex',
-		justifyContent: 'center',
+		textAlign: 'center',
 		marginVertical: 24,
 		color: '#006994',
 	}
