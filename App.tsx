@@ -1,10 +1,19 @@
-import { View } from 'react-native'
-import BaseInput from './components/base/input/BaseInput'
+import { StyleSheet, View } from 'react-native'
+import AuthCard from './components/auth/card/Card'
 
 export default function App() {
 	return (
-		<View>
-			<BaseInput placeholder='Email' secureText={false} />
+		<View style={styles.container}>
+			<AuthCard />
 		</View>
 	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		width: '100%',
+	},
+})
