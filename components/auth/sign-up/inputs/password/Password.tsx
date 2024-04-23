@@ -10,7 +10,7 @@ export default function Password() {
 	return (
 		<>
 			<TextInput value={value} onChangeText={setValue} placeholder='Password' secureTextEntry={!secureText} style={{backgroundColor: '#fff'}} testID="sign-up-password" />
-			<Eye icon={icon} onPress={setSecureText} top={105} />
+			<Eye icon={icon} onPress={setSecureText} top={77} />
 		</>
 	)
 }

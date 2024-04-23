@@ -9,7 +9,7 @@ export default function AlreadyHaveAccount() {
 const styles = StyleSheet.create({
 	text: {
 		textAlign: 'center',
-		marginVertical: 24,
+		marginTop: 50,
 		color: '#006994',
 	}
 })

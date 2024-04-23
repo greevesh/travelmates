@@ -10,7 +10,7 @@ export default function PasswordConfirmation() {
 	return (
 		<>
 			<TextInput value={value} onChangeText={setValue} placeholder='Confirm password' secureTextEntry={!secureText} style={{backgroundColor: '#fff'}} testID='password-confirmation' />
-			<Eye icon={icon} onPress={setSecureText} top={192} />
+			<Eye icon={icon} onPress={setSecureText} top={132} />
 		</>
 	)
 }
