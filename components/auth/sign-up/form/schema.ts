@@ -4,7 +4,7 @@ export const schema = z
 	.object({
 		email: z.string().email(),
 		password: z.string().min(8, 'Passwords must contain at least 8 characters')
-			.regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/, 'Passwords must contain at least one character, one number, and one special character'),
+			.regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/, 'Passwords must contain a letter, number, and one special character'),
 		passwordConfirmation: z.string(),
 	})
 	.refine((data) => data.password === data.passwordConfirmation, {
