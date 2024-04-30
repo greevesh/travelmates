@@ -9,9 +9,11 @@ describe('AuthCard', () => {
 		const img = getByTestId('auth-img')
 		const title = getByTestId('sign-up-title')
 		const form = getByTestId('sign-up-form')
+		const googleSignUpButton = getByTestId('google-sign-up')
 
 		expect(img).toBeDefined()
 		expect(title).toBeDefined()
 		expect(form).toBeDefined()
+		expect(googleSignUpButton).toBeDefined()
 	})
 })

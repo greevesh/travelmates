@@ -3,6 +3,7 @@ import Image from '../image/Image'
 import Title from '../../auth/sign-up/titles/Title'
 import Subtitle from '../sign-up/titles/subtitle/Subtitle'
 import SignUpForm from '../sign-up/form/Form'
+import GoogleSignUpButton from '../sign-up/buttons/google/GoogleSignUpButton'
 
 export default function AuthCard() {
 	return (
@@ -11,6 +12,7 @@ export default function AuthCard() {
 			<Title />
 			<Subtitle />
 			<SignUpForm />
+			<GoogleSignUpButton />
 		</Card>
 	)
 }
