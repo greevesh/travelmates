@@ -2,7 +2,7 @@ import { StyleSheet, Text } from 'react-native'
 
 export default function ForgotPassword() {
 	return (
-		<Text style={styles.text} testID='forgot-password'>Forgot your password?</Text>
+		<Text style={styles.text}>Forgot your password?</Text>
 	)
 }
 

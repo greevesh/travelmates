@@ -6,7 +6,6 @@ export default function GoogleSignUpButton() {
 			text="Sign up with Google"
 			icon={{ source: 'google', size: 25 }}
 			bgColor="#4285F4"
-			testId="google-sign-up"
 		/>
 	)
 }

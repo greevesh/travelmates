@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from 'react-native'
 export default function AuthImage() {
 	return (
 		<View style={styles.container}>
-			<Image source={require('../../../assets/img/travel-mates.jpg')} style={styles.img} testID='auth-img' />
+			<Image source={require('../../../assets/img/travel-mates.jpg')} style={styles.img} />
 		</View>
 	)
 }

@@ -6,5 +6,5 @@ interface ISignUpButtonProps {
 }
 
 export default function SignUpButton({onPress}: ISignUpButtonProps) {
-	return <BaseButton onPress={onPress} text="Sign up" bgColor="#0047AB" testId="sign-up-button" />
+	return <BaseButton onPress={onPress} text="Sign up" bgColor="#0047AB" />
 }

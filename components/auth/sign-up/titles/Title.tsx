@@ -3,7 +3,7 @@ import BaseTitle from '../../../base/Title'
 
 export default function Title() {
 	return (
-		<BaseTitle style={styles.title} testId="sign-up-title">
+		<BaseTitle style={styles.title}>
       Sign up
 		</BaseTitle>
 	)
