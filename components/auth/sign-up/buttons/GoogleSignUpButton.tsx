@@ -1,4 +1,4 @@
-import BaseButton from '../../../../base/Button'
+import BaseButton from '../../../base/Button'
 
 export default function GoogleSignUpButton() {
 	return (

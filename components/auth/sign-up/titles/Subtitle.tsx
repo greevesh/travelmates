@@ -1,12 +1,8 @@
 import { StyleSheet } from 'react-native'
-import BaseTitle from '../../../../base/Title'
+import BaseTitle from '../../../base/Title'
 
 export default function Subtitle() {
-	return (
-		<BaseTitle style={styles.title}>
-      Become a Travel Mate today
-		</BaseTitle>
-	)
+	return <BaseTitle style={styles.title}>Become a Travel Mate today</BaseTitle>
 }
 
 const styles = StyleSheet.create({
