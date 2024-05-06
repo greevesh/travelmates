@@ -1,14 +1,31 @@
+import { TextInput } from 'react-native-paper'
+import { Controller } from 'react-hook-form'
 import useToggleSecureText from '../../../../../../hooks/useToggleSecureText'
-import BaseInput from '../../../../../base/Input'
 import Eye from '../eye/Eye'
+import { IInputProps } from '../../types'
 
-export default function PasswordConfirmation() {
+export default function PasswordConfirmation({control}: IInputProps) {
 	const { secureText, setSecureText, icon } = useToggleSecureText(false)
 
 	return (
 		<>
-			<BaseInput placeholder="Confirm password" secureText={!secureText} testId="password-confirmation" />
-			<Eye icon={icon} onPress={setSecureText} top={192} />
+			<Controller
+				control={control}
+				rules={{
+					required: true,
+				}}
+				render={({ field: { onChange, value } }) => (
+					<TextInput
+						onChangeText={onChange}
+						value={value}
+						secureTextEntry={!secureText}
+						placeholder="Confirm password"
+						style={{ backgroundColor: '#fff' }}
+					/>
+				)}
+				name="passwordConfirmation"
+			/>
+			<Eye icon={icon} onPress={setSecureText} top={200} />
 		</>
 	)
 }

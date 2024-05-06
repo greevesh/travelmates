@@ -9,7 +9,7 @@ interface EyeProps {
 
 export default function Eye({ onPress, icon, top }: EyeProps) {
 	return (
-		<Pressable onPress={onPress} style={[styles.container, { top }]} testID="eye">
+		<Pressable onPress={onPress} style={[styles.container, { top }]}>
 			<Icon size={20} source={icon} />
 		</Pressable>
 	)

@@ -1,19 +1,19 @@
-import { Pressable, StyleSheet, Text } from 'react-native'
+import { GestureResponderEvent, Pressable, StyleSheet, Text } from 'react-native'
 import { Icon } from 'react-native-paper'
 
 interface IBaseButtonProps {
+	onPress: (event: GestureResponderEvent) => void
     text: string
 	bgColor: string
 	icon?: {
 		source: string
 		size: number
 	}
-	testId: string
 }
 
-export default function BaseButton({bgColor, icon, text, testId}: IBaseButtonProps) {
+export default function BaseButton({onPress, bgColor, icon, text}: IBaseButtonProps) {
 	return (
-		<Pressable style={[styles.button, { backgroundColor: bgColor }]} testID={testId}>
+		<Pressable onPress={onPress} style={[styles.button, { backgroundColor: bgColor }]}>
 			{icon && <Icon size={icon.size} source={icon.source} color='#fff' /> }
 			<Text style={styles.text}>{text}</Text>
 		</Pressable>
