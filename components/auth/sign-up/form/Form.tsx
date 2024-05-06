@@ -2,12 +2,12 @@ import { View } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { schema, FormFields } from './schema'
-import AlreadyHaveAccount from '../already-have-account/AlreadyHaveAccount'
-import SignUpButton from '../buttons/traditional/SignUpButton'
-import Email from '../inputs/email/Email'
+import AlreadyHaveAccount from '../AlreadyHaveAccount'
+import SignUpButton from '../buttons/SignUpButton'
+import Email from '../inputs/Email'
 import Password from '../inputs/password/Password'
-import PasswordConfirmation from '../inputs/password/password-confirmation/PasswordConfirmation'
-import Error from '../../errors/Error'
+import PasswordConfirmation from '../inputs/password/PasswordConfirmation'
+import Error from '../../Error'
 
 export default function SignUpForm() {
 	const {

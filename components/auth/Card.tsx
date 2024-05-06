@@ -1,9 +1,9 @@
 import { Card } from 'react-native-paper'
-import Image from '../../auth/image/Image'
-import Title from '../../auth/sign-up/titles/Title'
-import Subtitle from '../sign-up/titles/subtitle/Subtitle'
-import SignUpForm from '../sign-up/form/Form'
-import GoogleSignUpButton from '../sign-up/buttons/google/GoogleSignUpButton'
+import Image from './Image'
+import Title from './sign-up/titles/Title'
+import Subtitle from './sign-up/titles/Subtitle'
+import SignUpForm from './sign-up/form/Form'
+import GoogleSignUpButton from './sign-up/buttons/GoogleSignUpButton'
 import { StyleSheet } from 'react-native'
 
 export default function AuthCard() {
@@ -20,8 +20,8 @@ export default function AuthCard() {
 
 const styles = StyleSheet.create({
 	card: {
-		backgroundColor: '#fff', 
+		backgroundColor: '#fff',
 		width: '90%',
-		marginTop: 20
-	}
+		marginTop: 20,
+	},
 })

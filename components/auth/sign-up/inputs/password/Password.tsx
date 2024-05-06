@@ -1,12 +1,12 @@
 import { TextInput } from 'react-native-paper'
 import { Controller } from 'react-hook-form'
 import useToggleSecureText from '../../../../../hooks/useToggleSecureText'
-import Eye from './eye/Eye'
+import Eye from './Eye'
 import { IInputProps } from '../types'
 
-export default function Password({control}: IInputProps) {
+export default function Password({ control }: IInputProps) {
 	const { secureText, setSecureText, icon } = useToggleSecureText(false)
-	
+
 	return (
 		<>
 			<Controller
