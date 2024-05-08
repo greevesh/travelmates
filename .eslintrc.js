@@ -28,7 +28,8 @@ module.exports = {
 	},
 	'plugins': [
 		'@typescript-eslint',
-		'react'
+		'react',
+		'import'
 	],
 	'rules': {
 		'indent': [
@@ -52,6 +53,22 @@ module.exports = {
 				'delimiter': 'none'
 			},
 		}],
-		'no-undef': 0
+		'no-undef': 0,
+		'import/order': ['error', {
+			'groups': [
+				'builtin',
+				'external',
+				'internal',
+				['parent', 'sibling', 'index']
+			],
+			'pathGroups': [
+				{
+					'pattern': 'react',
+					'group': 'external',
+					'position': 'before'
+				}
+			],
+			'newlines-between': 'always'
+		}]
 	}
 }
