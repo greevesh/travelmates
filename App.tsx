@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native'
+
 import AuthCard from './components/auth/Card'
 
 export default function App() {

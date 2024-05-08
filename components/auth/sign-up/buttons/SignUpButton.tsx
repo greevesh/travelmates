@@ -1,4 +1,5 @@
 import { GestureResponderEvent } from 'react-native'
+
 import BaseButton from '../../../base/Button'
 
 interface ISignUpButtonProps {

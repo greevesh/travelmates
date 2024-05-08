@@ -1,10 +1,11 @@
 import { Card } from 'react-native-paper'
+import { StyleSheet } from 'react-native'
+
 import Image from './Image'
 import Title from './sign-up/titles/Title'
 import Subtitle from './sign-up/titles/Subtitle'
 import SignUpForm from './sign-up/form/Form'
 import GoogleSignUpButton from './sign-up/buttons/GoogleSignUpButton'
-import { StyleSheet } from 'react-native'
 
 export default function AuthCard() {
 	return (
