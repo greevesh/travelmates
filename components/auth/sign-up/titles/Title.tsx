@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+
 import BaseTitle from '../../../base/Title'
 
 export default function Title() {

@@ -1,5 +1,6 @@
 import { TextInput } from 'react-native-paper'
 import { Controller } from 'react-hook-form'
+
 import { IInputProps } from './types'
 
 export default function Email({ control }: IInputProps) {

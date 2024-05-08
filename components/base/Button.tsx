@@ -11,7 +11,7 @@ interface IBaseButtonProps {
 	}
 }
 
-export default function BaseButton({onPress, bgColor, icon, text}: IBaseButtonProps) {
+export default function BaseButton({ onPress, bgColor, icon, text }: IBaseButtonProps) {
 	return (
 		<Pressable onPress={onPress} style={[styles.button, { backgroundColor: bgColor }]}>
 			{icon && <Icon size={icon.size} source={icon.source} color='#fff' /> }

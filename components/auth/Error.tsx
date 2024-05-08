@@ -4,7 +4,7 @@ interface IErrorProps {
     msg: string | undefined
 }
 
-export default function Error({msg}: IErrorProps) {
+export default function Error({ msg }: IErrorProps) {
 	return (
 		<Text style={styles.error}>{msg}</Text>
 	)

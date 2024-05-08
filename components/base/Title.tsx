@@ -5,6 +5,6 @@ interface IBaseTitleProps {
   style?: StyleProp<TextStyle>
 }
 
-export default function BaseTitle({children, style}: IBaseTitleProps) {
+export default function BaseTitle({ children, style }: IBaseTitleProps) {
 	return <Text style={style}>{children}</Text>
 }

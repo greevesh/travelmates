@@ -1,8 +1,9 @@
 import { GestureResponderEvent } from 'react-native'
+
 import BaseButton from '../../../base/Button'
 
 interface ISignUpButtonProps {
-  onPress: (event: GestureResponderEvent) => void;
+  onPress: (event: GestureResponderEvent) => void
 }
 
 export default function SignUpButton({ onPress }: ISignUpButtonProps) {
