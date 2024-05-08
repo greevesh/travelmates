@@ -47,6 +47,11 @@ module.exports = {
 			'error',
 			'never'
 		],
+		'@typescript-eslint/member-delimiter-style': ['error', {
+			'multiline': {
+				'delimiter': 'none'
+			},
+		}],
 		'no-undef': 0
 	}
 }

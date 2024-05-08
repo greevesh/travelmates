@@ -2,9 +2,9 @@ import { GestureResponderEvent, Pressable, StyleSheet } from 'react-native'
 import { Icon } from 'react-native-paper'
 
 interface EyeProps {
-  onPress: (event: GestureResponderEvent) => void;
-  icon: string;
-  top: number;
+  onPress: (event: GestureResponderEvent) => void
+  icon: string
+  top: number
 }
 
 export default function Eye({ onPress, icon, top }: EyeProps) {
