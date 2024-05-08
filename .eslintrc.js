@@ -69,6 +69,7 @@ module.exports = {
 				}
 			],
 			'newlines-between': 'always'
-		}]
+		}],
+		'object-curly-spacing': ['error', 'always']
 	}
 }
