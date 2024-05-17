@@ -1,5 +1,4 @@
 import { Card } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
 
 import Image from './Image'
 import Title from './sign-up/titles/Title'
@@ -9,7 +8,7 @@ import GoogleSignUpButton from './sign-up/buttons/GoogleSignUpButton'
 
 export default function AuthCard() {
 	return (
-		<Card style={styles.card} mode="contained">
+		<Card style={{ width: '90%', backgroundColor: '#fff' }} mode="contained">
 			<Image />
 			<Title />
 			<Subtitle />
@@ -18,11 +17,3 @@ export default function AuthCard() {
 		</Card>
 	)
 }
-
-const styles = StyleSheet.create({
-	card: {
-		backgroundColor: '#fff',
-		width: '90%',
-		marginTop: 20,
-	},
-})
