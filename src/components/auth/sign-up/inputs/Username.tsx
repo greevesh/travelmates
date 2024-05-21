@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form'
 
 import { IInputProps } from './types'
 
-export default function Email({ control }: IInputProps) {
+export default function Username({ control }: IInputProps) {
 	return (
 		<Controller
 			control={control}
@@ -14,11 +14,11 @@ export default function Email({ control }: IInputProps) {
 				<TextInput
 					onChangeText={onChange}
 					value={value}
-					placeholder="Email"
+					placeholder="Username"
 					style={{ backgroundColor: '#fff' }}
 				/>
 			)}
-			name="email"
+			name="username"
 		/>
 	)
 }

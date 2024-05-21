@@ -1,7 +1,7 @@
 import { Control } from 'react-hook-form'
 
 interface FieldValues {
-	email: string
+	username: string
 	password: string
 	passwordConfirmation: string
 }

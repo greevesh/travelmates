@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { schema, FormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
-import Email from '../inputs/Email'
+import Username from '../inputs/Username'
 import Password from '../inputs/password/Password'
 import PasswordConfirmation from '../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
@@ -17,7 +17,7 @@ export default function SignUpForm() {
 		formState: { errors },
 	} = useForm<FormFields>({
 		defaultValues: {
-			email: '',
+			username: '',
 			password: '',
 			passwordConfirmation: '',
 		},
@@ -28,8 +28,8 @@ export default function SignUpForm() {
 
 	return (
 		<View>
-			<Email control={control} />
-			<Error msg={errors.email?.message} />
+			<Username control={control} />
+			<Error msg={errors.username?.message} />
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
 			<PasswordConfirmation control={control} />
