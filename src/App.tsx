@@ -10,7 +10,8 @@ export default function App() {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Sign In" screenOptions={{
-				contentStyle: { backgroundColor: 'white' },
+				contentStyle: { backgroundColor: 'white', marginTop: 20 },
+				headerShown: false
 			}}>
 				<Stack.Screen name="Sign In" component={SignInScreen} />
 				<Stack.Screen name="Sign Up" component={SignUpScreen} />
