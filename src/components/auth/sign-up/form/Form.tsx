@@ -8,7 +8,7 @@ import Username from '../inputs/Username'
 import Password from '../inputs/password/Password'
 import PasswordConfirmation from '../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
-import AlreadyHaveAccount from '../AlreadyHaveAccount'
+import AuthScreenLink from '../AuthScreenLink'
 
 export default function SignUpForm() {
 	const {
@@ -34,7 +34,7 @@ export default function SignUpForm() {
 			<Error msg={errors.password?.message} />
 			<PasswordConfirmation control={control} />
 			<Error msg={errors.passwordConfirmation?.message} />
-			<AlreadyHaveAccount />
+			<AuthScreenLink />
 			<SignUpButton onPress={handleSubmit(onSubmit)} />
 		</View>
 	)
