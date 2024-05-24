@@ -4,11 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { schema, FormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
-import Username from '../inputs/Username'
-import Password from '../inputs/password/Password'
-import PasswordConfirmation from '../inputs/password/PasswordConfirmation'
+import Username from '../../inputs/Username'
+import Password from '../../inputs/password/Password'
+import PasswordConfirmation from '../../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
-import AuthScreenLink from '../AuthScreenLink'
+import AuthScreenLink from '../../AuthScreenLink'
 
 export default function SignUpForm() {
 	const {
