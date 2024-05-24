@@ -1,7 +1,7 @@
 import { TextInput } from 'react-native-paper'
 import { Controller } from 'react-hook-form'
 
-import useToggleSecureText from '../../../../../hooks/useToggleSecureText'
+import useToggleSecureText from '../../../../hooks/useToggleSecureText'
 import Eye from './Eye'
 import { IInputProps } from '../types'
 
