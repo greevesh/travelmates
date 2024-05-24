@@ -1,19 +1,27 @@
-import { View } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 
-import BaseButton from '../components/base/Button'
-import { SignUpScreenNavProp } from '../types'
+import SignInCard from '../components/auth/sign-in/Card'
 
 export default function SignInScreen() {
-	const navigation = useNavigation<SignUpScreenNavProp>()
-
 	return (
-		<View>
-			<BaseButton
-				text='Sign up'
-				onPress={() => navigation.navigate('Sign Up')}
-				bgColor='green'
-			/>
-		</View>
+		<>
+			<ScrollView contentContainerStyle={styles.container}>
+				<View style={styles.content}>
+					<SignInCard />
+				</View>
+			</ScrollView>
+		</>
 	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+		justifyContent: 'center'
+	},
+	content: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		width: '100%',
+	},
+})
