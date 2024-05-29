@@ -30,7 +30,7 @@ export default function SignInForm() {
 			<Error msg={errors.username?.message} />
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
-			<AuthScreenLink />
+			<AuthScreenLink text="Not a member?" />
 			<SignInButton onPress={handleSubmit(onSubmit)} />
 		</View>
 	)
