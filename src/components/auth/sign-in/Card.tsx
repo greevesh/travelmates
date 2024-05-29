@@ -11,7 +11,7 @@ export default function SignInCard() {
 	return (
 		<Card style={{ width: '90%', backgroundColor: '#fff' }} mode="contained">
 			<Image />
-			<Title />
+			<Title text='Sign in' />
 			<Subtitle />
 			<SignInForm />
 			<GoogleSignInButton />
