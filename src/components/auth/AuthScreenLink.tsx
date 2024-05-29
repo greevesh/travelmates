@@ -3,7 +3,11 @@ import { useNavigation, useNavigationState } from '@react-navigation/native'
 
 import { SignInScreenNavProp } from '../../types'
 
-export default function AuthScreenLink() {
+interface IAuthScreenLinkProps {
+	text: string
+}
+
+export default function AuthScreenLink({ text }: IAuthScreenLinkProps) {
 	const navigation = useNavigation<SignInScreenNavProp>()
 	const screen = useNavigationState((state) => state.routes[state.index].name)
 
@@ -14,7 +18,7 @@ export default function AuthScreenLink() {
 			onPress={() => (signInPage ? navigation.navigate('Sign Up') : navigation.navigate('Sign In'))}
 		>
 			<Text style={styles.text}>
-				{signInPage ? 'Not a member yet?' : 'Already have an account?'}
+				{text}
 			</Text>
 		</TouchableOpacity>
 	)

@@ -10,7 +10,7 @@ export default function SignUpCard() {
 	return (
 		<Card style={{ width: '90%', backgroundColor: '#fff' }} mode="contained">
 			<Image />
-			<Title />
+			<Title text='Sign up' />
 			<Subtitle />
 			<SignUpForm />
 			<GoogleSignUpButton />

@@ -34,7 +34,7 @@ export default function SignUpForm() {
 			<Error msg={errors.password?.message} />
 			<PasswordConfirmation control={control} />
 			<Error msg={errors.passwordConfirmation?.message} />
-			<AuthScreenLink />
+			<AuthScreenLink text="Already have an account?" />
 			<SignUpButton onPress={handleSubmit(onSubmit)} />
 		</View>
 	)
