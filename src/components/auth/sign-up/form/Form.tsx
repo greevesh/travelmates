@@ -1,6 +1,8 @@
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios, { AxiosError } from 'axios'
+import * as SecureStore from 'expo-secure-store'
 
 import { schema, FormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
@@ -9,6 +11,7 @@ import Password from '../../inputs/password/Password'
 import PasswordConfirmation from '../../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
 import AuthScreenLink from '../../AuthScreenLink'
+import { signUpEndpoint } from '../../../../consts/api'
 
 export default function SignUpForm() {
 	const {
@@ -24,7 +27,27 @@ export default function SignUpForm() {
 		resolver: zodResolver(schema),
 	})
 
-	const onSubmit = (data: FormFields) => console.log(data)
+	const onSubmit = async (data: FormFields) => {
+		try {
+			const { username, password } = data
+			const res = await axios.post(signUpEndpoint, { username, password })
+			const { accessToken, refreshToken } = res.data
+
+			await SecureStore.setItemAsync('accessToken', accessToken)
+			await SecureStore.setItemAsync('refreshToken', refreshToken)
+
+			Alert.alert('User successfully signed up!')
+		} catch (err) {
+			if (err instanceof AxiosError) {
+				if (err.response && err.response.status === 409) {
+					Alert.alert('Username already exists')
+				}
+				else {
+					Alert.alert('There was an issue signing up')
+				}
+			}
+		}
+	}
 
 	return (
 		<View>
