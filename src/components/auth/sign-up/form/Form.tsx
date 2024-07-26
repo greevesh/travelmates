@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 
-import { schema, FormFields } from './schema'
+import { signUpSchema, SignUpFormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
 import Username from '../../inputs/Username'
 import Password from '../../inputs/password/Password'
@@ -18,16 +18,16 @@ export default function SignUpForm() {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<FormFields>({
+	} = useForm<SignUpFormFields>({
 		defaultValues: {
 			username: '',
 			password: '',
 			passwordConfirmation: '',
 		},
-		resolver: zodResolver(schema),
+		resolver: zodResolver(signUpSchema),
 	})
 
-	const onSubmit = async (data: FormFields) => {
+	const onSubmit = async (data: SignUpFormFields) => {
 		try {
 			const { username, password } = data
 			const res = await axios.post(signUpEndpoint, { username, password })
