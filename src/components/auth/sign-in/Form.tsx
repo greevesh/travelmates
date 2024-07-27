@@ -28,13 +28,13 @@ export default function SignInForm() {
 	const onSubmit = async (data: SignInFormFields) => {
 		try {
 			const { accessToken, refreshToken } = await authenticate(data, signInEndpoint)
-
 			await SecureStore.setItemAsync('accessToken', accessToken)
 			await SecureStore.setItemAsync('refreshToken', refreshToken)
 
 			Alert.alert('User successfully signed in!')
-		} catch (err) {
-			Alert.alert('There was an issue signing in')
+		} catch {
+			// error scenarios handled in authenticate()
+			return
 		}
 	}
 

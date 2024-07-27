@@ -29,6 +29,9 @@ const authenticate = async (data: Credentials, endpoint: string) => {
 				}
 			}
 		}
+		else {
+			Alert.alert('There was an issue authenticating')
+		}
 	}
 }
 
