@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import { Alert } from 'react-native'
+import * as SecureStore from 'expo-secure-store'
 
 import { signInEndpoint, signUpEndpoint } from '../../consts/api'
 
@@ -32,6 +33,16 @@ const authenticate = async (data: Credentials, endpoint: string) => {
 		else {
 			Alert.alert('There was an issue authenticating')
 		}
+	}
+}
+
+export const storeAuthTokens = async (accessToken: string, refreshToken: string) => {
+	try {
+		await SecureStore.setItemAsync('accessToken', accessToken)
+		await SecureStore.setItemAsync('refreshToken', refreshToken)
+	}
+	catch {
+		Alert.alert('There was an issue authenticating')
 	}
 }
 

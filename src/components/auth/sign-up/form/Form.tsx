@@ -1,7 +1,6 @@
 import { Alert, View } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import * as SecureStore from 'expo-secure-store'
 
 import { signUpSchema, SignUpFormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
@@ -11,7 +10,7 @@ import PasswordConfirmation from '../../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
 import AuthScreenLink from '../../AuthScreenLink'
 import { signUpEndpoint } from '../../../../consts/api'
-import authenticate from '../../../../utils/auth/authenticate'
+import authenticate, { storeAuthTokens } from '../../../../utils/auth/authenticate'
 
 export default function SignUpForm() {
 	const {
@@ -30,9 +29,7 @@ export default function SignUpForm() {
 	const onSubmit = async (data: SignUpFormFields) => {
 		try {
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
-
-			await SecureStore.setItemAsync('accessToken', accessToken)
-			await SecureStore.setItemAsync('refreshToken', refreshToken)
+			storeAuthTokens(accessToken, refreshToken)
 
 			Alert.alert('User successfully signed up!')
 		} catch {
