@@ -2,14 +2,14 @@ import axios, { AxiosError } from 'axios'
 import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 
-import { signInEndpoint, signUpEndpoint } from '../../consts/api'
+import { signInEndpoint, signUpEndpoint } from '../consts/api'
 
 interface Credentials {
     username: string
     password: string
 }
 
-const authenticate = async (data: Credentials, endpoint: string) => {
+export const authenticate = async (data: Credentials, endpoint: string) => {
 	try {
 		const { username, password } = data
 		const res = await axios.post(endpoint, { username, password })
@@ -45,5 +45,3 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 		Alert.alert('There was an issue authenticating')
 	}
 }
-
-export default authenticate

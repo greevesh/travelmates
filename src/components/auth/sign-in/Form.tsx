@@ -8,7 +8,7 @@ import Error from '../Error'
 import AuthScreenLink from '../AuthScreenLink'
 import SignInButton from './buttons/SignInButton'
 import { SignInFormFields, signInSchema } from '../sign-up/form/schema'
-import authenticate, { storeAuthTokens } from '../../../utils/auth/authenticate'
+import { authenticate, storeAuthTokens } from '../../../utils/auth'
 import { signInEndpoint } from '../../../consts/api'
 
 export default function SignInForm() {

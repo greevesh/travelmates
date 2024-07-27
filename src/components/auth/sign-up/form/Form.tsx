@@ -10,7 +10,7 @@ import PasswordConfirmation from '../../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
 import AuthScreenLink from '../../AuthScreenLink'
 import { signUpEndpoint } from '../../../../consts/api'
-import authenticate, { storeAuthTokens } from '../../../../utils/auth/authenticate'
+import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 
 export default function SignUpForm() {
 	const {
