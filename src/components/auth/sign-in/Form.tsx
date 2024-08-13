@@ -1,28 +1,40 @@
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import SignInButton from '../sign-in/buttons/SignInButton'
 import Username from '../inputs/Username'
 import Password from '../inputs/password/Password'
 import Error from '../Error'
 import AuthScreenLink from '../AuthScreenLink'
-import { FormFields, schema } from '../sign-up/form/schema'
+import SignInButton from './buttons/SignInButton'
+import { SignInFormFields, signInSchema } from '../sign-up/form/schema'
+import { authenticate, storeAuthTokens } from '../../../utils/auth'
+import { signInEndpoint } from '../../../consts/api'
 
 export default function SignInForm() {
 	const {
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<FormFields>({
+	} = useForm<SignInFormFields>({
 		defaultValues: {
 			username: '',
 			password: '',
 		},
-		resolver: zodResolver(schema),
+		resolver: zodResolver(signInSchema),
 	})
 
-	const onSubmit = (data: FormFields) => console.log(data)
+	const onSubmit = async (data: SignInFormFields) => {
+		try {
+			const { accessToken, refreshToken } = await authenticate(data, signInEndpoint)
+			storeAuthTokens(accessToken, refreshToken)
+
+			Alert.alert('User successfully signed in!')
+		} catch {
+			// error scenarios handled in authenticate()
+			return
+		}
+	}
 
 	return (
 		<View style={{ marginTop: 20 }}>
