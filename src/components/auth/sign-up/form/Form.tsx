@@ -24,6 +24,7 @@ export default function SignUpForm() {
 			passwordConfirmation: '',
 		},
 		resolver: zodResolver(signUpSchema),
+		mode: 'onChange'
 	})
 
 	const onSubmit = async (data: SignUpFormFields) => {
