@@ -13,11 +13,10 @@ export const signUpSchema = z
 		path: ['passwordConfirmation'],
 	})
 
-export const signInSchema = z
-	.object({
-		username: z.string(),
-		password: z.string(),
-	})
+export const signInSchema = z.object({
+	username: z.string().min(1, { message: 'Username cannot be empty' }),
+	password: z.string().min(1, { message: 'Password cannot be empty' }),
+})
 
 export type SignUpFormFields = z.infer<typeof signUpSchema>
 export type SignInFormFields = z.infer<typeof signInSchema>
