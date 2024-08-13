@@ -1,6 +1,7 @@
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigation } from '@react-navigation/native'
 
 import { signUpSchema, SignUpFormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
@@ -11,6 +12,7 @@ import Error from '../../Error'
 import AuthScreenLink from '../../AuthScreenLink'
 import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
+import { SetupScreenNavProp } from '../../../../types'
 
 export default function SignUpForm() {
 	const {
@@ -27,12 +29,14 @@ export default function SignUpForm() {
 		mode: 'onChange'
 	})
 
+	const navigation = useNavigation<SetupScreenNavProp>()
+
 	const onSubmit = async (data: SignUpFormFields) => {
 		try {
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
 			storeAuthTokens(accessToken, refreshToken)
 
-			Alert.alert('User successfully signed up!')
+			navigation.navigate('Setup')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
