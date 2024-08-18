@@ -1,6 +1,8 @@
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigation } from '@react-navigation/native'
+import { useState } from 'react'
 
 import { signUpSchema, SignUpFormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
@@ -11,6 +13,8 @@ import Error from '../../Error'
 import AuthScreenLink from '../../AuthScreenLink'
 import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
+import { SetupScreenNavProp } from '../../../../types'
+import Spinner from '../../../Spinner'
 
 export default function SignUpForm() {
 	const {
@@ -26,16 +30,23 @@ export default function SignUpForm() {
 		resolver: zodResolver(signUpSchema),
 		mode: 'onChange'
 	})
+	const [isLoading, setIsLoading] = useState(false)
+
+	const navigation = useNavigation<SetupScreenNavProp>()
 
 	const onSubmit = async (data: SignUpFormFields) => {
 		try {
+			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
 			storeAuthTokens(accessToken, refreshToken)
 
-			Alert.alert('User successfully signed up!')
+			navigation.navigate('Setup')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
+		}
+		finally {
+			setIsLoading(false)
 		}
 	}
 
@@ -48,7 +59,9 @@ export default function SignUpForm() {
 			<PasswordConfirmation control={control} />
 			<Error msg={errors.passwordConfirmation?.message} />
 			<AuthScreenLink text="Already have an account?" />
-			<SignUpButton onPress={handleSubmit(onSubmit)} />
+			<SignUpButton onPress={handleSubmit(onSubmit)}>
+				{isLoading && <Spinner />}
+			</SignUpButton>
 		</View>
 	)
 }
