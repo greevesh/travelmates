@@ -15,6 +15,7 @@ import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 import { SetupScreenNavProp } from '../../../../types'
 import Spinner from '../../../Spinner'
+import { useAuthStore } from '../../../../stores/useAuthStore'
 
 export default function SignUpForm() {
 	const {
@@ -40,6 +41,7 @@ export default function SignUpForm() {
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
 			storeAuthTokens(accessToken, refreshToken)
 
+			useAuthStore.getState().setIsSignedIn(true)
 			navigation.navigate('Setup')
 		} catch {
 			// error scenarios handled in authenticate()
