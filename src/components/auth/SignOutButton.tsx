@@ -8,10 +8,10 @@ export default function SignOutButton() {
 	const navigation = useNavigation<SignInScreenNavProp>()
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
 
-	const handleSignOut = () => {
+	const onSubmit = () => {
 		setIsSignedIn(false)
 		navigation.navigate('Sign In')
 	}
 
-	return <BaseButton onPress={handleSignOut} text="Sign out" bgColor="#0047AB" />
+	return <BaseButton onPress={onSubmit} text="Sign out" bgColor="#0047AB" />
 }
