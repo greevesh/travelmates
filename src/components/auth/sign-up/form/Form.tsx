@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
+import * as SecureStore from 'expo-secure-store'
 
 import { signUpSchema, SignUpFormFields } from './schema'
 import SignUpButton from '../buttons/SignUpButton'
@@ -16,6 +17,7 @@ import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 import { SetupScreenNavProp } from '../../../../types'
 import Spinner from '../../../Spinner'
 import { useAuthStore } from '../../../../stores/useAuthStore'
+
 
 export default function SignUpForm() {
 	const {
@@ -39,6 +41,7 @@ export default function SignUpForm() {
 		try {
 			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
+			await SecureStore.setItemAsync('username', data.username)
 			storeAuthTokens(accessToken, refreshToken)
 
 			useAuthStore.getState().setIsSignedIn(true)
