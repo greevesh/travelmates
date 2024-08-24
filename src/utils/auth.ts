@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 
-import { signInEndpoint, signUpEndpoint } from '../consts/api'
+import { signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
 
 interface Credentials {
     username: string
@@ -49,5 +49,37 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 	}
 	catch {
 		Alert.alert('There was an issue authenticating')
+	}
+}
+
+export const signOut = async () => {
+	try {
+		const username = await SecureStore.getItemAsync('username')
+		const refreshToken = await SecureStore.getItemAsync('refreshToken')
+
+		if (!refreshToken) {
+			throw new Error('No refresh token available to sign out')
+		}
+
+		const res = await axios.post(signOutEndpoint, { username, refreshToken })
+		console.log('res data: ', res.data)
+		return res.data
+	}
+	catch (err) {
+		if (err instanceof AxiosError) {
+			console.error('Error in signOut:', err.response ? err.response.data : err.message)
+		}
+	}
+}
+
+export const removeAuthTokens = async () => {
+	try {
+		await SecureStore.deleteItemAsync('accessToken')
+		await SecureStore.deleteItemAsync('refreshToken')
+	}
+	catch (err) {
+		Alert.alert('There was an issue signing out')
+		console.log('err', err)
+		throw err
 	}
 }
