@@ -1,14 +1,24 @@
 import { useNavigation } from '@react-navigation/native'
+import * as SecureStore from 'expo-secure-store'
 
 import BaseButton from '../base/Button'
 import { useAuthStore } from '../../stores/useAuthStore'
 import { SignInScreenNavProp } from '../../types'
+import { removeAuthTokens, signOut } from '../../utils/auth'
 
 export default function SignOutButton() {
 	const navigation = useNavigation<SignInScreenNavProp>()
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
+		await signOut()
+		const refreshToken = await SecureStore.getItemAsync('refreshToken')
+		const accessToken = await SecureStore.getItemAsync('accessToken')
+
+		if (refreshToken && accessToken) {
+			await removeAuthTokens()
+		}
+
 		setIsSignedIn(false)
 		navigation.navigate('Sign In')
 	}
