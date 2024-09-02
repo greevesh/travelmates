@@ -1,13 +1,16 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
 
-import SignInCard from '../components/auth/sign-in/Card'
+import SetupCard from '../components/setup/Card'
+
+// import SignInCard from '../components/auth/sign-in/Card'
 
 export default function SignInScreen() {
 	return (
 		<>
 			<ScrollView contentContainerStyle={styles.container}>
 				<View style={styles.content}>
-					<SignInCard />
+					{/* <SignInCard /> */}
+					<SetupCard />
 				</View>
 			</ScrollView>
 		</>
@@ -16,7 +19,9 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
 	container: {
-		justifyContent: 'center'
+		justifyContent: 'center',
+		alignItems: 'center',
+		height: '100%',
 	},
 	content: {
 		display: 'flex',
