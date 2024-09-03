@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Card } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 
@@ -27,7 +27,7 @@ export default function SetupCard() {
 	return (
 		<Card style={styles.card}>
 			<Title text={title} />
-			{step === 1 ? <FirstStep /> : step === 2 ? <Text>2</Text> : <Text>3</Text> }
+			{step === 1 ? <FirstStep /> : step === 2 ? '' : '' }
 			<StepTracker step={step} setStep={setStep} />
 		</Card>
 	)
