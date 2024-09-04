@@ -1,20 +1,20 @@
-import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import UploadPhotoButton from './buttons/UploadPhotoButton'
 import DeletePhotoButton from './buttons/DeletePhotoButton'
+import { useProfilePhotoStore } from '../../stores/useProfilePhotoStore'
 
 export default function EditPhotoButtons() {
-	const [uploaded] = useState(false)
+	const uploaded = useProfilePhotoStore((state) => state.uploaded)
 
 	return (
 		<>
 			{uploaded ? <View style={styles.containerUploaded}>
-				<UploadPhotoButton uploaded={uploaded} />
+				<UploadPhotoButton />
 				<DeletePhotoButton />
 			</View>
 				: <View style={styles.container}>
-					<UploadPhotoButton uploaded={uploaded} />
+					<UploadPhotoButton />
 				</View>}
 		</>
         

@@ -2,14 +2,12 @@ import { useState } from 'react'
 import { Modal, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon } from 'react-native-paper'
 
-import BaseButton from '../../base/Button'
+import ChooseFileButton from './ChooseFileButton'
+import { useProfilePhotoStore } from '../../../stores/useProfilePhotoStore'
 
-interface IUploadPhotoButtonProps {
-    uploaded: boolean
-}
-
-export default function UploadPhotoButton({ uploaded }: IUploadPhotoButtonProps) {
+export default function UploadPhotoButton() {
 	const [visible, setVisible] = useState(false)
+	const uploaded = useProfilePhotoStore((state) => state.uploaded)
 
 	const handleClick = () => {
 		setVisible(!visible)
@@ -27,7 +25,7 @@ export default function UploadPhotoButton({ uploaded }: IUploadPhotoButtonProps)
 			>
 				<View style={styles.container}>
 					<Icon source="upload" size={75} color='#c6c6c6' />
-					<BaseButton onPress={() => console.log('file opened')} text="Choose file" bgColor="#0047AB" w={150} />
+					<ChooseFileButton />
 				</View>
 			</Modal>
 			<Button onPress={handleClick} style={styles.btn} icon="upload" labelStyle={{ color: '#c6c6c6' }}><Text style={{ color: '#fff' }}>
