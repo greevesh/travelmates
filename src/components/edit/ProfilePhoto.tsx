@@ -8,10 +8,14 @@ interface IProfilePhotoProps {
 
 export default function ProfilePhoto({ size }: IProfilePhotoProps) {
 	const photo = useProfilePhotoStore((state) => state.photo)
+	const uploaded = useProfilePhotoStore((state) => state.uploaded)
 
 	return (
 		<View>
-			<Image style={{ height: size, width: size }} source={{ uri: photo }} />
+			{uploaded ? <Image style={{ height: size, width: size, borderRadius: size / 2 }} source={{ uri: photo }} />
+				:
+				<Image style={{ height: size, width: size, borderRadius: size / 2 }} source={require('../../assets/img/placeholder-profile.jpg')} />
+			}
 		</View>
 	)
 }
