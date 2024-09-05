@@ -11,7 +11,7 @@ export default function ProfilePhoto({ size }: IProfilePhotoProps) {
 
 	return (
 		<View>
-			<Image style={{ height: size, width: size }} source={photo} />
+			<Image style={{ height: size, width: size }} source={{ uri: photo }} />
 		</View>
 	)
 }

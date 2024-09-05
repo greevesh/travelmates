@@ -1,9 +1,8 @@
-import { ImageSourcePropType } from 'react-native'
 import { create } from 'zustand'
 
 interface ProfilePhotoState {
-  photo: NodeRequire | ImageSourcePropType | undefined
-  setPhoto: (photo: NodeRequire) => void
+  photo: string | undefined
+  setPhoto: (photo: string) => void
   uploaded: boolean
   setUploaded: (uploaded: boolean) => void
 }
