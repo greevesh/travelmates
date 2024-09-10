@@ -5,12 +5,14 @@ import SignInScreen from './screens/SignInScreen'
 import SignUpScreen from './screens/SignUpScreen'
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen'
 import SetupScreen from './screens/SetupScreen'
+import Navbar from './components/Navbar'
 
 const Stack = createNativeStackNavigator()
 
 export default function App() {
 	return (
 		<NavigationContainer>
+			<Navbar />
 			<Stack.Navigator initialRouteName="Sign In" screenOptions={{
 				contentStyle: { backgroundColor: 'white', marginTop: 20 },
 				headerShown: false
