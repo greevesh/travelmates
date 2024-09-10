@@ -20,9 +20,4 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignContent: 'center',
 	},
-	title: {
-		fontSize: 24,
-		textAlign: 'center', 
-		paddingVertical: 15
-	},
 })
