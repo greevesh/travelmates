@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import FirstStep from './FirstStep'
 import StepTracker from './StepTracker'
 import BaseTitle from '../base/Title'
+import SecondStep from './SecondStep'
 
 interface ITitleProps {
     text: string
@@ -18,7 +19,7 @@ function Title({ text }: ITitleProps) {
 
 export default function SetupCard() {
 	const [title, setTitle] = useState('Profile Photo')
-	const [step, setStep] = useState(1)
+	const [step, setStep] = useState(2)
 
 	useEffect(() => {
 		step === 1 ? setTitle('Profile Photo') : step === 2 ? setTitle('Trip') : setTitle('Friends')
@@ -27,7 +28,7 @@ export default function SetupCard() {
 	return (
 		<Card style={styles.card}>
 			<Title text={title} />
-			{step === 1 ? <FirstStep /> : step === 2 ? '' : '' }
+			{step === 1 ? <FirstStep /> : step === 2 ? <SecondStep /> : '' }
 			<StepTracker step={step} setStep={setStep} />
 		</Card>
 	)
