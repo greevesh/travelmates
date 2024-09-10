@@ -1,6 +1,6 @@
 import { Card } from 'react-native-paper'
 
-import Image from '../Image'
+import Image from '../../Logo'
 import Title from '../titles/Title'
 import Subtitle from '../titles/Subtitle'
 import SignInForm from './Form'

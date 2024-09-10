@@ -1,7 +1,7 @@
 import { Card } from 'react-native-paper'
 import { StyleSheet, View } from 'react-native'
 
-import Image from '../Image'
+import Image from '../../Logo'
 import Title from '../titles/Title'
 import AuthScreenLink from '../AuthScreenLink'
 import Email from '../inputs/Email'
