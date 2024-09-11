@@ -9,7 +9,7 @@ interface IStepTrackerProps {
 }
 
 export default function StepTracker({ step, setStep }: IStepTrackerProps) {
-	const [progress, setProgress] = useState(0.33)
+	const [progress, setProgress] = useState(0.66)
     
 	const increment = () => {
 		setStep(step + 1)
