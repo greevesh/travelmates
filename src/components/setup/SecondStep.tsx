@@ -27,6 +27,11 @@ export default function SecondStep() {
 		}
 	}
 
+	const onLocationChange = (place: string) => {
+		setLocation(place)
+		setPlaces([])
+	}
+
 	const onStartDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
 		setShowStartDatePicker(false)
 		if (selectedDate) {
@@ -58,7 +63,7 @@ export default function SecondStep() {
 				{error && <Text style={styles.errorText}>{error}</Text>}
 				<View style={styles.resultsContainer}>
 					{places.map((place) => (
-						<TouchableOpacity onPress={() => setLocation(place.description)} key={place.place_id} style={styles.resultItem}>
+						<TouchableOpacity onPress={() => onLocationChange(place.description)} key={place.place_id} style={styles.resultItem}>
 							<Text>{place.description}</Text>
 						</TouchableOpacity>
 					))}
