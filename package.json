@@ -19,6 +19,7 @@
     "@expo-google-fonts/inter": "^0.2.3",
     "@expo/metro-runtime": "~3.2.1",
     "@hookform/resolvers": "^3.3.4",
+    "@react-native-community/datetimepicker": "^8.2.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "axios": "^1.7.2",
