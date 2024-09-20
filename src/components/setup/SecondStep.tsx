@@ -29,6 +29,7 @@ export default function SecondStep() {
 
 	const onLocationChange = (place: string) => {
 		setLocation(place)
+		setQuery(place)
 		setPlaces([])
 	}
 
