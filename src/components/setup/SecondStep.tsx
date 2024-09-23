@@ -34,17 +34,23 @@ export default function SecondStep() {
 	}
 
 	const onStartDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-		setShowStartDatePicker(false)
-		if (selectedDate) {
+		if (event.type === 'dismissed') {
+			setStartDate(startDate)
+		}
+		else {
 			setStartDate(selectedDate)
 		}
+		setShowStartDatePicker(!showStartDatePicker)
 	}
 	
 	const onEndDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-		setShowEndDatePicker(false)
-		if (selectedDate) {
+		if (event.type === 'dismissed') {
+			setEndDate(endDate)
+		}
+		else {
 			setEndDate(selectedDate)
 		}
+		setShowEndDatePicker(!showEndDatePicker)
 	}
 
 	return (
@@ -60,6 +66,7 @@ export default function SecondStep() {
 						fetchPlaces(text)
 					}}
 					placeholder="Search location"
+					onClearIconPress={() => setLocation(undefined)}
 				/>
 				{error && <Text style={styles.errorText}>{error}</Text>}
 				<View style={styles.resultsContainer}>
@@ -84,9 +91,10 @@ export default function SecondStep() {
 							mode="date"
 							display="default"
 							onChange={onStartDateChange}
+							onTouchCancel={() => setShowStartDatePicker(!showStartDatePicker)}
 						/>
 					)}
-					<TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
+					<TouchableOpacity onPress={() => setShowEndDatePicker(!showEndDatePicker)}>
 						<TextInput
 							label="End Date"
 							value={endDate ? endDate.toDateString() : ''}
@@ -100,6 +108,7 @@ export default function SecondStep() {
 							mode="date"
 							display="default"
 							onChange={onEndDateChange}
+							onTouchCancel={() => setShowStartDatePicker(!showStartDatePicker)}
 						/>
 					)}
 				</View>

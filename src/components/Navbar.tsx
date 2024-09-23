@@ -20,7 +20,7 @@ export default function Navbar() {
 				<View style={styles.logoContainer}>
 					<Logo size={55} />
 					<View style={styles.textContainer}>
-						<Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 16 }}>TravelMates</Text>
+						<Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 16 }}>TravelM@tes</Text>
 					</View>
 				</View>
 				<ProfilePhoto size={55} />
