@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
 		height: 45,
 		width: 300,
 		borderRadius: 50,
-		marginRight: 7,
 		backgroundColor: '#f0f0f0'
 	},
 	resultsContainer: {
