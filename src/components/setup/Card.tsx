@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import FirstStep from './FirstStep'
 import StepTracker from './StepTracker'
 import BaseTitle from '../base/Title'
-import SecondStep from './SecondStep'
+import SecondStep from './second-step/SecondStep'
 
 interface ITitleProps {
     text: string
