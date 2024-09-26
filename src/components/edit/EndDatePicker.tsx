@@ -6,10 +6,10 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 interface IEndDatePickerProps {
     endDate: Date | undefined
     setEndDate: (endDate: Date | undefined) => void
-    startDate: Date | undefined
+    minDate: Date | undefined
 }
 
-export default function EndDatePicker({ endDate, setEndDate, startDate }: IEndDatePickerProps) {
+export default function EndDatePicker({ endDate, setEndDate, minDate }: IEndDatePickerProps) {
 	const [showEndDatePicker, setShowEndDatePicker] = useState(false)
 
 	const handleEndDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -39,7 +39,7 @@ export default function EndDatePicker({ endDate, setEndDate, startDate }: IEndDa
 					display="default"
 					onChange={handleEndDateChange}
 					onTouchCancel={() => setShowEndDatePicker(!showEndDatePicker)}
-					minimumDate={startDate}
+					minimumDate={minDate}
 				/>
 			)}
 		</>
