@@ -6,9 +6,10 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 interface IStartDatePickerProps {
     startDate: Date | undefined
     setStartDate: (startDate: Date | undefined) => void
+    maxDate: Date | undefined
 }
 
-export default function StartDatePicker({ startDate, setStartDate }: IStartDatePickerProps) {
+export default function StartDatePicker({ startDate, setStartDate, maxDate }: IStartDatePickerProps) {
 	const [showStartDatePicker, setShowStartDatePicker] = useState(false)
 
 	const handleStartDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -38,6 +39,7 @@ export default function StartDatePicker({ startDate, setStartDate }: IStartDateP
 					display="default"
 					onChange={handleStartDateChange}
 					onTouchCancel={() => setShowStartDatePicker(!showStartDatePicker)}
+					maximumDate={maxDate}
 				/>
 			)}
 		</>

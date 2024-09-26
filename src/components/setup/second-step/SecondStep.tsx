@@ -17,7 +17,7 @@ export default function SecondStep() {
 			<Card.Actions style={styles.container}>
 				<SearchLocationBar setLocation={setLocation} />
 				<View style={styles.datePickerContainer}>
-					<StartDatePicker startDate={startDate} setStartDate={setStartDate} />
+					<StartDatePicker startDate={startDate} setStartDate={setStartDate} maxDate={endDate} />
 					<EndDatePicker endDate={endDate} setEndDate={setEndDate} startDate={startDate} />
 				</View>
 				<Output location={location} startDate={startDate} endDate={endDate} />
