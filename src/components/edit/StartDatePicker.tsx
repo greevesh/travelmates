@@ -39,6 +39,7 @@ export default function StartDatePicker({ startDate, setStartDate, maxDate }: IS
 					display="default"
 					onChange={handleStartDateChange}
 					onTouchCancel={() => setShowStartDatePicker(!showStartDatePicker)}
+					minimumDate={new Date()}
 					maximumDate={maxDate}
 				/>
 			)}

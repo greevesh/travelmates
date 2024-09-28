@@ -39,7 +39,7 @@ export default function EndDatePicker({ endDate, setEndDate, minDate }: IEndDate
 					display="default"
 					onChange={handleEndDateChange}
 					onTouchCancel={() => setShowEndDatePicker(!showEndDatePicker)}
-					minimumDate={minDate}
+					minimumDate={minDate ?? new Date()}
 				/>
 			)}
 		</>
