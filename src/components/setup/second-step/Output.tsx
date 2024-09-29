@@ -4,11 +4,11 @@ import { Icon } from 'react-native-paper'
 import { useTripStore } from '../../../stores/useTripStore'
 
 interface IOutputProps {
-    location: string | undefined
     endDate: Date | undefined
 }
 
-export default function Output({ location, endDate }: IOutputProps) {
+export default function Output({ endDate }: IOutputProps) {
+	const location = useTripStore((state) => state.location)
 	const startDate = useTripStore((state) => state.startDate)
 
 	return (
