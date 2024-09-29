@@ -8,13 +8,13 @@ import StartDatePicker from '../../edit/StartDatePicker'
 import Output from './Output'
 
 export default function SecondStep() {
-	const [location, setLocation] = useState<string | undefined>(undefined)
+	const [location] = useState<string | undefined>(undefined)
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined)
 
 	return (
 		<>
 			<Card.Actions style={styles.container}>
-				<SearchLocationBar setLocation={setLocation} />
+				<SearchLocationBar />
 				<View style={styles.datePickerContainer}>
 					<StartDatePicker maxDate={endDate} />
 					<EndDatePicker endDate={endDate} setEndDate={setEndDate} />
