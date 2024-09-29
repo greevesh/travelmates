@@ -4,14 +4,15 @@ import { Searchbar } from 'react-native-paper'
 import { GOOGLE_PLACES_API_KEY } from '@env'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-interface SearchLocationBarProps {
-	setLocation: (location: string | undefined) => void
-}
+import { useTripStore } from '../../stores/useTripStore'
 
-export default function SearchLocationBar({ setLocation }: SearchLocationBarProps) {
-	const [query, setQuery] = useState('')
+export default function SearchLocationBar() {
 	const [places, setPlaces] = useState<Array<{ place_id: string; description: string }>>([])
 	const [error, setError] = useState<string | null>(null)
+
+	const query = useTripStore((state) => state.locationQuery)
+	const setQuery = useTripStore((state) => state.setLocationQuery)
+	const setLocation = useTripStore((state) => state.setLocation)
 
 	const fetchPlaces = async (input: string) => {
 		const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${GOOGLE_PLACES_API_KEY}&language=en&types=(cities)`
