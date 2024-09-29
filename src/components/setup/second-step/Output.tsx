@@ -1,13 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-paper'
 
+import { useTripStore } from '../../../stores/useTripStore'
+
 interface IOutputProps {
     location: string | undefined
-    startDate: Date | undefined
     endDate: Date | undefined
 }
 
-export default function Output({ location, startDate, endDate }: IOutputProps) {
+export default function Output({ location, endDate }: IOutputProps) {
+	const startDate = useTripStore((state) => state.startDate)
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.item}>

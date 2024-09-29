@@ -9,7 +9,6 @@ import Output from './Output'
 
 export default function SecondStep() {
 	const [location, setLocation] = useState<string | undefined>(undefined)
-	const [startDate, setStartDate] = useState<Date | undefined>(undefined)
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined)
 
 	return (
@@ -17,10 +16,10 @@ export default function SecondStep() {
 			<Card.Actions style={styles.container}>
 				<SearchLocationBar setLocation={setLocation} />
 				<View style={styles.datePickerContainer}>
-					<StartDatePicker startDate={startDate} setStartDate={setStartDate} maxDate={endDate} />
-					<EndDatePicker endDate={endDate} setEndDate={setEndDate} minDate={startDate} />
+					<StartDatePicker maxDate={endDate} />
+					<EndDatePicker endDate={endDate} setEndDate={setEndDate} />
 				</View>
-				<Output location={location} startDate={startDate} endDate={endDate} />
+				<Output location={location} endDate={endDate} />
 			</Card.Actions>
 		</>
 	)

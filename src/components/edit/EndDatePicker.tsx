@@ -3,14 +3,17 @@ import { TouchableOpacity, StyleSheet } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 
+import { useTripStore } from '../../stores/useTripStore'
+
 interface IEndDatePickerProps {
     endDate: Date | undefined
     setEndDate: (endDate: Date | undefined) => void
-    minDate: Date | undefined
 }
 
-export default function EndDatePicker({ endDate, setEndDate, minDate }: IEndDatePickerProps) {
+export default function EndDatePicker({ endDate, setEndDate }: IEndDatePickerProps) {
 	const [showEndDatePicker, setShowEndDatePicker] = useState(false)
+
+	const startDate = useTripStore((state) => state.startDate)
 
 	const handleEndDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
 		if (event.type === 'dismissed') {
@@ -39,7 +42,7 @@ export default function EndDatePicker({ endDate, setEndDate, minDate }: IEndDate
 					display="default"
 					onChange={handleEndDateChange}
 					onTouchCancel={() => setShowEndDatePicker(!showEndDatePicker)}
-					minimumDate={minDate ?? new Date()}
+					minimumDate={startDate ?? new Date()}
 				/>
 			)}
 		</>

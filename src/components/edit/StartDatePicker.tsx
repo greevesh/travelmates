@@ -3,14 +3,17 @@ import { TouchableOpacity, StyleSheet } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 
+import { useTripStore } from '../../stores/useTripStore'
+
 interface IStartDatePickerProps {
-    startDate: Date | undefined
-    setStartDate: (startDate: Date | undefined) => void
     maxDate: Date | undefined
 }
 
-export default function StartDatePicker({ startDate, setStartDate, maxDate }: IStartDatePickerProps) {
+export default function StartDatePicker({ maxDate }: IStartDatePickerProps) {
 	const [showStartDatePicker, setShowStartDatePicker] = useState(false)
+
+	const startDate = useTripStore((state) => state.startDate)
+	const setStartDate =  useTripStore((state) => state.setStartDate)
 
 	const handleStartDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
 		if (event.type === 'dismissed') {
