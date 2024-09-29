@@ -5,15 +5,14 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 
 import { useTripStore } from '../../stores/useTripStore'
 
-interface IEndDatePickerProps {
-    endDate: Date | undefined
-    setEndDate: (endDate: Date | undefined) => void
-}
-
-export default function EndDatePicker({ endDate, setEndDate }: IEndDatePickerProps) {
+export default function EndDatePicker() {
 	const [showEndDatePicker, setShowEndDatePicker] = useState(false)
 
-	const startDate = useTripStore((state) => state.startDate)
+	const { startDate, endDate, setEndDate } = useTripStore((state) => ({
+		startDate: state.startDate,
+		endDate: state.endDate,
+		setEndDate: state.setEndDate,
+	}))
 
 	const handleEndDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
 		if (event.type === 'dismissed') {

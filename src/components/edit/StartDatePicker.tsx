@@ -5,15 +5,14 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 
 import { useTripStore } from '../../stores/useTripStore'
 
-interface IStartDatePickerProps {
-    maxDate: Date | undefined
-}
-
-export default function StartDatePicker({ maxDate }: IStartDatePickerProps) {
+export default function StartDatePicker() {
 	const [showStartDatePicker, setShowStartDatePicker] = useState(false)
 
-	const startDate = useTripStore((state) => state.startDate)
-	const setStartDate =  useTripStore((state) => state.setStartDate)
+	const { startDate, setStartDate, endDate } = useTripStore((state) => ({
+		startDate: state.startDate,
+		setStartDate: state.setStartDate,
+		endDate: state.endDate,
+	}))
 
 	const handleStartDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
 		if (event.type === 'dismissed') {
@@ -43,7 +42,7 @@ export default function StartDatePicker({ maxDate }: IStartDatePickerProps) {
 					onChange={handleStartDateChange}
 					onTouchCancel={() => setShowStartDatePicker(!showStartDatePicker)}
 					minimumDate={new Date()}
-					maximumDate={maxDate}
+					maximumDate={endDate}
 				/>
 			)}
 		</>

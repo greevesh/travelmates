@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Card } from 'react-native-paper'
 
@@ -8,17 +7,15 @@ import StartDatePicker from '../../edit/StartDatePicker'
 import Output from './Output'
 
 export default function SecondStep() {
-	const [endDate, setEndDate] = useState<Date | undefined>(undefined)
-
 	return (
 		<>
 			<Card.Actions style={styles.container}>
 				<SearchLocationBar />
 				<View style={styles.datePickerContainer}>
-					<StartDatePicker maxDate={endDate} />
-					<EndDatePicker endDate={endDate} setEndDate={setEndDate} />
+					<StartDatePicker />
+					<EndDatePicker />
 				</View>
-				<Output endDate={endDate} />
+				<Output />
 			</Card.Actions>
 		</>
 	)
