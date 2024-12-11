@@ -59,7 +59,7 @@ export default function SearchLocationBar() {
 const styles = StyleSheet.create({
 	searchbar: {
 		height: 45,
-		width: 300,
+		width: 345,
 		borderRadius: 50,
 		backgroundColor: '#f0f0f0'
 	},
