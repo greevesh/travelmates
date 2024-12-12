@@ -8,7 +8,7 @@ interface IProgressProps {
 export default function Progress({ progress }: IProgressProps) {
 	return (
 		<View style={{ display: 'flex', alignItems: 'center' }}>
-			<ProgressBar style={styles.progress} progress={progress} color="#006994" />
+			<ProgressBar style={styles.progress} progress={progress} color="#007BFF" />
 		</View>
 	)
 }
@@ -16,6 +16,8 @@ export default function Progress({ progress }: IProgressProps) {
 const styles = StyleSheet.create({
 	progress: {
 		marginVertical: 20,
-		width: 250,
+		width: 338,
+		height: 5,
+		borderRadius: 3
 	}
 })
