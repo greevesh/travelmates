@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 		width: '100%',
 		marginTop: 10,
 		marginBottom: 20,
-		marginLeft: 45
+		marginLeft: 30
 	},
 	item: {
 		display: 'flex',
