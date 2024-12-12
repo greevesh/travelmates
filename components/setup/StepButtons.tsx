@@ -76,7 +76,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 				{step > 1 && <PreviousButton decrement={decrement} />}
 				{step === 2 && <NextButton increment={increment} />}
 				{step === 3 && <NextButton increment={increment} />}
-				{step === 4 && <Button onPress={handlePostData} textColor='#6E6E6E'>Finish</Button>}
+				{step === 4 && <Button onPress={handlePostData} style={{ borderRadius: 7 }} buttonColor='#28A745' textColor='#fff'>Finish</Button>}
 			</View>
 			{step === 1 && 
             <View style={styles.stepTwoBtnContainer}>
