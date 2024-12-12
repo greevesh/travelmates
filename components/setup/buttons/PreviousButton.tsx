@@ -6,6 +6,6 @@ interface IPreviousButtonProps {
 
 export default function PreviousButton({ decrement }: IPreviousButtonProps) {
 	return (
-		<Button buttonColor='#fff' textColor='#6E6E6E' onPress={decrement}>Previous</Button>
+		<Button style={{ borderRadius: 7, marginLeft: -8 }} buttonColor='#fff' textColor='#6E6E6E' onPress={decrement}>Previous</Button>
 	)
 }
