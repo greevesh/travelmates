@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { useTripStore } from '../../stores/useTripStore'
 
+import flags, { FlagMap } from "../../flag-emojis"
+
 export default function SearchLocationBar() {
 	const [places, setPlaces] = useState<Array<{ place_id: string; description: string }>>([])
 	const [error, setError] = useState<string | null>(null)
@@ -30,6 +32,12 @@ export default function SearchLocationBar() {
 		setPlaces([])
 	}
 
+	const getFlag = (place: string) => {
+		const country = place.split(", ").pop() || ''
+		const flag = (flags as FlagMap)[country] || '🌎'
+		return flag
+	}
+
 	return (
 		<>
 			<Searchbar
@@ -48,6 +56,7 @@ export default function SearchLocationBar() {
 			<View style={styles.resultsContainer}>
 				{places.map((place) => (
 					<TouchableOpacity onPress={() => handleLocationChange(place.description)} key={place.place_id} style={styles.resultItem}>
+						<Text>{getFlag(place.description)}</Text>
 						<Text>{place.description}</Text>
 					</TouchableOpacity>
 				))}
@@ -66,14 +75,18 @@ const styles = StyleSheet.create({
 	resultsContainer: {
 		position: 'absolute',
 		top: 50,
-		width: 280,
+		width: 345,
 		marginTop: 10,
-		backgroundColor: '#fff',
-		borderColor: '#ccc',
+		backgroundColor: '#f9f9f9',
+		borderColor: '#f9f9f9',
+		borderRadius: 8,
 		zIndex: 1000
 	},
 	resultItem: {
-		padding: 10,
+		display: 'flex',
+		flexDirection: 'row',
+		columnGap: 8,
+		padding: 12,
 		borderColor: '#ccc',
 		borderBottomWidth: 1
 	},
