@@ -15,7 +15,7 @@ export default function ProfilePhoto({ size }: IProfilePhotoProps) {
 			<View>
 				{uploaded ? <Image style={{ height: size, width: size, borderRadius: size / 2 }} source={{ uri: photo }} />
 					:
-					<Image style={{ height: size, width: size, borderRadius: size / 2 }} source={require('../../assets/img/placeholder-profile.jpg')} />}
+					<Image style={{ height: size, width: size, borderRadius: size / 2 }} source={require('../../assets/img/placeholder-profile.png')} />}
 			</View>
 		</>
 	)
