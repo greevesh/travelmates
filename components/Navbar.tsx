@@ -29,8 +29,13 @@ export default function Navbar() {
 
 const styles = StyleSheet.create({
 	container: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
 		height: 130,
-		backgroundColor: '#72C6EF'
+		backgroundColor: 'rgba(0, 0, 0, 0)',
+		zIndex: 1
 	},
 	navbar: {
 		display: 'flex',
