@@ -32,5 +32,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		columnGap: 20,
 		width: '100%',
+		marginRight: 8
 	},
 })
