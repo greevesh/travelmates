@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Card } from 'react-native-paper'
 
 import ProfilePhoto from '../edit/ProfilePhoto'
@@ -8,8 +8,10 @@ export default function FirstStep() {
 	return (
 		<>
 			<Card.Actions style={styles.container}>
-				<ProfilePhoto size={85} />
-				<EditPhotoButtons />
+				<View style={styles.subcontainer}>
+					<ProfilePhoto size={85} />
+					<EditPhotoButtons />
+				</View>
 			</Card.Actions>
 		</>
 	)
@@ -18,7 +20,11 @@ export default function FirstStep() {
 const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
+		alignItems: 'center',
 		height: 137,
-		alignContent: 'center',
 	},
+	subcontainer: {
+		display: 'flex',
+		flexDirection: 'row'
+	}
 })
