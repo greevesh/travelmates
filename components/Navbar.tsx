@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
-import { useFonts, Inter_600SemiBold } from '@expo-google-fonts/inter'
+import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 
 import ProfilePhoto from './edit/ProfilePhoto'
 
 export default function Navbar() {
 	const [fontsLoaded] = useFonts({
-		Inter_600SemiBold,
+		Poppins_600SemiBold
 	})
     
 	if (!fontsLoaded) {
@@ -18,7 +18,7 @@ export default function Navbar() {
 			<View style={styles.navbar}>
 				<View style={styles.logoContainer}>
 					<View style={styles.textContainer}>
-						<Text style={{ fontFamily: 'Inter_600SemiBold', fontSize: 20, color: '#fff' }}>TravelM@tes</Text>
+						<Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#fff' }}>TravelM@tes</Text>
 					</View>
 				</View>
 				<ProfilePhoto size={55} />
