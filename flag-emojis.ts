@@ -186,7 +186,7 @@ const flags: FlagMap = {
     "Uganda": "🇺🇬",
     "Ukraine": "🇺🇦",
     "United Arab Emirates": "🇦🇪",
-    "United Kingdom": "🇬🇧",
+    "UK": "🇬🇧",
     "USA": "🇺🇸",
     "Uruguay": "🇺🇾",
     "Uzbekistan": "🇺🇿",
