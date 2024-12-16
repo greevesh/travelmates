@@ -32,8 +32,22 @@ export default function SearchLocationBar() {
 		setPlaces([])
 	}
 
-	const getFlag = (place: string) => {
-		const country = place.split(", ").pop() || ''
+	const formatPlaceName = (placeName: string) => {
+		if (!placeName.includes(",")) {
+			if (placeName.includes(" - ")) {
+				// e.g. Abu Dhabi - United Arab Emirates (should be Abu Dhabi, United...)
+				return placeName.replace(" - ", ", ")
+			} else {
+				// e.g. Riyadh Saudi Arabia (should be Riyadh, Saudi Arabia)
+				return placeName.replace(" ", ", ")
+			}
+		}
+		return placeName
+	}
+
+	const getFlag = (placeName: string) => {
+		const formattedPlaceName = formatPlaceName(placeName)
+		let country = formattedPlaceName.split(", ").pop() || ''
 		const flag = (flags as FlagMap)[country] || '🌎'
 		return flag
 	}
@@ -54,10 +68,10 @@ export default function SearchLocationBar() {
 			/>
 			{error && <Text style={styles.errorText}>{error}</Text>}
 			<View style={styles.resultsContainer}>
-				{places.map((place) => (
-					<TouchableOpacity onPress={() => handleLocationChange(place.description)} key={place.place_id} style={styles.resultItem}>
-						<Text>{getFlag(place.description)}</Text>
-						<Text>{place.description}</Text>
+				{places.map(({ place_id, description }) => (
+					<TouchableOpacity onPress={() => handleLocationChange(description)} key={place_id} style={styles.resultItem}>
+						<Text>{getFlag(description)}</Text>
+						<Text>{formatPlaceName(description)}</Text>
 					</TouchableOpacity>
 				))}
 			</View>
