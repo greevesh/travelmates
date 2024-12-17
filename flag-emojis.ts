@@ -180,7 +180,7 @@ const flags: FlagMap = {
     "Tonga": "🇹🇴",
     "Trinidad and Tobago": "🇹🇹",
     "Tunisia": "🇹🇳",
-    "Turkey": "🇹🇷",
+    "Türkiye": "🇹🇷",
     "Turkmenistan": "🇹🇲",
     "Tuvalu": "🇹🇻",
     "Uganda": "🇺🇬",
