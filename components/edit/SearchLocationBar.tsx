@@ -34,12 +34,14 @@ export default function SearchLocationBar() {
 
 	const formatPlaceName = (placeName: string) => {
 		if (!placeName.includes(",")) {
-			if (placeName.includes(" - ")) {
+			if (placeName.includes("United Arab Emirates")) {
+				console.log(placeName)
 				// e.g. Abu Dhabi - United Arab Emirates (should be Abu Dhabi, United...)
-				return placeName.replace(" - ", ", ")
+				return placeName.replaceAll(" - ", ", ")
 			} else {
-				// e.g. Riyadh Saudi Arabia (should be Riyadh, Saudi Arabia)
-				return placeName.replace(" ", ", ")
+				if (placeName.includes("Saudi Arabia")) {
+					return placeName.replace(" Saudi Arabia", ", Saudi Arabia")
+				}
 			}
 		}
 		return placeName
