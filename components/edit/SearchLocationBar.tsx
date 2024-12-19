@@ -26,16 +26,24 @@ export default function SearchLocationBar() {
 		}
 	}
 
-	const handleLocationChange = (place: string) => {
-		setLocation(place)
-		setQuery(place)
+	const handleLocationChange = (placeName: string) => {
+		setLocation(placeName)
+		setQuery(placeName)
 		setPlaces([])
+	}
+
+	const shortenPlaceName = (placeName: string) => {
+		let shortened: string
+		let cutOffPoint: number
+		placeName[26] === " " ? cutOffPoint = 26 : cutOffPoint = 27
+		let end = placeName.slice(cutOffPoint, placeName.length)
+		shortened = placeName.replace(end, '...')
+		return shortened
 	}
 
 	const formatPlaceName = (placeName: string) => {
 		if (!placeName.includes(",")) {
 			if (placeName.includes("United Arab Emirates")) {
-				console.log(placeName)
 				// e.g. Abu Dhabi - United Arab Emirates (should be Abu Dhabi, United...)
 				return placeName.replaceAll(" - ", ", ")
 			} else {
@@ -60,7 +68,7 @@ export default function SearchLocationBar() {
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
 				style={styles.searchbar}
-				value={query}
+				value={query.length > 27 ? shortenPlaceName(query) : query}
 				onChangeText={(text) => {
 					setQuery(text)
 					fetchPlaces(text)
@@ -73,7 +81,7 @@ export default function SearchLocationBar() {
 				{places.map(({ place_id, description }) => (
 					<TouchableOpacity onPress={() => handleLocationChange(description)} key={place_id} style={styles.resultItem}>
 						<Text>{getFlag(description)}</Text>
-						<Text>{formatPlaceName(description)}</Text>
+						<Text>{description}</Text>
 					</TouchableOpacity>
 				))}
 			</View>
