@@ -78,8 +78,10 @@ export default function SearchLocationBar() {
 			/>
 			{error && <Text style={styles.errorText}>{error}</Text>}
 			<View style={styles.resultsContainer}>
-				{places.map(({ place_id, description }) => (
-					<TouchableOpacity onPress={() => handleLocationChange(description)} key={place_id} style={styles.resultItem}>
+				{places.map(({ place_id, description }, index) => (
+					<TouchableOpacity onPress={() => handleLocationChange(description)} 
+						key={place_id} 
+						style={{ ...styles.resultItem, borderBottomWidth: index === 4 ? 0 : 1 }}>
 						<Text>{getFlag(description)}</Text>
 						<Text>{description}</Text>
 					</TouchableOpacity>
@@ -112,7 +114,6 @@ const styles = StyleSheet.create({
 		columnGap: 8,
 		padding: 12,
 		borderColor: '#ccc',
-		borderBottomWidth: 1
 	},
 	errorText: {
 		marginTop: 10,
