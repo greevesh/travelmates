@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 	progress: {
 		marginVertical: 20,
 		width: 338,
-		height: 5,
+		height: 7,
 		borderRadius: 3
 	}
 })

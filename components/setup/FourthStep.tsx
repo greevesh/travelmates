@@ -16,8 +16,8 @@ export default function FourthStep() {
 const styles = StyleSheet.create({
 	container: {
 		display: 'flex',
-        height: 137,
 		flexDirection: 'column',
-		position: 'relative'
+		position: 'relative',
+		height: 97
 	},
 })

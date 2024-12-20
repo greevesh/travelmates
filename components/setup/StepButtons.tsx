@@ -79,7 +79,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 				{step === 4 && <Button onPress={handlePostData} style={{ borderRadius: 7 }} buttonColor='#28A745' textColor='#fff'>Finish</Button>}
 			</View>
 			{step === 1 && 
-            <View style={styles.stepTwoBtnContainer}>
+            <View style={styles.stepOneBtnContainer}>
             	<NextButton increment={increment} />
             </View>
 			}
@@ -92,15 +92,13 @@ const styles = StyleSheet.create({
 		display: 'flex', 
 		justifyContent: 'space-between', 
 		flexDirection: 'row', 
-		marginHorizontal: 21,
 		marginTop: 10
 	},
 	text: {
 		color: '#6E6E6E'
 	},
-	stepTwoBtnContainer: {
+	stepOneBtnContainer: {
 		display: 'flex', 
 		alignItems: 'flex-end', 
-		marginRight: 21
 	},
 })

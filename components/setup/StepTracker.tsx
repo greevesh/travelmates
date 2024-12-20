@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { StyleSheet } from 'react-native'
+import { useEffect, useState } from 'react'
 
 import Progress from './Progress'
 import StepButtons from './StepButtons'
+import { View } from 'react-native'
 
 interface IStepTrackerProps {
 	step: number
@@ -27,9 +29,16 @@ export default function StepTracker({ step, setStep }: IStepTrackerProps) {
 	}
 
 	return (
-		<>
+		<View style={{ ...styles.stepTracker, bottom: step === 4 ? -141 : -100 } }>
 			<StepButtons step={step} increment={increment} decrement={decrement} />
 			<Progress progress={progress} />
-		</>
+		</View>
 	)
 }
+
+const styles = StyleSheet.create({
+	stepTracker: {
+		position: 'absolute',
+		left: 23,
+	}
+})
