@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, IconButton, Searchbar } from 'react-native-paper'
+import { ActivityIndicator, Icon, IconButton, Searchbar } from 'react-native-paper'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { useUserStore } from '../../stores/useUserStore'
@@ -56,7 +56,7 @@ export default function SearchUserBar() {
 				},
 			})
 			const data = await res.json()
-			data.length === 0 && setError('No matching users.')
+			data.length === 0 && setError(`No results found for ${query}.`)
 			const filteredData = data.filter((user: { _id: number }) => !selectedUsers.some((selectedUser) => selectedUser._id === user._id))
 			setUsers(filteredData)
 		} catch (error) {
@@ -122,12 +122,13 @@ export default function SearchUserBar() {
 					text.length > 0 && debouncedFetchUsers(text)
 				}}
 				placeholder="Search users"
-				clearIcon={loading ? () => <ActivityIndicator size="small" color="#006994" /> : undefined}
+				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
 				onClearIconPress={() => setUsers([])}
 				selectionColor={'#006994'}
 			/>
 			{error && 
-			<View style={{ width: '100%' }}>
+			<View style={styles.errorContainer}>
+				<Icon size={18} source='magnify-close' />
 				<Text style={styles.errorText}>{error}</Text>
 			</View>
 			}
@@ -153,15 +154,25 @@ export default function SearchUserBar() {
 
 const styles = StyleSheet.create({
 	searchbar: {
+		position: 'absolute',
+		top: 20,
 		height: 45,
 		width: 345,
 		borderRadius: 50,
 		backgroundColor: '#f0f0f0',
-		marginBottom: 55
+		marginBottom: 15
+	},
+	errorContainer: {
+		display: 'flex', 
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: '100%',
+		top: 15,
+		marginLeft: 25,
 	},
 	errorText: {
-		marginTop: 20,
-		marginLeft: 10
+		marginLeft: 10,
+		fontSize: 18
 	},
 	resultsContainer: {
 		position: 'absolute',
