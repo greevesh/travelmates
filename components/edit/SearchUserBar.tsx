@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Icon, IconButton, Searchbar } from 'react-native-paper'
+import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { useUserStore } from '../../stores/useUserStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { usersEndpoint } from '../../consts/api'
 import { type User } from '../../stores/useUserStore'
+import Output from '../setup/fourth-step/Output'
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
@@ -126,13 +127,14 @@ export default function SearchUserBar() {
 					setQuery(text)
 					text.length > 0 && debouncedFetchUsers(text)
 				}}
-				placeholder="Search users"
+				placeholder={"Search users"}
 				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
 				onClearIconPress={() => setUsers([])}
 				selectionColor={'#006994'}
+				readOnly={selectedUsers.length > 1}
 			/>
 			{error && 
-			<View style={styles.errorContainer}>
+			<View style={{ ...styles.errorContainer, top: selectedUsers.length < 1 ? 5 : 55 }}>
 				<Icon size={18} source='magnify-close' />
 				<Text style={styles.errorText}>{error}</Text>
 			</View>
@@ -145,14 +147,7 @@ export default function SearchUserBar() {
 					</TouchableOpacity>
 				))}
 			</View>
-			<View style={styles.outputContainer}>
-				{selectedUsers.map((user) => (
-					<View key={user._id} style={styles.output}>
-						<Text>{user.username}</Text>
-						<IconButton style={styles.icon} size={18} icon="close" onPress={() => handleRemoveUser(user)} accessibilityLabel={`Remove ${user.username}`} />
-					</View>
-				))}
-			</View>
+			<Output selectedUsers={selectedUsers} handleRemoveUser={handleRemoveUser} />
 		</>
 	)
 }
@@ -172,12 +167,12 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
-		top: 15,
+		top: 5,
 		marginLeft: 25,
 	},
 	errorText: {
 		marginLeft: 10,
-		fontSize: 18
+		fontSize: 16
 	},
 	resultsContainer: {
 		position: 'absolute',
@@ -202,26 +197,4 @@ const styles = StyleSheet.create({
 		height: 35,
 		borderRadius: 25,
 	},
-	outputContainer: {
-		display: 'flex',
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		marginTop: 7,
-	},
-	output: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		margin: 10,
-		paddingHorizontal: 10,
-		backgroundColor: '#f0f0f0',
-		borderWidth: 0.5,
-		height: 30,
-		borderRadius: 50
-	},
-	icon: {
-		height: 20,
-		width: 20,
-		marginRight: 0
-	}
 })

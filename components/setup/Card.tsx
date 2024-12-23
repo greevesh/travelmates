@@ -7,7 +7,7 @@ import StepTracker from './StepTracker'
 import BaseTitle from '../base/Title'
 import SecondStep from './second-step/SecondStep'
 import ThirdStep from './third-step/ThirdStep'
-import FourthStep from './FourthStep'
+import FourthStep from './fourth-step/FourthStep'
 
 interface ITitleProps {
     text: string
@@ -24,7 +24,7 @@ export default function SetupCard() {
 	const [step, setStep] = useState(1)
 
 	useEffect(() => {
-		step === 1 ? setTitle('Profile Photo') : step === 2 ? setTitle('Location') : step === 3 ? setTitle('Dates') : setTitle('Friends')
+		step === 1 ? setTitle('Profile Photo') : step === 2 ? setTitle('Location') : step === 3 ? setTitle('Dates') : setTitle('Add two friends')
 	}, [step])
 
 	return (
