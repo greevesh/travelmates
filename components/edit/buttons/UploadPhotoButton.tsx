@@ -31,9 +31,16 @@ export default function UploadPhotoButton() {
 					<ChooseFileButton />
 				</View>
 			</Modal>
-			<Button onPress={handleClick} style={styles.btn} icon="upload" labelStyle={{ color: '#0056B3' }}><Text style={{ color: '#0056B3' }}>
-				{uploaded ? <Text>Edit</Text> : <Text>Upload</Text>}</Text>
-			</Button>
+			{
+				uploaded ? 
+				<Button onPress={handleClick} style={[styles.btn, { backgroundColor: '#0056B3' }]} icon="upload" labelStyle={{ color: '#fff' }}>
+					<Text style={{ color: 'fff' }}>Edit</Text>
+				</Button>
+				: 
+				<Button onPress={handleClick} style={styles.btn} icon="upload" labelStyle={{ color: '#0056B3' }}>
+					<Text style={{ color: '#0056B3' }}>Upload</Text>
+				</Button>
+			}
 		</>
 	)
 }
@@ -50,6 +57,5 @@ const styles = StyleSheet.create({
 		borderColor: '#0056B3',
 		borderWidth: 1.5,
 		width: '65%',
-		backgroundColor: '#fff'
 	},
 })
