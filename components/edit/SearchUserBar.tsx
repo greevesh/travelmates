@@ -56,7 +56,6 @@ export default function SearchUserBar() {
 				},
 			})
 			const data = await res.json()
-			data.length === 0 && setError(`No results found for ${query}.`)
 			const filteredData = data.filter((user: { _id: number }) => !selectedUsers.some((selectedUser) => selectedUser._id === user._id))
 			setUsers(filteredData)
 		} catch (error) {
@@ -107,8 +106,14 @@ export default function SearchUserBar() {
 	}, [query, loading])
 
 	useEffect(() => {
-		console.log('friendships: ', friendships)
-	}, [selectedUsers, friendships])
+		const timeoutId = setTimeout(() => {
+			if (!users.length && query && !loading) {
+				setError(`No results found for ${query}.`)
+			}
+		}, 300)
+
+		return () => clearTimeout(timeoutId)
+	}, [users, query, loading])
 
 	return (
 		<>
