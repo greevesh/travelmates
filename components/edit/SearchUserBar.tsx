@@ -110,7 +110,7 @@ export default function SearchUserBar() {
 			if (!users.length && query && !loading) {
 				setError(`No results found for ${query}.`)
 			}
-		}, 300)
+		}, 500)
 
 		return () => clearTimeout(timeoutId)
 	}, [users, query, loading])
