@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { Card } from 'react-native-paper'
 
-import SearchUserBar from '../edit/SearchUserBar'
+import SearchUserBar from '../../edit/SearchUserBar'
 
 export default function FourthStep() {
 	return (
