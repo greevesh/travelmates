@@ -138,8 +138,8 @@ export default function SearchUserBar() {
 			</View>
 			}
 			<View style={styles.resultsContainer}>
-				{users.slice(0, 5).map((user) => (
-					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={styles.resultItem} accessibilityLabel={`Select ${user.username}`}>
+				{users.slice(0, 5).map((user, index) => (
+					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === 4 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
 						<Image source={require('../../assets/img/travel-mates.jpg')} style={styles.img} />
 						<Text>{user.username}</Text>
 					</TouchableOpacity>
@@ -182,10 +182,11 @@ const styles = StyleSheet.create({
 	resultsContainer: {
 		position: 'absolute',
 		top: 50,
-		width: 280,
+		width: 345,
 		marginTop: 10,
-		backgroundColor: '#fff',
-		borderColor: '#ccc',
+		backgroundColor: '#f9f9f9',
+		borderColor: '#f9f9f9',
+		borderRadius: 8,
 		zIndex: 1000
 	},
 	resultItem: {
