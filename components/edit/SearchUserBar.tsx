@@ -13,7 +13,7 @@ export default function SearchUserBar() {
 	const [users, setUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
 	const [error, setError] = useState<string | null>(null)
-	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkdyZWV2ZXNsIiwiaWF0IjoxNzMyOTIwNDEyLCJleHAiOjE3MzMwMDY4MTJ9.9H-U_JUzRy3T_yxpIL8z3xIlLcnHmIcVWzO-ut3xItY")
+	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzUxNjk4MTAsImV4cCI6MTczNTI1NjIxMH0.zsGhso4iAqGZMMuTr0ZqShxfAFFQufwr0IRqmZ36U8g")
 
 	const { selectedUsers, setSelectedUsers, removeSelectedUser } = useUserStore((state) => ({
 		selectedUsers: state.selectedUsers,
@@ -39,7 +39,7 @@ export default function SearchUserBar() {
 	}
 
 	const user = { 
-		username: 'Greevesl', 
+		username: 'greevesh', 
 		password: 'Burgcoffee5!',
 		pic: 'https://via.placeholder.com/157.jpg', 
 		refreshToken: refreshToken 
@@ -142,8 +142,8 @@ export default function SearchUserBar() {
 			<View style={styles.resultsContainer}>
 				{users.slice(0, 5).map((user, index) => (
 					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === 4 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
-						<Image source={require('../../assets/img/travel-mates.jpg')} style={styles.img} />
-						<Text>{user.username}</Text>
+						<Image src={user?.pic} source={require('../../assets/img/placeholder-profile-2.png')} style={styles.img} />
+						<Text style={{ marginLeft: 10, fontWeight: '500' }}>{user.username}</Text>
 					</TouchableOpacity>
 				))}
 			</View>
