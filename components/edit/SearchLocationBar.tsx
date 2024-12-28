@@ -81,7 +81,7 @@ export default function SearchLocationBar() {
 				{places.map(({ place_id, description }, index) => (
 					<TouchableOpacity onPress={() => handleLocationChange(description)} 
 						key={place_id} 
-						style={{ ...styles.resultItem, borderBottomWidth: index === 4 ? 0 : 1 }}>
+						style={{ ...styles.resultItem, borderBottomWidth: index === places.length - 1 ? 0 : 1 }}>
 						<Text>{getFlag(description)}</Text>
 						<Text>{description}</Text>
 					</TouchableOpacity>

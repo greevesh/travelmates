@@ -141,7 +141,7 @@ export default function SearchUserBar() {
 			}
 			<View style={styles.resultsContainer}>
 				{users.slice(0, 5).map((user, index) => (
-					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === 4 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
+					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === users.length - 1 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
 							<View style={styles.skeletonLoader} />
 							<Image 
 								src={user.pic} 
