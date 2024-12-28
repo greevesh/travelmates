@@ -13,7 +13,7 @@ export default function SearchUserBar() {
 	const [users, setUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
 	const [error, setError] = useState<string | null>(null)
-	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzUxNjk4MTAsImV4cCI6MTczNTI1NjIxMH0.zsGhso4iAqGZMMuTr0ZqShxfAFFQufwr0IRqmZ36U8g")
+	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzUyNjQ4NTEsImV4cCI6MTczNTM1MTI1MX0.wcwJf6kRqy0rQxw-4mfVfUhHq8ISTQU8tedWjoqMZPw")
 
 	const { selectedUsers, setSelectedUsers, removeSelectedUser } = useUserStore((state) => ({
 		selectedUsers: state.selectedUsers,
@@ -142,7 +142,12 @@ export default function SearchUserBar() {
 			<View style={styles.resultsContainer}>
 				{users.slice(0, 5).map((user, index) => (
 					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === 4 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
-						<Image src={user?.pic} source={require('../../assets/img/placeholder-profile-2.png')} style={styles.img} />
+							<View style={styles.skeletonLoader} />
+							<Image 
+								src={user.pic} 
+								source={require('../../assets/img/placeholder-profile2.webp')} 
+								style={styles.img} 
+							/>
 						<Text style={{ marginLeft: 10, fontWeight: '500' }}>{user.username}</Text>
 					</TouchableOpacity>
 				))}
@@ -191,6 +196,14 @@ const styles = StyleSheet.create({
 		padding: 10,
 		borderColor: '#ccc',
 		borderBottomWidth: 1,
+	},
+	skeletonLoader: {
+		position: 'absolute',
+		left: 10,
+		width: 35,
+		height: 35,
+		borderRadius: 25,
+		backgroundColor: '#e0e0e0',
 	},
 	img: {
 		width: 35,
