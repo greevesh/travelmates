@@ -13,7 +13,7 @@ export default function SearchUserBar() {
 	const [users, setUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
 	const [error, setError] = useState<string | null>(null)
-	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzUyNjQ4NTEsImV4cCI6MTczNTM1MTI1MX0.wcwJf6kRqy0rQxw-4mfVfUhHq8ISTQU8tedWjoqMZPw")
+	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzU0MjczNTAsImV4cCI6MTczNTUxMzc1MH0.i3ov2SmFnGObDpVTwxAdTYnBQE4l6sXCWQ-Y_Ve-Ins")
 
 	const { selectedUsers, setSelectedUsers, removeSelectedUser } = useUserStore((state) => ({
 		selectedUsers: state.selectedUsers,
@@ -108,7 +108,7 @@ export default function SearchUserBar() {
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
-			if (!users.length && query && !loading) {
+			if (!users.length && query && !loading && !error) {
 				setError(`No results found for ${query}.`)
 			}
 		}, 500)
