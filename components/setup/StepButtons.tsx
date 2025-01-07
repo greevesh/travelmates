@@ -6,10 +6,13 @@ import axios from 'axios'
 
 import NextButton from './buttons/NextButton'
 import PreviousButton from './buttons/PreviousButton'
-import { setupEndpoint } from '../../consts/api'
+import { s3ProfilePicsEndpoint, setupEndpoint } from '../../consts/api'
 import { useTripStore } from '../../stores/useTripStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
+import { useState } from 'react'
+import uploadImage from '@/utils/uploadImage'
+import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
 
 interface IStepButtonsProps {
     step: number
@@ -18,6 +21,10 @@ interface IStepButtonsProps {
 }
 
 export default function StepButtons({ step, increment, decrement }: IStepButtonsProps) {
+	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzU0MjczNTAsImV4cCI6MTczNTUxMzc1MH0.i3ov2SmFnGObDpVTwxAdTYnBQE4l6sXCWQ-Y_Ve-Ins")
+
+	const photo = useProfilePhotoStore((state) => state.photo)
+	
 	const { location, startDate, endDate } = useTripStore((state) => ({
 		location: state.location,
 		startDate: state.startDate,
@@ -34,18 +41,11 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 	}))
 
 	const user = { 
-		username: 'Greevesl', 
-	  	password: 'Burgcoffee5!',
-	  	pic: 'https://via.placeholder.com/157.jpg', 
-	  	refreshToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkdyZWV2ZXNsIiwiaWF0IjoxNzMyOTIwNDEyLCJleHAiOjE3MzMwMDY4MTJ9.9H-U_JUzRy3T_yxpIL8z3xIlLcnHmIcVWzO-ut3xItY' 
+		username: 'greevesh', 
+		password: 'Burgcoffee5!',
+		pic: s3ProfilePicsEndpoint + photo.split('/').pop(), 
+		refreshToken: refreshToken 
 	}
-
-	// const trip = {
-	// 	startDate: startDate,
-	// 	endDate: endDate,
-	// 	location: location,
-	// 	userId: 555
-	// }
 
 	const trip = { startDate, endDate, location, userId: 555 }
 
@@ -59,6 +59,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 					}
 				}
 			)
+			await uploadImage(photo)
 			clearSelectedUsers()
 			clearFriendships()
 			console.log('data: ', res.data)
