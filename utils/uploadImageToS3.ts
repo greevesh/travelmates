@@ -10,7 +10,7 @@ const s3Client = new S3Client({
   },
 })
 
-const uploadImage = async (fileUri: string) => {
+const uploadImageToS3 = async (fileUri: string) => {
   try {
     const response = await fetch(fileUri)
     const fileBlob = await response.blob()
@@ -31,4 +31,4 @@ const uploadImage = async (fileUri: string) => {
   }
 }
 
-export default uploadImage
+export default uploadImageToS3

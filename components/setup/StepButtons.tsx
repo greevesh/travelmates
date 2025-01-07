@@ -11,7 +11,7 @@ import { useTripStore } from '../../stores/useTripStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
 import { useState } from 'react'
-import uploadImage from '@/utils/uploadImage'
+import uploadImage from '@/utils/uploadImageToS3'
 import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
 
 interface IStepButtonsProps {
