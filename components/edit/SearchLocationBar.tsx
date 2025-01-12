@@ -68,7 +68,7 @@ export default function SearchLocationBar() {
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
 				style={styles.searchbar}
-				value={query.length > 27 ? shortenPlaceName(query) : query}
+				value={query.length > 28 ? shortenPlaceName(query) : query}
 				onChangeText={(text) => {
 					setQuery(text)
 					fetchPlaces(text)
