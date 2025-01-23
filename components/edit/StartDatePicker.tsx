@@ -22,7 +22,6 @@ export default function StartDatePicker() {
 				onChange={handleStartDateChange}
 				minimumDate={new Date()}
 				maximumDate={endDate}
-				key={startDate?.toISOString()}
 			/>
 		</>
 	)

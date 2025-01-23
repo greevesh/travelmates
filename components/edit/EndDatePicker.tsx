@@ -21,7 +21,6 @@ export default function EndDatePicker() {
 				display="default"
 				onChange={handleEndDateChange}
 				minimumDate={startDate ?? new Date()}
-				key={endDate?.toISOString()}
 			/>
 		</>
 	)
