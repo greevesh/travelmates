@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Alert } from 'react-native'
 // import * as SecureStore from 'expo-secure-store'
 import { Button } from 'react-native-paper'
 import axios from 'axios'
@@ -66,7 +66,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 			return res.data
 		}
 		catch (err) {
-			console.error('Error posting data: ', err)
+			Alert.alert('Something went wrong.', 'Please check your internet connection and try again')
 			throw err
 		}
 	}
