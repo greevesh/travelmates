@@ -22,7 +22,7 @@ export default function Output() {
 const styles = StyleSheet.create({
 	container: {
 		width: '100%',
-		top: 50,
+		top: 35,
 		marginBottom: 20,
 		marginLeft: 25,
 	},
