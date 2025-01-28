@@ -12,7 +12,6 @@ interface IStepTrackerProps {
 
 export default function StepTracker({ step, setStep }: IStepTrackerProps) {
 	const [progress, setProgress] = useState(0.25)
-	// const roundedProgress = useMemo(() => Math.round(progress * 10) / 10, [progress])
 
 	useEffect(() => {
 		console.log(progress)
@@ -39,6 +38,7 @@ export default function StepTracker({ step, setStep }: IStepTrackerProps) {
 const styles = StyleSheet.create({
 	stepTracker: {
 		position: 'absolute',
+		top: 250,
 		left: 23,
 	}
 })

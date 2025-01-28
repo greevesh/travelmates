@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		height: 137,
+		marginTop: 25
 	},
 	subcontainer: {
 		display: 'flex',

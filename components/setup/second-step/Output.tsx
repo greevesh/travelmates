@@ -22,9 +22,9 @@ export default function Output() {
 const styles = StyleSheet.create({
 	container: {
 		width: '100%',
-		marginTop: 10,
+		top: 50,
 		marginBottom: 20,
-		marginLeft: 25
+		marginLeft: 25,
 	},
 	item: {
 		display: 'flex',
