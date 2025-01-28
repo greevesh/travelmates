@@ -14,6 +14,7 @@ export default function SearchLocationBar() {
 	const query = useTripStore((state) => state.locationQuery)
 	const setQuery = useTripStore((state) => state.setLocationQuery)
 	const setLocation = useTripStore((state) => state.setLocation)
+	const location = useTripStore((state) => state.location)
 
 	const fetchPlaces = async (input: string) => {
 		setLoading(true)
@@ -69,7 +70,7 @@ export default function SearchLocationBar() {
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
-			if (!places.length && query && !loading && !error) {
+			if (!places.length && query && !loading && !error && !location) {
 				setError(`No results found for ${query}.`)
 			}
 		}, 500)
