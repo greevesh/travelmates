@@ -134,7 +134,7 @@ export default function SearchUserBar() {
 				readOnly={selectedUsers.length > 1}
 			/>
 			{error && 
-			<View style={{ ...styles.errorContainer, top: selectedUsers.length < 1 ? 5 : 55 }}>
+			<View style={styles.errorContainer}>
 				<Icon size={18} source='magnify-close' />
 				<Text style={styles.errorText}>{error}</Text>
 			</View>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
-		top: 5,
+		top: 55,
 		marginLeft: 25,
 	},
 	errorText: {
