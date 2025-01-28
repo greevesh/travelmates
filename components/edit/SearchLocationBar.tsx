@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Searchbar } from 'react-native-paper'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { useTripStore } from '../../stores/useTripStore'
@@ -9,12 +9,14 @@ import flags, { FlagMap } from "../../flag-emojis"
 export default function SearchLocationBar() {
 	const [places, setPlaces] = useState<Array<{ place_id: string; description: string }>>([])
 	const [error, setError] = useState<string | null>(null)
+	const [loading, setLoading] = useState<boolean>(false)
 
 	const query = useTripStore((state) => state.locationQuery)
 	const setQuery = useTripStore((state) => state.setLocationQuery)
 	const setLocation = useTripStore((state) => state.setLocation)
 
 	const fetchPlaces = async (input: string) => {
+		setLoading(true)
 		const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY}&language=en&types=(cities)`
 		try {
 			const response = await fetch(url)
@@ -23,6 +25,9 @@ export default function SearchLocationBar() {
 			setError(null)
 		} catch (error) {
 			setError('Failed to fetch places. Please try again.')
+		}
+		finally {
+			setLoading(false)
 		}
 	}
 
@@ -62,6 +67,16 @@ export default function SearchLocationBar() {
 		return flag
 	}
 
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			if (!places.length && query && !loading && !error) {
+				setError(`No results found for ${query}.`)
+			}
+		}, 500)
+
+		return () => clearTimeout(timeoutId)
+	}, [places, query, loading])
+
 	return (
 		<>
 			<Searchbar
@@ -76,8 +91,14 @@ export default function SearchLocationBar() {
 				placeholder="Search location"
 				onClearIconPress={() => setLocation(undefined)}
 				selectionColor={'#006994'}
+				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
 			/>
-			{error && <Text style={styles.errorText}>{error}</Text>}
+			{error &&
+				<View style={styles.errorContainer}>
+					<Icon size={18} source='magnify-close' />
+					<Text style={styles.errorText}>{error}</Text>
+				</View>
+			}
 			<View style={styles.resultsContainer}>
 				{places.map(({ place_id, description }, index) => (
 					<TouchableOpacity onPress={() => handleLocationChange(description)} 
@@ -116,7 +137,17 @@ const styles = StyleSheet.create({
 		padding: 12,
 		borderColor: '#ccc',
 	},
+	errorContainer: {
+		position: 'absolute',
+		display: 'flex', 
+		flexDirection: 'row',
+		alignItems: 'center',
+		width: '100%',
+		top: 85,
+		left: 25,
+	},
 	errorText: {
-		marginTop: 10,
+		marginLeft: 10,
+		fontSize: 16
 	},
 })
