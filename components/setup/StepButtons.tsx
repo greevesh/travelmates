@@ -43,7 +43,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 	const user = { 
 		username: 'greevesh', 
 		password: 'Burgcoffee5!',
-		pic: s3ProfilePicsEndpoint + photo.split('/').pop(), 
+		...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
 		refreshToken: refreshToken 
 	}
 
@@ -59,7 +59,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 					}
 				}
 			)
-			await uploadImage(photo)
+			photo !== '' && await uploadImage(photo)
 			clearSelectedUsers()
 			clearFriendships()
 			console.log('data: ', res.data)
