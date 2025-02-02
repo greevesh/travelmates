@@ -14,10 +14,10 @@ export default function ChooseFileButton() {
 
 		if (!result.canceled) {
 			setPhoto(result.assets[0].uri)
+			setUploaded(true)
 		}
 
 		setVisible(false)
-		setUploaded(true)
 	}
 
 	return (
