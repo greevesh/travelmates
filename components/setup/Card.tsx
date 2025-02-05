@@ -24,7 +24,7 @@ export default function SetupCard() {
 	const [step, setStep] = useState(1)
 
 	useEffect(() => {
-		step === 1 ? setTitle('Profile Photo') : step === 2 ? setTitle('Travel Location') : step === 3 ? setTitle('Dates') : setTitle('Add two friends')
+		step === 1 ? setTitle('Profile Photo') : step === 2 ? setTitle('*Travel Location') : step === 3 ? setTitle('*Dates') : setTitle('Add two friends')
 	}, [step])
 
 	return (
