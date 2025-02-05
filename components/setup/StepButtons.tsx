@@ -70,7 +70,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 				Alert.alert('Please fill in all required fields (*).')
 			}
 			else {
-				Alert.alert('Something went wrong.', 'Please check your internet connection and try again')
+				Alert.alert('Something went wrong.', 'Please check your internet connection and try again.')
 			}
 			throw err
 		}
