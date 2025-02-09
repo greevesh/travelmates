@@ -1,19 +1,10 @@
-import { useNavigation } from '@react-navigation/native'
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet } from 'react-native'
 
-import { SignInScreenNavProp } from '../../../types'
+import { Link } from 'expo-router'
 
 export default function ForgotPassword() {
-	const navigation = useNavigation<SignInScreenNavProp>()
-
 	return (
-		<TouchableOpacity
-			onPress={() => navigation.navigate('Forgot Password')}
-		>
-			<Text style={styles.text}>
-				Forgot your password?
-			</Text>
-		</TouchableOpacity>
+		<Link href='/forgot-password' style={styles.text}>Forgot your password?</Link>
 	)
 }
 

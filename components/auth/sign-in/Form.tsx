@@ -6,11 +6,11 @@ import * as SecureStore from 'expo-secure-store'
 import Username from '../inputs/Username'
 import Password from '../inputs/password/Password'
 import Error from '../Error'
-import AuthScreenLink from '../AuthScreenLink'
 import SignInButton from './buttons/SignInButton'
 import { SignInFormFields, signInSchema } from '../sign-up/form/schema'
 import { authenticate, storeAuthTokens } from '../../../utils/auth'
 import { signInEndpoint } from '../../../consts/api'
+import { Link } from 'expo-router'
 
 export default function SignInForm() {
 	const {
@@ -44,7 +44,7 @@ export default function SignInForm() {
 			<Error msg={errors.username?.message} />
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
-			<AuthScreenLink text="Not a member?" />
+			<Link href='/signup'>Not a member?</Link>
 			<SignInButton onPress={handleSubmit(onSubmit)} />
 		</View>
 	)
