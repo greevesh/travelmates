@@ -3,8 +3,11 @@ import { Text } from 'react-native-paper'
 import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 
 import ProfilePhoto from './edit/ProfilePhoto'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 export default function Navbar() {
+	const isSignedIn = useAuthStore((state) => state.isSignedIn)
+
 	const [fontsLoaded] = useFonts({
 		Poppins_600SemiBold
 	})
@@ -21,7 +24,7 @@ export default function Navbar() {
 						<Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#fff' }}>TravelM@tes</Text>
 					</View>
 				</View>
-				<ProfilePhoto size={55} />
+				{isSignedIn && <ProfilePhoto size={55} />}
 			</View>
 		</View>
 	)
