@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -49,17 +49,23 @@ export default function SignUpForm() {
 	}
 
 	return (
-		<View>
+		<View style={styles.form}>
 			<Username control={control} />
 			<Error msg={errors.username?.message} />
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
 			<PasswordConfirmation control={control} />
 			<Error msg={errors.passwordConfirmation?.message} />
-			<Link href='/'>Already have an account?</Link>
+			<Link style={{ textAlign: 'center', marginTop: 15, color: '#006994' }} href='/'>Already have an account?</Link>
 			<SignUpButton onPress={handleSubmit(onSubmit)}>
 				{isLoading && <Text>Loading...</Text>}
 			</SignUpButton>
 		</View>
 	)
 }
+
+const styles = StyleSheet.create({
+	form: {
+		marginTop: 55
+	}
+})

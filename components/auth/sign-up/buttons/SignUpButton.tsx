@@ -1,4 +1,4 @@
-import { GestureResponderEvent } from 'react-native'
+import { GestureResponderEvent, StyleSheet } from 'react-native'
 import { ReactNode } from 'react'
 
 import BaseButton from '../../../base/Button'

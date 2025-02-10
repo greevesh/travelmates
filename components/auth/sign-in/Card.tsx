@@ -10,7 +10,7 @@ export default function SignInCard() {
 	return (
 		<Card style={{ width: '90%', backgroundColor: '#fff' }} mode="contained">
 			<Title text='Sign in' />
-			<Subtitle />
+			<Subtitle text='Welcome back!' />
 			<SignInForm />
 			<GoogleSignInButton />
 			<ForgotPassword />

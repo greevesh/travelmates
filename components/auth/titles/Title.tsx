@@ -1,13 +1,14 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextStyle } from 'react-native'
 
 import BaseTitle from '../../base/Title'
 
 interface ITitleProps {
-	text: string
+	text: string,
+	style?: TextStyle
 }
 
-export default function Title({ text }: ITitleProps) {
-	return <BaseTitle style={styles.title}>{text}</BaseTitle>
+export default function Title({ text, style }: ITitleProps) {
+	return <BaseTitle style={[styles.title, style]}>{text}</BaseTitle>
 }
 
 const styles = StyleSheet.create({

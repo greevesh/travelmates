@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native'
-import { useNavigationState } from '@react-navigation/native'
 
 import BaseTitle from '../../base/Title'
 
-export default function Subtitle() {
-	const screen = useNavigationState((state) => state.routes[state.index].name)
+interface ISubtitleProps {
+	text: string
+}
 
+export default function Subtitle({ text }: ISubtitleProps) {
 	return (
 		<BaseTitle style={styles.title}>
-			{screen === 'Sign Up' ? 'Become a Travel Mate today' : 'Welcome back'}
+			{text}
 		</BaseTitle>
 	)
 }
