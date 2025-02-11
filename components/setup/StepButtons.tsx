@@ -13,6 +13,7 @@ import { useUserStore } from '@/stores/useUserStore'
 import { useState } from 'react'
 import uploadImage from '@/utils/uploadImageToS3'
 import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
+import { router } from 'expo-router'
 
 interface IStepButtonsProps {
     step: number
@@ -63,6 +64,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 			clearSelectedUsers()
 			clearFriendships()
 			console.log('data: ', res.data)
+			router.push('/hub')
 			return res.data
 		}
 		catch (err) {
