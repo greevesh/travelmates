@@ -10,7 +10,7 @@ import SignInButton from './buttons/SignInButton'
 import { SignInFormFields, signInSchema } from '../sign-up/form/schema'
 import { authenticate, storeAuthTokens } from '../../../utils/auth'
 import { signInEndpoint } from '../../../consts/api'
-import { Link } from 'expo-router'
+import AuthLink from '../AuthLink'
 
 export default function SignInForm() {
 	const {
@@ -39,12 +39,12 @@ export default function SignInForm() {
 	}
 
 	return (
-		<View style={{ marginTop: 20 }}>
+		<View style={{ marginTop: 55 }}>
 			<Username control={control} />
 			<Error msg={errors.username?.message} />
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
-			<Link href='/signup'>Not a member?</Link>
+			<AuthLink path='./signup' text='Not a member?' />
 			<SignInButton onPress={handleSubmit(onSubmit)} />
 		</View>
 	)

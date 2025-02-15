@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -13,7 +13,7 @@ import Error from '../../Error'
 import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 import { useAuthStore } from '../../../../stores/useAuthStore'
-import { Link } from 'expo-router'
+import AuthLink from '@/components/auth/AuthLink'
 
 export default function SignUpForm() {
 	const {
@@ -49,23 +49,17 @@ export default function SignUpForm() {
 	}
 
 	return (
-		<View style={styles.form}>
+		<View style={{ marginTop: 55 }}>
 			<Username control={control} />
 			<Error msg={errors.username?.message} />
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
 			<PasswordConfirmation control={control} />
 			<Error msg={errors.passwordConfirmation?.message} />
-			<Link style={{ textAlign: 'center', marginTop: 15, color: '#006994' }} href='/'>Already have an account?</Link>
+			<AuthLink path='./' text='Already have an account?' />
 			<SignUpButton onPress={handleSubmit(onSubmit)}>
 				{isLoading && <Text>Loading...</Text>}
 			</SignUpButton>
 		</View>
 	)
 }
-
-const styles = StyleSheet.create({
-	form: {
-		marginTop: 55
-	}
-})
