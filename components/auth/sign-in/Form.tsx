@@ -11,6 +11,8 @@ import { SignInFormFields, signInSchema } from '../sign-up/form/schema'
 import { authenticate, storeAuthTokens } from '../../../utils/auth'
 import { signInEndpoint } from '../../../consts/api'
 import AuthLink from '../AuthLink'
+import Spinner from '@/components/base/Spinner'
+import { useState } from 'react'
 
 export default function SignInForm() {
 	const {
@@ -24,9 +26,11 @@ export default function SignInForm() {
 		},
 		resolver: zodResolver(signInSchema),
 	})
+	const [isLoading, setIsLoading] = useState(false)
 
 	const onSubmit = async (data: SignInFormFields) => {
 		try {
+			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signInEndpoint)
 			await SecureStore.setItemAsync('username', data.username)
 			storeAuthTokens(accessToken, refreshToken)
@@ -35,6 +39,9 @@ export default function SignInForm() {
 		} catch {
 			// error scenarios handled in authenticate()
 			return
+		}
+		finally {
+			setIsLoading(false)
 		}
 	}
 
@@ -45,7 +52,9 @@ export default function SignInForm() {
 			<Password control={control} />
 			<Error msg={errors.password?.message} />
 			<AuthLink path='./signup' text='Not a member?' />
-			<SignInButton onPress={handleSubmit(onSubmit)} />
+			<SignInButton onPress={handleSubmit(onSubmit)} >
+				{isLoading && <Spinner />}
+			</SignInButton>
 		</View>
 	)
 }

@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -14,6 +14,8 @@ import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 import { useAuthStore } from '../../../../stores/useAuthStore'
 import AuthLink from '@/components/auth/AuthLink'
+import { ActivityIndicator } from 'react-native-paper'
+import Spinner from '@/components/base/Spinner'
 
 export default function SignUpForm() {
 	const {
@@ -58,7 +60,7 @@ export default function SignUpForm() {
 			<Error msg={errors.passwordConfirmation?.message} />
 			<AuthLink path='./' text='Already have an account?' />
 			<SignUpButton onPress={handleSubmit(onSubmit)}>
-				{isLoading && <Text>Loading...</Text>}
+				{isLoading && <Spinner />}
 			</SignUpButton>
 		</View>
 	)
