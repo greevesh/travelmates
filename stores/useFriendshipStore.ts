@@ -3,7 +3,7 @@ import { create } from 'zustand'
 export interface Friendship {
     _id: number
     recipientId: number
-    senderId: number
+    senderId: Promise<any>
     status: string
 }
 

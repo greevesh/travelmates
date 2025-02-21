@@ -1,19 +1,20 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import * as SecureStore from 'expo-secure-store'
 
 import { useUserStore } from '../../stores/useUserStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { usersEndpoint } from '../../consts/api'
 import { type User } from '../../stores/useUserStore'
 import Output from '../setup/fourth-step/Output'
+import fetchCurrentUserId from '@/utils/fetchCurrentUser'
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
 	const [users, setUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
 	const [error, setError] = useState<string | null>(null)
-	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzU0MjczNTAsImV4cCI6MTczNTUxMzc1MH0.i3ov2SmFnGObDpVTwxAdTYnBQE4l6sXCWQ-Y_Ve-Ins")
 
 	const { selectedUsers, setSelectedUsers, removeSelectedUser } = useUserStore((state) => ({
 		selectedUsers: state.selectedUsers,
@@ -38,22 +39,17 @@ export default function SearchUserBar() {
 		}
 	}
 
-	const user = { 
-		username: 'greevesh', 
-		password: 'Burgcoffee5!',
-		pic: 'https://via.placeholder.com/157.jpg', 
-		refreshToken: refreshToken 
-	}
-
 	const fetchUsers = async (input: string) => {
 		try {
 			setLoading(true)
+			const username = await SecureStore.getItemAsync('username')
+			const refreshToken = await SecureStore.getItemAsync('refreshToken')
 			const res = await fetch(usersEndpoint + input, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': `Bearer ${refreshToken}`,
-					'X-Username': user.username
+					'X-Username': username || ''
 				},
 			})
 			const data = await res.json()
@@ -83,7 +79,7 @@ export default function SearchUserBar() {
 			{
 				_id: generateRandom9DigitNumber(),
 				recipientId: generateRandom9DigitNumber(),
-				senderId: generateRandom9DigitNumber(),
+				senderId: fetchCurrentUserId(),
 				status: 'pending'
 			}
 		)

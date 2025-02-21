@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { View, StyleSheet, Alert } from 'react-native'
-// import * as SecureStore from 'expo-secure-store'
+import * as SecureStore from 'expo-secure-store'
 import { Button } from 'react-native-paper'
 import axios from 'axios'
 
@@ -10,10 +10,10 @@ import { s3ProfilePicsEndpoint, setupEndpoint } from '../../consts/api'
 import { useTripStore } from '../../stores/useTripStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
-import { useState } from 'react'
 import uploadImage from '@/utils/uploadImageToS3'
 import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
 import { router } from 'expo-router'
+import fetchCurrentUserId from '@/utils/fetchCurrentUser'
 
 interface IStepButtonsProps {
     step: number
@@ -22,8 +22,6 @@ interface IStepButtonsProps {
 }
 
 export default function StepButtons({ step, increment, decrement }: IStepButtonsProps) {
-	const [refreshToken] = useState<string | null>("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MzU0MjczNTAsImV4cCI6MTczNTUxMzc1MH0.i3ov2SmFnGObDpVTwxAdTYnBQE4l6sXCWQ-Y_Ve-Ins")
-
 	const photo = useProfilePhotoStore((state) => state.photo)
 	
 	const { location, startDate, endDate } = useTripStore((state) => ({
@@ -41,18 +39,15 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 		clearFriendships: state.clearFriendships
 	}))
 
-	const user = { 
-		username: 'greevesh', 
-		password: 'Burgcoffee5!',
-		...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
-		refreshToken: refreshToken 
-	}
-
-	const trip = { startDate, endDate, location, userId: 555 }
-
 	const handlePostData = async () => {
-		console.log('user: ', user)
+		const userId = await fetchCurrentUserId()
+		const trip = { startDate, endDate, location, userId }
 		try {
+			const user = { 
+				username: await SecureStore.getItemAsync('username'), 
+				...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
+				refreshToken: await SecureStore.getItemAsync('refreshToken') 
+			}
 			const res = await axios.post(setupEndpoint, { user, trip, friendships },
 				{
 					headers: {
