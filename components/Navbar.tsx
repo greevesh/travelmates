@@ -2,11 +2,10 @@ import { StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 
-import ProfilePhoto from './edit/ProfilePhoto'
-import { useAuthStore } from '@/stores/useAuthStore'
+import { usePathname } from 'expo-router'
 
 export default function Navbar() {
-	const isSignedIn = useAuthStore((state) => state.isSignedIn)
+	const pathname = usePathname()
 
 	const [fontsLoaded] = useFonts({
 		Poppins_600SemiBold
@@ -21,10 +20,9 @@ export default function Navbar() {
 			<View style={styles.navbar}>
 				<View style={styles.logoContainer}>
 					<View style={styles.textContainer}>
-						<Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 20, color: '#fff' }}>TravelM@tes</Text>
+						<Text style={styles.text}>{pathname === '/settings' ? 'Settings' : 'TravelMates'}</Text>
 					</View>
 				</View>
-				{isSignedIn && <ProfilePhoto size={55} />}
 			</View>
 		</View>
 	)
@@ -56,5 +54,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'center',
 		marginLeft: 10
+	},
+	text: {
+		fontFamily: 'Poppins_600SemiBold', 
+		fontSize: 20, 
+		color: '#fff'
 	}
 })
