@@ -1,13 +1,12 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { View, StyleSheet, Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import * as SecureStore from 'expo-secure-store'
 import { Button } from 'react-native-paper'
 import axios from 'axios'
 
 import NextButton from './buttons/NextButton'
 import PreviousButton from './buttons/PreviousButton'
-import { s3ProfilePicsEndpoint, setupEndpoint, usersEndpoint } from '../../consts/api'
+import { s3ProfilePicsEndpoint, setupEndpoint } from '../../consts/api'
 import { useTripStore } from '../../stores/useTripStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
