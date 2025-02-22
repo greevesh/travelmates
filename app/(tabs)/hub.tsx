@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native";
-import Hub from "@/components/hub/Hub";
+import { View, StyleSheet } from "react-native"
+import Hub from "@/components/hub/Hub"
 
 export default function Page() {
     return (
