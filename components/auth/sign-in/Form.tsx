@@ -1,4 +1,4 @@
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as SecureStore from 'expo-secure-store'
