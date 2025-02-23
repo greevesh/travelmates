@@ -14,7 +14,6 @@ import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 import { useAuthStore } from '../../../../stores/useAuthStore'
 import AuthLink from '@/components/auth/AuthLink'
-import { ActivityIndicator } from 'react-native-paper'
 import Spinner from '@/components/base/Spinner'
 
 export default function SignUpForm() {
@@ -22,6 +21,7 @@ export default function SignUpForm() {
 		control,
 		handleSubmit,
 		formState: { errors },
+		reset
 	} = useForm<SignUpFormFields>({
 		defaultValues: {
 			username: '',
@@ -41,6 +41,7 @@ export default function SignUpForm() {
 			storeAuthTokens(accessToken, refreshToken)
 
 			useAuthStore.getState().setIsSignedIn(true)
+			reset()
 		} catch {
 			// error scenarios handled in authenticate()
 			return

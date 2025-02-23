@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native'
+import { StyleSheet, Animated } from 'react-native'
 import { useEffect, useRef } from 'react'
-import { Icon } from 'react-native-paper'
+import SignOutButton from '@/components/auth/SignOutButton'
 
 export default function Tab() {
   const slideAnim = useRef(new Animated.Value(1000)).current
@@ -15,12 +15,7 @@ export default function Tab() {
 
   return (
       <Animated.View style={[styles.container, { transform: [{ translateX: slideAnim }] }]}>
-        <TouchableOpacity style={styles.signOutBtn}>
-          <View style={styles.signOutBtnContainer}>
-            <Icon size={20} source="logout" color='#fff' />
-            <Text style={styles.signOutText}>Sign out</Text>
-          </View>
-        </TouchableOpacity>
+        <SignOutButton />
       </Animated.View>
   )
 }
@@ -33,23 +28,5 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     zIndex: 99
-  },
-  signOutBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 5,
-    margin: 15,
-  },
-  signOutBtnContainer: {
-    display: 'flex', 
-    flexDirection: 'row', 
-    alignItems: 'center'
-  },
-  signOutText: {
-    marginLeft: 5,
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: 500
   },
 })

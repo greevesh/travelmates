@@ -1,4 +1,4 @@
-import { Alert, View } from 'react-native'
+import { View } from 'react-native'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as SecureStore from 'expo-secure-store'
@@ -34,8 +34,7 @@ export default function SignInForm() {
 			const { accessToken, refreshToken } = await authenticate(data, signInEndpoint)
 			await SecureStore.setItemAsync('username', data.username)
 			storeAuthTokens(accessToken, refreshToken)
-
-			Alert.alert('User successfully signed in!')
+			console.log('data: ', data)
 		} catch {
 			// error scenarios handled in authenticate()
 			return

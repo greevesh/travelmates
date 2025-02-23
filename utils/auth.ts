@@ -14,7 +14,7 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 	try {
 		const { username, password } = data
 		const res = await axios.post(endpoint, { username, password })
-		router.push('/setup')
+		endpoint === signInEndpoint ? router.push('/hub') : router.push('/setup')
 		return res.data
 	} catch (err) {
 		if (err instanceof AxiosError && err.response) {
@@ -54,15 +54,8 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 	}
 }
 
-export const signOut = async () => {
+export const signOut = async (username: string | null, refreshToken: string | null) => {
 	try {
-		const username = await SecureStore.getItemAsync('username')
-		const refreshToken = await SecureStore.getItemAsync('refreshToken')
-
-		if (!refreshToken) {
-			throw new Error('No refresh token available to sign out')
-		}
-
 		const res = await axios.post(signOutEndpoint, { username, refreshToken })
 		console.log('res data: ', res.data)
 		return res.data

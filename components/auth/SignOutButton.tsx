@@ -1,23 +1,60 @@
 import * as SecureStore from 'expo-secure-store'
 
-import BaseButton from '../base/Button'
 import { useAuthStore } from '../../stores/useAuthStore'
 import { removeAuthTokens, signOut } from '../../utils/auth'
+import { TouchableOpacity, View, StyleSheet, Text, Alert } from 'react-native'
+import { Icon } from 'react-native-paper'
+import { router } from 'expo-router'
 
 export default function SignOutButton() {
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
 
 	const onSubmit = async () => {
-		await signOut()
+		const username = await SecureStore.getItemAsync('username')
 		const refreshToken = await SecureStore.getItemAsync('refreshToken')
 		const accessToken = await SecureStore.getItemAsync('accessToken')
-
-		if (refreshToken && accessToken) {
-			await removeAuthTokens()
+		try {
+			await signOut(username, refreshToken)
+			refreshToken && accessToken && await removeAuthTokens()
+			setIsSignedIn(false)
+			router.push('/')
 		}
-
-		setIsSignedIn(false)
+		catch (err) {
+			console.error('err: ', err)
+			if (!refreshToken) {
+				throw new Error('No refresh token available to sign out')
+			}
+			Alert.alert('There was a problem signing out.')
+		}
 	}
 
-	return <BaseButton onPress={onSubmit} text="Sign out" bgColor="#0047AB" />
+	return (
+		<TouchableOpacity onPress={onSubmit} style={styles.container}>
+          <View style={styles.btn}>
+            <Icon size={20} source="logout" color='#fff' />
+            <Text style={styles.text}>Sign out</Text>
+          </View>
+        </TouchableOpacity>
+	)
 }
+
+const styles = StyleSheet.create({
+	container: {
+	  flexDirection: 'row',
+	  alignItems: 'center',
+	  padding: 10,
+	  borderRadius: 5,
+	  margin: 15,
+	},
+	btn: {
+	  display: 'flex', 
+	  flexDirection: 'row', 
+	  alignItems: 'center'
+	},
+	text: {
+	  marginLeft: 5,
+	  fontSize: 20,
+	  color: '#fff',
+	  fontWeight: 500
+	},
+  })
