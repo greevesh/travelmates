@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 
 export interface Friendship {
-    _id: number
     recipientId: number
     senderId: Promise<any>
     status: string
@@ -24,6 +23,6 @@ export const useFriendshipStore = create<FriendshipsState>((set) => ({
   })),
   clearFriendships: () => set(() => ({
     friendships: []
-}))
+  }))
 }))
 

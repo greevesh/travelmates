@@ -66,20 +66,13 @@ export default function SearchUserBar() {
 
 	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [selectedUsers])
 
-	function generateRandom9DigitNumber(): number {
-		const min = 100000000
-		const max = 999999999
-		const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-		return randomNum
-	}
-
-	const handleUserSelect = (user: User) => {
+	const handleUserSelect = async (user: User) => {
 		setSelectedUsers(user)
+		const currentUserId = await fetchCurrentUserId()
 		addFriendship(
 			{
-				_id: generateRandom9DigitNumber(),
-				recipientId: generateRandom9DigitNumber(),
-				senderId: fetchCurrentUserId(),
+				recipientId: user._id,
+				senderId: currentUserId,
 				status: 'pending'
 			}
 		)
