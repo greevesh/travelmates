@@ -8,7 +8,7 @@ interface IAuthLinkProps {
 
 export default function AuthLink({ path, text }: IAuthLinkProps) {
     return (
-        <Link href={path} style={styles.link}>{text}</Link>
+        <Link push href={path} style={styles.link}>{text}</Link>
     )
 }
 
