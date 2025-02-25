@@ -6,6 +6,6 @@ interface INextButtonProps {
 
 export default function NextButton({ increment }: INextButtonProps) {
 	return (
-		<Button style={{ borderRadius: 7 }} buttonColor='#28A745' textColor='#fff' onPress={increment}>Next</Button>
+		<Button style={{ borderRadius: 7 }} buttonColor='#34b67a' textColor='#fff' onPress={increment}>Next</Button>
 	)
 }

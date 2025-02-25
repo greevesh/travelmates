@@ -14,6 +14,8 @@ import uploadImage from '@/utils/uploadImageToS3'
 import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
 import { router } from 'expo-router'
 import fetchCurrentUserId from '@/utils/fetchCurrentUser'
+import { useState } from 'react'
+import Spinner from '../base/Spinner'
 
 interface IStepButtonsProps {
     step: number
@@ -22,6 +24,7 @@ interface IStepButtonsProps {
 }
 
 export default function StepButtons({ step, increment, decrement }: IStepButtonsProps) {
+	const [loading, setLoading] = useState<boolean>(false)
 	const photo = useProfilePhotoStore((state) => state.photo)
 	
 	const { location, startDate, endDate } = useTripStore((state) => ({
@@ -40,6 +43,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 	}))
 
 	const handlePostData = async () => {
+		setLoading(true)
 		const userId = await fetchCurrentUserId()
 		const trip = { startDate, endDate, location, userId }
 		try {
@@ -79,7 +83,7 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 				{step > 1 && <PreviousButton decrement={decrement} />}
 				{step === 2 && <NextButton increment={increment} />}
 				{step === 3 && <NextButton increment={increment} />}
-				{step === 4 && <Button onPress={handlePostData} style={{ borderRadius: 7 }} buttonColor='#28A745' textColor='#fff'>Finish</Button>}
+				{step === 4 && <Button onPress={handlePostData} style={{ borderRadius: 7 }} buttonColor='#28A745' textColor='#fff'>{loading ? <Spinner /> : 'Finish'}</Button>}
 			</View>
 			{step === 1 && 
             <View style={styles.stepOneBtnContainer}>
