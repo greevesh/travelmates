@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
 		width: 290,
 		marginTop: 5,
 		marginBottom: 10,
-		marginLeft: 15,
-		color: 'red'
+		color: 'red',
 	}
 })
