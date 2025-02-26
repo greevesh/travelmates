@@ -20,7 +20,7 @@ export default function Navbar() {
 			<View style={styles.navbar}>
 				<View style={styles.logoContainer}>
 					<View style={styles.textContainer}>
-						<Text style={styles.text}>{pathname === '/settings' ? 'Settings' : 'TravelMates'}</Text>
+						<Text style={styles.text}>{pathname === '/settings' ? 'Settings' : 'TravelM@tes'}</Text>
 					</View>
 				</View>
 			</View>

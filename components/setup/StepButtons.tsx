@@ -25,13 +25,32 @@ interface IStepButtonsProps {
 
 export default function StepButtons({ step, increment, decrement }: IStepButtonsProps) {
 	const [loading, setLoading] = useState<boolean>(false)
-	const photo = useProfilePhotoStore((state) => state.photo)
+	const { setPhoto, photo, setUploaded } = useProfilePhotoStore((state) => ({
+		setPhoto: state.setPhoto,
+		photo: state.photo,
+		setUploaded: state.setUploaded
+	}))
 	
-	const { location, startDate, endDate } = useTripStore((state) => ({
+	const { setLocationQuery, setLocation, location, setStartDate, startDate, setEndDate, endDate } = useTripStore((state) => ({
+		setLocationQuery: state.setLocationQuery,
+		setLocation: state.setLocation,
 		location: state.location,
+		setStartDate: state.setStartDate,
 		startDate: state.startDate,
+		setEndDate: state.setEndDate,
 		endDate: state.endDate,
 	}))
+
+	const clearSetupForm = () => {
+		setPhoto('')
+		setUploaded(false)
+		setLocationQuery('')
+		setLocation('')
+		setStartDate(undefined)
+		setEndDate(undefined)
+		clearSelectedUsers()
+		clearFriendships()
+	}
 
 	const { clearSelectedUsers } = useUserStore((state) => ({
 		clearSelectedUsers: state.clearSelectedUsers
@@ -60,13 +79,13 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 				}
 			)
 			photo !== '' && await uploadImage(photo)
-			clearSelectedUsers()
-			clearFriendships()
+			clearSetupForm()
 			console.log('data: ', res.data)
 			router.push('/hub')
 			return res.data
 		}
 		catch (err) {
+			setLoading(false)
 			if (!trip.startDate || !trip.endDate || !trip.location) {
 				Alert.alert('Please fill in all required fields (*).')
 			}
@@ -74,6 +93,9 @@ export default function StepButtons({ step, increment, decrement }: IStepButtons
 				Alert.alert('Something went wrong.', 'Please check your internet connection and try again.')
 			}
 			throw err
+		}
+		finally {
+			setLoading(false)
 		}
 	}
 
