@@ -10,6 +10,7 @@ import { type User } from '../../stores/useUserStore'
 import Output from '../setup/fourth-step/Output'
 import fetchCurrentUserId from '@/utils/fetchCurrentUser'
 import React from 'react'
+import debounce from '@/utils/debounce'
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
@@ -28,17 +29,6 @@ export default function SearchUserBar() {
 		addFriendship: state.addFriendship,
 		setFriendships: state.setFriendships,
 	}))
-
-	const debounce = <T extends (...args: string[]) => void>(func: T, wait: number) => {
-		let timeoutId: ReturnType<typeof setTimeout> | null = null
-  
-		return (...args: Parameters<T>) => {
-			timeoutId !== null && clearTimeout(timeoutId)
-			timeoutId = setTimeout(() => {
-				func(...args)
-			}, wait)
-		}
-	}
 
 	const fetchUsers = async (input: string) => {
 		try {
