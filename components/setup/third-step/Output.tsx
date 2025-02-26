@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-paper'
 
 import { useTripStore } from '../../../stores/useTripStore'
+import React from 'react'
 
 export default function Output() {
 	const { startDate, endDate } = useTripStore((state) => ({

@@ -9,6 +9,7 @@ import { usersEndpoint } from '../../consts/api'
 import { type User } from '../../stores/useUserStore'
 import Output from '../setup/fourth-step/Output'
 import fetchCurrentUserId from '@/utils/fetchCurrentUser'
+import React from 'react'
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')

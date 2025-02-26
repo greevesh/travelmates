@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useTripStore } from '../../stores/useTripStore'
 
 import flags, { FlagMap } from "../../flag-emojis"
+import React from 'react'
 
 export default function SearchLocationBar() {
 	const [places, setPlaces] = useState<Array<{ place_id: string; description: string }>>([])

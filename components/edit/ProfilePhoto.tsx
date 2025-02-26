@@ -1,6 +1,7 @@
 import { View, Image } from 'react-native'
 
 import { useProfilePhotoStore } from '../../stores/useProfilePhotoStore'
+import React from 'react'
 
 interface IProfilePhotoProps {
     size: number

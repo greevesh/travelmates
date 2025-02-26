@@ -3,6 +3,7 @@ import StartDatePicker from '@/components/edit/StartDatePicker'
 import { StyleSheet, View } from 'react-native'
 import { Card } from 'react-native-paper'
 import Output from './Output'
+import React from 'react'
 
 export default function ThirdStep() {
 	return (

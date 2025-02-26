@@ -3,6 +3,7 @@ import { Card } from 'react-native-paper'
 
 import SearchLocationBar from '../../edit/SearchLocationBar'
 import Output from './Output'
+import React from 'react'
 
 export default function SecondStep() {
 	return (
