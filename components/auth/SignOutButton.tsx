@@ -1,7 +1,5 @@
-import * as SecureStore from 'expo-secure-store'
-
 import { useAuthStore } from '../../stores/useAuthStore'
-import { removeAuthTokens, signOut } from '../../utils/auth'
+import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/auth'
 import { TouchableOpacity, View, StyleSheet, Text, Alert } from 'react-native'
 import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
@@ -10,9 +8,7 @@ export default function SignOutButton() {
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
 
 	const onSubmit = async () => {
-		const username = await SecureStore.getItemAsync('username')
-		const refreshToken = await SecureStore.getItemAsync('refreshToken')
-		const accessToken = await SecureStore.getItemAsync('accessToken')
+		const {username, refreshToken, accessToken} = await fetchUserCredentials()
 		try {
 			await signOut(username, refreshToken)
 			refreshToken && accessToken && await removeAuthTokens()

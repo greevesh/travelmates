@@ -1,6 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { Alert, View, StyleSheet } from 'react-native'
-import * as SecureStore from 'expo-secure-store'
 import { Button } from 'react-native-paper'
 import axios from 'axios'
 
@@ -14,6 +13,7 @@ import { router } from 'expo-router'
 import fetchCurrentUserId from '@/utils/fetchCurrentUser'
 import { useState } from 'react'
 import Spinner from '@/components/base/Spinner'
+import { fetchUserCredentials } from '@/utils/auth'
 
 export default function FinishButton() {
 	const [loading, setLoading] = useState<boolean>(false)
@@ -55,13 +55,14 @@ export default function FinishButton() {
 
 	const handlePostData = async () => {
 		setLoading(true)
+        const { username, refreshToken } = await fetchUserCredentials()
 		const userId = await fetchCurrentUserId()
 		const trip = { startDate, endDate, location, userId }
 		try {
 			const user = { 
-				username: await SecureStore.getItemAsync('username'), 
+				username, 
 				...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
-				refreshToken: await SecureStore.getItemAsync('refreshToken') 
+				refreshToken 
 			}
 			const res = await axios.post(setupEndpoint, { user, trip, friendships },
 				{

@@ -67,6 +67,21 @@ export const signOut = async (username: string | null, refreshToken: string | nu
 	}
 }
 
+export const fetchUserCredentials = async () => {
+	try {
+		const username = await SecureStore.getItemAsync('username')
+		const refreshToken = await SecureStore.getItemAsync('refreshToken')
+		const accessToken = await SecureStore.getItemAsync('accessToken')
+		return {
+			username, refreshToken, accessToken
+		}
+	}
+	catch (err) {
+		console.error('Error fetching user credentials: ', err)
+		throw err
+	}
+}
+
 export const removeAuthTokens = async () => {
 	try {
 		await SecureStore.deleteItemAsync('accessToken')
