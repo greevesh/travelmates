@@ -25,4 +25,3 @@ export const useFriendshipStore = create<FriendshipsState>((set) => ({
     friendships: []
   }))
 }))
-
