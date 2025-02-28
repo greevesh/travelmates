@@ -15,6 +15,7 @@ import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
 import { useAuthStore } from '../../../../stores/useAuthStore'
 import AuthLink from '@/components/auth/AuthLink'
 import Spinner from '@/components/base/Spinner'
+import { router } from 'expo-router'
 
 export default function SignUpForm() {
 	const {
@@ -42,6 +43,7 @@ export default function SignUpForm() {
 
 			useAuthStore.getState().setIsSignedIn(true)
 			reset()
+			router.push('/setup')
 		} catch {
 			// error scenarios handled in authenticate()
 			return

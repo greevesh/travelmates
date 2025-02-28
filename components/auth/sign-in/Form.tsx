@@ -13,6 +13,7 @@ import { signInEndpoint } from '../../../consts/api'
 import AuthLink from '../AuthLink'
 import Spinner from '@/components/base/Spinner'
 import { useState } from 'react'
+import { router } from 'expo-router'
 
 export default function SignInForm() {
 	const {
@@ -33,8 +34,8 @@ export default function SignInForm() {
 			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signInEndpoint)
 			await SecureStore.setItemAsync('username', data.username)
-			storeAuthTokens(accessToken, refreshToken)
-			console.log('data: ', data)
+			await storeAuthTokens(accessToken, refreshToken)
+			router.push('/hub')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
