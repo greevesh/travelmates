@@ -21,8 +21,8 @@ export default function SearchLocationBar() {
 		setLoading(true)
 		const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY}&language=en&types=(cities)`
 		try {
-			const response = await fetch(url)
-			const data = await response.json()
+			const res = await fetch(url)
+			const data = await res.json()
 			setPlaces(data.predictions)
 			setError(null)
 		} catch (error) {
