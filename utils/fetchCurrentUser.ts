@@ -2,7 +2,7 @@ import { usersEndpoint } from "@/consts/api"
 import axios from 'axios'
 import { fetchUserCredentials } from "./auth"
 
-export default async function fetchCurrentUserId() {
+export default async function fetchCurrentUser() {
     try {
         const { username, refreshToken } = await fetchUserCredentials()
         const res = await axios.get(usersEndpoint + username, {
@@ -13,10 +13,10 @@ export default async function fetchCurrentUserId() {
                 'X-Username': username || ''
             },
     })
-        return res.data[0]._id
+        return res.data[0]
     }
     catch(err) {
-        console.error('Error: Failed to fetch the current user id: ', err)
+        console.error('Error: Failed to fetch the current user: ', err)
         throw err
     }
 }
