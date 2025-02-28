@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import * as SecureStore from 'expo-secure-store'
 
 import { useUserStore } from '../../stores/useUserStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
@@ -47,7 +46,7 @@ export default function SearchUserBar() {
 			const filteredData = data.filter((user: { _id: number }) => !selectedUsers.some((selectedUser) => selectedUser._id === user._id))
 			setUsers(filteredData)
 		} catch (error) {
-			console.log('err', error)
+			console.error('Error: Failed to fetch users: ', error)
 			setError('Failed to fetch users. Please try again.')
 		}
 		finally {

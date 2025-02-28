@@ -16,7 +16,7 @@ export default function SignOutButton() {
 			router.push('/')
 		}
 		catch (err) {
-			console.error('err: ', err)
+			console.error('Error: There was a problem signing out: ', err)
 			if (!refreshToken) {
 				throw new Error('No refresh token available to sign out')
 			}
