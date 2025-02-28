@@ -1,6 +1,7 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 
 import { useTripStore } from '../../stores/useTripStore'
+import React from 'react'
 
 export default function EndDatePicker() {
 	const { startDate, endDate, setEndDate } = useTripStore((state) => ({

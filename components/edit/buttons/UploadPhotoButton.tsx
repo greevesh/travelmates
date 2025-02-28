@@ -4,6 +4,7 @@ import { Button, Icon } from 'react-native-paper'
 import ChooseFileButton from './ChooseFileButton'
 import { useProfilePhotoStore } from '../../../stores/useProfilePhotoStore'
 import { useFileUploadModalStore } from '../../../stores/useFileUploadModalStore'
+import React from 'react'
 
 export default function UploadPhotoButton() {
 	const { modalVisible, setModalVisible } = useFileUploadModalStore((state) => ({

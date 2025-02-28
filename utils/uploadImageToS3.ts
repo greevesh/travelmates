@@ -12,8 +12,8 @@ const s3Client = new S3Client({
 
 const uploadImageToS3 = async (fileUri: string) => {
   try {
-    const response = await fetch(fileUri)
-    const fileBlob = await response.blob()
+    const res = await fetch(fileUri)
+    const fileBlob = await res.blob()
 
     const params = {
       Bucket: 'travelmates-profile-pics',
@@ -25,9 +25,9 @@ const uploadImageToS3 = async (fileUri: string) => {
     const command = new PutObjectCommand(params)
     const data = await s3Client.send(command)
 
-    console.log('Success: ', data)
+    console.log('Success uploading image to s3 bucket: ', data)
   } catch (err) {
-    console.error('Error uploading file:', err)
+    console.error('Error: Failed to upload file:', err)
   }
 }
 

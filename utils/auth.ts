@@ -57,13 +57,28 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 export const signOut = async (username: string | null, refreshToken: string | null) => {
 	try {
 		const res = await axios.post(signOutEndpoint, { username, refreshToken })
-		console.log('res data: ', res.data)
+		console.log('sign out res data: ', res.data)
 		return res.data
 	}
 	catch (err) {
 		if (err instanceof AxiosError) {
-			console.error('Error in signOut:', err.response ? err.response.data : err.message)
+			console.error('Error: Sign out failed: ', err.response ? err.response.data : err.message)
 		}
+	}
+}
+
+export const fetchUserCredentials = async () => {
+	try {
+		const username = await SecureStore.getItemAsync('username')
+		const refreshToken = await SecureStore.getItemAsync('refreshToken')
+		const accessToken = await SecureStore.getItemAsync('accessToken')
+		return {
+			username, refreshToken, accessToken
+		}
+	}
+	catch (err) {
+		console.error('Error: Failed to fetch user credentials: ', err)
+		throw err
 	}
 }
 
@@ -74,7 +89,7 @@ export const removeAuthTokens = async () => {
 	}
 	catch (err) {
 		Alert.alert('There was an issue signing out')
-		console.log('err', err)
+		console.error('Error: Failed to remove tokens on sign out', err)
 		throw err
 	}
 }

@@ -3,6 +3,7 @@ import { Card } from 'react-native-paper'
 
 import ProfilePhoto from '../edit/ProfilePhoto'
 import EditPhotoButtons from '../edit/EditPhotoButtons'
+import React from 'react'
 
 export default function FirstStep() {
 	return (

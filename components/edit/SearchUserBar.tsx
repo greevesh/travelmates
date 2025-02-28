@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import * as SecureStore from 'expo-secure-store'
 
 import { useUserStore } from '../../stores/useUserStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
@@ -9,6 +8,9 @@ import { usersEndpoint } from '../../consts/api'
 import { type User } from '../../stores/useUserStore'
 import Output from '../setup/fourth-step/Output'
 import fetchCurrentUserId from '@/utils/fetchCurrentUser'
+import React from 'react'
+import debounce from '@/utils/debounce'
+import { fetchUserCredentials } from '@/utils/auth'
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
@@ -28,22 +30,10 @@ export default function SearchUserBar() {
 		setFriendships: state.setFriendships,
 	}))
 
-	const debounce = <T extends (...args: string[]) => void>(func: T, wait: number) => {
-		let timeoutId: ReturnType<typeof setTimeout> | null = null
-  
-		return (...args: Parameters<T>) => {
-			timeoutId !== null && clearTimeout(timeoutId)
-			timeoutId = setTimeout(() => {
-				func(...args)
-			}, wait)
-		}
-	}
-
 	const fetchUsers = async (input: string) => {
 		try {
 			setLoading(true)
-			const username = await SecureStore.getItemAsync('username')
-			const refreshToken = await SecureStore.getItemAsync('refreshToken')
+			const {username, refreshToken} = await fetchUserCredentials()
 			const res = await fetch(usersEndpoint + input, {
 				method: 'GET',
 				headers: {
@@ -56,7 +46,7 @@ export default function SearchUserBar() {
 			const filteredData = data.filter((user: { _id: number }) => !selectedUsers.some((selectedUser) => selectedUser._id === user._id))
 			setUsers(filteredData)
 		} catch (error) {
-			console.log('err', error)
+			console.error('Error: Failed to fetch users: ', error)
 			setError('Failed to fetch users. Please try again.')
 		}
 		finally {

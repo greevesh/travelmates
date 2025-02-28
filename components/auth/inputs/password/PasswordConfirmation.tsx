@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form'
 import useToggleSecureText from '../../../../hooks/useToggleSecureText'
 import Eye from './Eye'
 import { IInputProps } from '../types'
+import React from 'react'
 
 export default function PasswordConfirmation({ control }: IInputProps) {
 	const { secureText, setSecureText, icon } = useToggleSecureText(false)
