@@ -1,4 +1,5 @@
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
+import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
 import { View, Text } from "react-native"
 
 export default function Hub() {
@@ -7,7 +8,13 @@ export default function Hub() {
         console.log('current user: ', currentUser)
     }
 
+    const logCurrentUserTrip = async () => {
+        const currentUserTrip = await fetchCurrentUserTrip()
+        console.log('current user trip: ', currentUserTrip)
+    }
+
     logCurrentUser()
+    logCurrentUserTrip()
 
     return (
         <View>
