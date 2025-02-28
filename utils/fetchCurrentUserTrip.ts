@@ -13,7 +13,7 @@ export default async function fetchCurrentUserTrip() {
                 'X-Username': username || ''
             },
     })
-        return res.data
+        return res.data[0]
     }
     catch(err) {
         console.error('Error: Failed to fetch the current trip: ', err)
