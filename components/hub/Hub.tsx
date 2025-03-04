@@ -1,52 +1,15 @@
-import fetchCurrentUser from "@/utils/fetchCurrentUser"
-import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
-import { useEffect, useState } from "react"
-import { View, Text } from "react-native"
+import { useState } from "react"
+import { View } from "react-native"
+import Table from "./Table"
 
 export default function Hub() {
-    const [startDate, setStartDate] = useState<Date | null>(null)
-    const [endDate, setEndDate] = useState<Date | null>(null)
-    const [startDay, setStartDay] = useState<number | undefined>(undefined)
-    const [endDay, setEndDay] = useState<number | undefined>(undefined)
-
-    const logCurrentUser = async () => {
-        const currentUser = await fetchCurrentUser()
-        console.log('current user: ', currentUser)
-    }
-
-    const storeCurrentUserTrip = async () => {
-        try {
-            const currentUserTrip = await fetchCurrentUserTrip()
-            const startDate = new Date(currentUserTrip.startDate)
-            const endDate = new Date(currentUserTrip.endDate)
-            const startDay = startDate.getDate()
-            const endDay = endDate.getDate()
-            setStartDate(startDate)
-            setEndDate(endDate)
-            setStartDay(startDay)
-            setEndDay(endDay)
-        }
-        catch (err) {
-            console.error('Error storing current trip data: ', err)
-        }
-    }
-
-    useEffect(() => {
-        storeCurrentUserTrip()
-    }, [])
-
-    // logCurrentUser()
-
-    useEffect(() => {
-        console.log('start date: ', startDate)
-        console.log('end date: ', endDate)
-        console.log('start day: ', startDay)
-        console.log('end day: ', endDay)
-    }, [startDate, endDate, startDay, endDay])
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const [displayMonth, setDisplayMonth] = useState(monthNames[2])
+    const [displayYear, setDisplayYear] = useState(new Date().getFullYear())
 
     return (
         <View>
-            <Text>This is the hub page.</Text>
+            <Table />
         </View>
     )
 }
