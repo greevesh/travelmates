@@ -47,6 +47,16 @@ export default function Table() {
         }
     }
 
+    const decrementMonth = () => {
+        setMonth(month - 1)
+        setDisplayMonth(monthNames[month - 1])
+        if (month === 0) {
+            setMonth(11)
+            setDisplayMonth("December")
+            setDisplayYear(displayYear + - 1)
+        }
+    }
+
     useEffect(() => {
         loadDisplayDays()
         parseAndLogCurrentUserTrip()
@@ -71,7 +81,7 @@ export default function Table() {
             <View style={styles.belowTableContainer}>
                 <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', marginTop: -3 }}>
-                    <IconButton icon="chevron-left" />
+                    <IconButton onPress={decrementMonth} icon="chevron-left" />
                     <IconButton onPress={incrementMonth} icon="chevron-right" />
                 </View>
             </View>
