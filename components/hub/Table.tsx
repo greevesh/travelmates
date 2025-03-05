@@ -11,8 +11,6 @@ export default function Table() {
     const [displayYear, setDisplayYear] = useState(new Date().getFullYear())
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
-
-    const todaysDate = new Date().getDate()
     
     const parseAndLogCurrentUserTrip = async () => {
         try {
@@ -31,7 +29,14 @@ export default function Table() {
 
     const loadDisplayDays = () => {
         let days = []
-        for (let i = todaysDate; i < monthDaysLength + 1; i++) {
+        let startDay
+        if (month === new Date().getMonth() && displayYear === new Date().getFullYear()) {
+            startDay = new Date().getDate()
+        }
+        else {
+            startDay = 1
+        }
+        for (let i = startDay; i < monthDaysLength + 1; i++) {
             days.push(i)
         }
         setDisplayDays(days)
