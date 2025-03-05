@@ -64,6 +64,9 @@ export default function Table() {
         }
     }
 
+    const previousBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear()
+    const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
+
     useEffect(() => {
         parseAndLogCurrentUserTrip()
     }, [])
@@ -91,8 +94,8 @@ export default function Table() {
             <View style={styles.belowTableContainer}>
                 <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', marginTop: -3 }}>
-                    <IconButton onPress={decrementMonth} icon="chevron-left" />
-                    <IconButton onPress={incrementMonth} icon="chevron-right" />
+                    <IconButton disabled={previousBtnDisabled} onPress={decrementMonth} icon="chevron-left" />
+                    <IconButton disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
                 </View>
             </View>
         </>
