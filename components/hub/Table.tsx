@@ -6,8 +6,8 @@ import React from "react"
 
 export default function Table() {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    const [displayMonth, setDisplayMonth] = useState(monthNames[new Date().getMonth()])
     const [month, setMonth] = useState(new Date().getMonth())
+    const [displayMonth, setDisplayMonth] = useState(monthNames[month])
     const [displayYear, setDisplayYear] = useState(new Date().getFullYear())
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
@@ -37,6 +37,16 @@ export default function Table() {
         setDisplayDays(days)
     }
 
+    const incrementMonth = () => {
+        setMonth(month + 1)
+        setDisplayMonth(monthNames[month + 1])
+        if (month === 11) {
+            setMonth(0)
+            setDisplayMonth("January")
+            setDisplayYear(displayYear + 1)
+        }
+    }
+
     useEffect(() => {
         loadDisplayDays()
         parseAndLogCurrentUserTrip()
@@ -62,7 +72,7 @@ export default function Table() {
                 <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', marginTop: -3 }}>
                     <IconButton icon="chevron-left" />
-                    <IconButton icon="chevron-right" />
+                    <IconButton onPress={incrementMonth} icon="chevron-right" />
                 </View>
             </View>
         </>
