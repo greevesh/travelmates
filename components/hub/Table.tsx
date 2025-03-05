@@ -40,6 +40,7 @@ export default function Table() {
     const incrementMonth = () => {
         setMonth(month + 1)
         setDisplayMonth(monthNames[month + 1])
+        setMonthDaysLength(new Date(displayYear, month + 2, 0).getDate())
         if (month === 11) {
             setMonth(0)
             setDisplayMonth("January")
@@ -50,17 +51,21 @@ export default function Table() {
     const decrementMonth = () => {
         setMonth(month - 1)
         setDisplayMonth(monthNames[month - 1])
+        setMonthDaysLength(new Date(displayYear, month, 0).getDate())
         if (month === 0) {
             setMonth(11)
             setDisplayMonth("December")
-            setDisplayYear(displayYear + - 1)
+            setDisplayYear(displayYear - 1)
         }
     }
 
     useEffect(() => {
-        loadDisplayDays()
         parseAndLogCurrentUserTrip()
     }, [])
+
+    useEffect(() => {
+        loadDisplayDays()
+    }, [monthDaysLength])
 
     // logCurrentUser()
 
