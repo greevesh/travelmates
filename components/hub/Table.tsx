@@ -1,7 +1,7 @@
 import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
 import { useEffect, useState } from "react"
-import { DataTable } from 'react-native-paper'
-import { ScrollView, View, Text } from 'react-native'
+import { DataTable, IconButton } from 'react-native-paper'
+import { ScrollView, View, Text, StyleSheet } from 'react-native'
 import React from "react"
 
 export default function Table() {
@@ -58,7 +58,21 @@ export default function Table() {
                     </DataTable>
                 </ScrollView>
             </View>
-            <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
+            <View style={styles.belowTableContainer}>
+                <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', marginTop: -3 }}>
+                    <IconButton icon="chevron-left" />
+                    <IconButton icon="chevron-right" />
+                </View>
+            </View>
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    belowTableContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    }
+})
