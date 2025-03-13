@@ -3,16 +3,25 @@ import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/aut
 import { TouchableOpacity, View, StyleSheet, Text, Alert } from 'react-native'
 import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
+import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 
 export default function SignOutButton() {
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
+	const { setUploaded, setPhoto, setUsername } = useCurrentUserStore((state) => ({
+		setUploaded: state.setUploaded,
+		setPhoto: state.setPhoto,
+		setUsername: state.setUsername
+	}))
 
 	const onSubmit = async () => {
-		const {username, refreshToken, accessToken} = await fetchUserCredentials()
+		const { username, refreshToken, accessToken } = await fetchUserCredentials()
 		try {
 			await signOut(username, refreshToken)
 			refreshToken && accessToken && await removeAuthTokens()
 			setIsSignedIn(false)
+			setUploaded(false)
+			setPhoto('')
+			setUsername('')
 			router.push('/')
 		}
 		catch (err) {
@@ -54,3 +63,11 @@ const styles = StyleSheet.create({
 	  fontWeight: 500
 	},
   })
+
+function setUploaded(arg0: boolean) {
+	throw new Error('Function not implemented.')
+}
+function setPhoto(arg0: string) {
+	throw new Error('Function not implemented.')
+}
+

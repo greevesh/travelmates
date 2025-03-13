@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import { DataTable, IconButton } from 'react-native-paper'
 import { ScrollView, View, Text, StyleSheet } from 'react-native'
 import React from "react"
+import ProfilePhoto from "../edit/ProfilePhoto"
+import { useCurrentUserStore } from "@/stores/useProfilePhotoStore"
 
 export default function Table() {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -11,6 +13,8 @@ export default function Table() {
     const [displayYear, setDisplayYear] = useState(new Date().getFullYear())
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
+    
+    const username = useCurrentUserStore((state) => state.username)
     
     const parseAndLogCurrentUserTrip = async () => {
         try {
@@ -88,6 +92,10 @@ export default function Table() {
                                 <DataTable.Title key={day}>{day}</DataTable.Title>
                             ))}
                         </DataTable.Header>
+                        <View style={{ flexDirection: 'row', margin: 14 }}>
+                            <ProfilePhoto size={25} />
+                            <Text style={{ marginTop: 3, marginLeft: 7 }}>{username}</Text>
+                        </View>
                     </DataTable>
                 </ScrollView>
             </View>
