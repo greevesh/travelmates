@@ -8,7 +8,7 @@ import { useTripStore } from '@/stores/useTripStore'
 import { useFriendshipStore } from '@/stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
 import uploadImage from '@/utils/uploadImageToS3'
-import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 import { router } from 'expo-router'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { useState } from 'react'
@@ -17,7 +17,7 @@ import { fetchUserCredentials } from '@/utils/auth'
 
 export default function FinishButton() {
 	const [loading, setLoading] = useState<boolean>(false)
-	const { setPhoto, photo, setUploaded } = useProfilePhotoStore((state) => ({
+	const { setPhoto, photo, setUploaded } = useCurrentUserStore((state) => ({
 		setPhoto: state.setPhoto,
 		photo: state.photo,
 		setUploaded: state.setUploaded

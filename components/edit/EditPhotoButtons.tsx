@@ -2,11 +2,11 @@ import { StyleSheet, View } from 'react-native'
 
 import UploadPhotoButton from './buttons/UploadPhotoButton'
 import DeletePhotoButton from './buttons/DeletePhotoButton'
-import { useProfilePhotoStore } from '../../stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '../../stores/useProfilePhotoStore'
 import React from 'react'
 
 export default function EditPhotoButtons() {
-	const uploaded = useProfilePhotoStore((state) => state.uploaded)
+	const uploaded = useCurrentUserStore((state) => state.uploaded)
 
 	return (
 		<>
