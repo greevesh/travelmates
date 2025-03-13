@@ -63,11 +63,3 @@ const styles = StyleSheet.create({
 	  fontWeight: 500
 	},
   })
-
-function setUploaded(arg0: boolean) {
-	throw new Error('Function not implemented.')
-}
-function setPhoto(arg0: string) {
-	throw new Error('Function not implemented.')
-}
-
