@@ -6,6 +6,12 @@ import React from "react"
 import ProfilePhoto from "../edit/ProfilePhoto"
 import { useCurrentUserStore } from "@/stores/useProfilePhotoStore"
 
+interface Trip {
+    location: string
+    startDay: number | undefined
+    endDay: number | undefined
+}
+
 export default function Table() {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const [month, setMonth] = useState(new Date().getMonth())
@@ -13,6 +19,8 @@ export default function Table() {
     const [displayYear, setDisplayYear] = useState(new Date().getFullYear())
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
+
+    const [trip, setTrip] = useState<Trip>({ location: '', startDay: undefined, endDay: undefined })
     
     const username = useCurrentUserStore((state) => state.username)
     
@@ -24,6 +32,7 @@ export default function Table() {
             const endDate = new Date(currentUserTrip.endDate)
             const startDay = startDate.getDate()
             const endDay = endDate.getDate()
+            setTrip({ location, startDay, endDay })
             console.log('trip: ', { location, startDate, endDate, startDay, endDay })
         }
         catch (err) {
@@ -34,12 +43,12 @@ export default function Table() {
     const loadDisplayDays = () => {
         let days = []
         let startDay
-        if (month === new Date().getMonth() && displayYear === new Date().getFullYear()) {
-            startDay = new Date().getDate()
-        }
-        else {
+        // if (month === new Date().getMonth() && displayYear === new Date().getFullYear()) {
+        //     startDay = new Date().getDate()
+        // }
+        // else {
             startDay = 1
-        }
+        // }
         for (let i = startDay; i < monthDaysLength + 1; i++) {
             days.push(i)
         }
@@ -77,7 +86,8 @@ export default function Table() {
 
     useEffect(() => {
         loadDisplayDays()
-    }, [monthDaysLength])
+        console.log('trip: ', trip)
+    }, [monthDaysLength, trip])
 
     // logCurrentUser()
 
@@ -87,15 +97,32 @@ export default function Table() {
                 <ScrollView horizontal={true}>
                     <DataTable style={{ width: 1100 }}>
                         <DataTable.Header>
-                            <DataTable.Title style={{ flex: 3 }}>User</DataTable.Title>
+                            <DataTable.Title style={{ flex: 3.5  }}>User</DataTable.Title>
                             {displayDays && displayDays.map((day) => (
                                 <DataTable.Title key={day}>{day}</DataTable.Title>
                             ))}
                         </DataTable.Header>
-                        <View style={{ flexDirection: 'row', margin: 14 }}>
-                            <ProfilePhoto size={25} />
-                            <Text style={{ marginTop: 3, marginLeft: 7 }}>{username}</Text>
-                        </View>
+                        <DataTable.Row>
+                            <View style={{ flexDirection: 'row', marginTop: 14 }}>
+                                <ProfilePhoto size={25} />
+                                <Text style={{ marginTop: 3, marginLeft: 7 }}>{username}</Text>
+                            </View>
+                            {displayDays && displayDays.map((day) => (
+                                <React.Fragment key={day}>
+                                    {trip.startDay && day >= trip.startDay && trip.endDay && day <= trip.endDay + 1 ? (
+                                        <View style={{ backgroundColor: 'lightblue', width: 30 }}>
+                                            {trip.startDay === day && (
+                                                <Text style={{ backgroundColor: 'seagreen' }}>London, UK</Text>
+                                            )}
+                                        </View>
+                                    ) : (
+                                        <View style={{ width: 30 }}>
+                                            <Text></Text>
+                                        </View>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </DataTable.Row>
                     </DataTable>
                 </ScrollView>
             </View>
