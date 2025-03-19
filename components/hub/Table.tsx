@@ -97,9 +97,13 @@ export default function Table() {
                 <ScrollView horizontal={true}>
                     <DataTable style={{ width: 1100 }}>
                         <DataTable.Header>
-                            <DataTable.Title style={{ flex: 3.5  }}>User</DataTable.Title>
+                            <View style={styles.userTxt}>
+                                <Text>User</Text>
+                            </View>
                             {displayDays && displayDays.map((day) => (
-                                <DataTable.Title key={day}>{day}</DataTable.Title>
+                                <View style={styles.day} key={day}>
+                                    <Text>{day}</Text>
+                                </View>
                             ))}
                         </DataTable.Header>
                         <DataTable.Row>
@@ -109,10 +113,10 @@ export default function Table() {
                             </View>
                             {displayDays && displayDays.map((day) => (
                                 <React.Fragment key={day}>
-                                    {trip.startDay && day >= trip.startDay && trip.endDay && day <= trip.endDay + 1 ? (
+                                    {trip.startDay && day >= trip.startDay && trip.endDay && day <= trip.endDay ? (
                                         <View style={{ backgroundColor: 'lightblue', width: 30 }}>
                                             {trip.startDay === day && (
-                                                <Text style={{ backgroundColor: 'seagreen' }}>London, UK</Text>
+                                                <Text>{trip.location}</Text>
                                             )}
                                         </View>
                                     ) : (
@@ -128,7 +132,7 @@ export default function Table() {
             </View>
             <View style={styles.belowTableContainer}>
                 <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
-                <View style={{ display: 'flex', flexDirection: 'row', marginTop: -3 }}>
+                <View style={styles.chevronBtns}>
                     <IconButton disabled={previousBtnDisabled} onPress={decrementMonth} icon="chevron-left" />
                     <IconButton disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
                 </View>
@@ -138,9 +142,24 @@ export default function Table() {
 }
 
 const styles = StyleSheet.create({
+    userTxt: {
+        justifyContent: 'center', 
+        width: 100, 
+        height: 50
+    },
+    day: {
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        width: 30
+    },
     belowTableContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    chevronBtns: {
+        display: 'flex', 
+        flexDirection: 'row', 
+        marginTop: -3
     }
 })
