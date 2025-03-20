@@ -24,7 +24,7 @@ export default function Table() {
     
     const username = useCurrentUserStore((state) => state.username)
     
-    const parseAndLogCurrentUserTrip = async () => {
+    const loadCurrentUserTrip = async () => {
         try {
             const currentUserTrip = await fetchCurrentUserTrip()
             const location = currentUserTrip.location
@@ -32,7 +32,12 @@ export default function Table() {
             const endDate = new Date(currentUserTrip.endDate)
             const startDay = startDate.getDate()
             const endDay = endDate.getDate()
-            setTrip({ location, startDay, endDay })
+            if (startDate.getMonth() === month && startDate.getFullYear() === displayYear) {
+                setTrip({ location, startDay, endDay })
+            }
+            else {
+                setTrip({ location: '', startDay: undefined, endDay: undefined })
+            }
             console.log('trip: ', { location, startDate, endDate, startDay, endDay })
         }
         catch (err) {
@@ -81,8 +86,9 @@ export default function Table() {
     const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
 
     useEffect(() => {
-        parseAndLogCurrentUserTrip()
-    }, [])
+        loadCurrentUserTrip()
+        console.log('month: ', month)
+    }, [month])
 
     useEffect(() => {
         loadDisplayDays()
