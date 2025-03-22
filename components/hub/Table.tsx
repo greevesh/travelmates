@@ -29,19 +29,28 @@ export default function Table() {
             const currentUserTrip = await fetchCurrentUserTrip()
             const location = currentUserTrip.location
             const startDate = new Date(currentUserTrip.startDate)
-            const endDate = new Date('2025-04-10')
+            const endDate = new Date('2025-06-10')
             let startDay = startDate.getDate()
             let endDay
+            let fullMonth = false
             if (startDate.getMonth() === month && startDate.getFullYear() === displayYear 
             && endDate.getMonth() !== month || endDate.getFullYear() !== displayYear) {
                 endDay = monthDaysLength
+            }
+            else if (month > startDate.getMonth() && month < endDate.getMonth()) {
+                startDay = 1
+                endDay = monthDaysLength
+                fullMonth = true
             }
             else {
                 startDay = 1
                 endDay = endDate.getDate()
             }
             if (startDate.getMonth() === month && startDate.getFullYear() === displayYear 
-            || endDate.getMonth() === month && endDate.getFullYear() === displayYear) {
+            || endDate.getMonth() === month && endDate.getFullYear() === displayYear ) {
+                setTrip({ location, startDay, endDay })
+            }
+            else if (fullMonth) {
                 setTrip({ location, startDay, endDay })
             }
             else {
