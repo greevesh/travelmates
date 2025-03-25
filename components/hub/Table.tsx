@@ -6,10 +6,16 @@ import React from "react"
 import ProfilePhoto from "../edit/ProfilePhoto"
 import { useCurrentUserStore } from "@/stores/useProfilePhotoStore"
 
-interface Trip {
+interface TableTrip {
     location: string
     startDay: number | undefined
     endDay: number | undefined
+}
+
+interface RawTrip {
+    startDate: Date
+    endDate: Date
+    location: string
 }
 
 export default function Table() {
@@ -20,43 +26,49 @@ export default function Table() {
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
 
-    const [trip, setTrip] = useState<Trip>({ location: '', startDay: undefined, endDay: undefined })
+    const [trip, setTrip] = useState<TableTrip>({ location: '', startDay: undefined, endDay: undefined })
     
     const username = useCurrentUserStore((state) => state.username)
+
+    const parseTrip = (trip: RawTrip) => {
+        const { startDate, endDate, location } = trip
+        let startDay = startDate.getDate()
+        let endDay = endDate.getDate()
+        let fullMonth = false
+
+        const isStartInCurrentMonth = startDate.getMonth() === month && startDate.getFullYear() === displayYear
+        const isEndInCurrentMonth = endDate.getMonth() === month && endDate.getFullYear() === displayYear
+
+        if (isStartInCurrentMonth && !isEndInCurrentMonth) {
+            endDay = monthDaysLength
+        }
+        else if (month > startDate.getMonth() && month < endDate.getMonth()) {
+            startDay = 1
+            endDay = monthDaysLength
+            fullMonth = true
+        }
+        // If doesn't start in current month but ends in current month
+        else if (!isStartInCurrentMonth) {
+            startDay = 1
+        }
+
+        if (isStartInCurrentMonth || isEndInCurrentMonth || fullMonth) {
+            setTrip({ location, startDay, endDay })
+        }
+        else {
+            setTrip({ location: '', startDay: undefined, endDay: undefined })
+        }
+    }
     
     const loadCurrentUserTrip = async () => {
         try {
             const currentUserTrip = await fetchCurrentUserTrip()
-            const location = currentUserTrip.location
             const startDate = new Date(currentUserTrip.startDate)
+            // const endDate = new Date(currentUserTrip.endDate)
             const endDate = new Date('2025-06-10')
-            let startDay = startDate.getDate()
-            let endDay
-            let fullMonth = false
-            if (startDate.getMonth() === month && startDate.getFullYear() === displayYear 
-            && endDate.getMonth() !== month || endDate.getFullYear() !== displayYear) {
-                endDay = monthDaysLength
-            }
-            else if (month > startDate.getMonth() && month < endDate.getMonth()) {
-                startDay = 1
-                endDay = monthDaysLength
-                fullMonth = true
-            }
-            else {
-                startDay = 1
-                endDay = endDate.getDate()
-            }
-            if (startDate.getMonth() === month && startDate.getFullYear() === displayYear 
-            || endDate.getMonth() === month && endDate.getFullYear() === displayYear ) {
-                setTrip({ location, startDay, endDay })
-            }
-            else if (fullMonth) {
-                setTrip({ location, startDay, endDay })
-            }
-            else {
-                setTrip({ location: '', startDay: undefined, endDay: undefined })
-            }
-            console.log('trip: ', { location, startDate, endDate, startDay, endDay })
+            const { location } = await fetchCurrentUserTrip()
+            parseTrip({ startDate, endDate, location })
+            // console.log('trip: ', { location, startDate, endDate, startDay, endDay })
         }
         catch (err) {
             console.error('Error storing current trip data: ', err)
