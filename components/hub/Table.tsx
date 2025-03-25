@@ -36,13 +36,17 @@ export default function Table() {
         let endDay = endDate.getDate()
         let fullMonth = false
 
+        console.log('end date: ', displayYear < endDate.getFullYear())
+
         const isStartInCurrentMonth = startDate.getMonth() === month && startDate.getFullYear() === displayYear
         const isEndInCurrentMonth = endDate.getMonth() === month && endDate.getFullYear() === displayYear
+        const betweenMonths = month > startDate.getMonth() && month < endDate.getMonth()
+        const moreThanOneYear = displayYear < endDate.getFullYear() || displayYear === endDate.getFullYear() && month < endDate.getMonth()
 
         if (isStartInCurrentMonth && !isEndInCurrentMonth) {
             endDay = monthDaysLength
         }
-        else if (month > startDate.getMonth() && month < endDate.getMonth()) {
+        else if (betweenMonths || moreThanOneYear) {
             startDay = 1
             endDay = monthDaysLength
             fullMonth = true
@@ -64,8 +68,7 @@ export default function Table() {
         try {
             const currentUserTrip = await fetchCurrentUserTrip()
             const startDate = new Date(currentUserTrip.startDate)
-            // const endDate = new Date(currentUserTrip.endDate)
-            const endDate = new Date('2025-06-10')
+            const endDate = new Date(currentUserTrip.endDate)
             const { location } = await fetchCurrentUserTrip()
             parseTrip({ startDate, endDate, location })
             // console.log('trip: ', { location, startDate, endDate, startDay, endDay })
