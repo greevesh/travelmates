@@ -80,13 +80,7 @@ export default function Table() {
 
     const loadDisplayDays = () => {
         let days = []
-        let startDay
-        // if (month === new Date().getMonth() && displayYear === new Date().getFullYear()) {
-        //     startDay = new Date().getDate()
-        // }
-        // else {
-            startDay = 1
-        // }
+        let startDay = 1
         for (let i = startDay; i < monthDaysLength + 1; i++) {
             days.push(i)
         }
@@ -127,8 +121,6 @@ export default function Table() {
         loadDisplayDays()
         console.log('trip: ', trip)
     }, [monthDaysLength, trip])
-
-    // logCurrentUser()
 
     return (
         <>
