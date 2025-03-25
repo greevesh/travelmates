@@ -8,16 +8,16 @@ import { useTripStore } from '@/stores/useTripStore'
 import { useFriendshipStore } from '@/stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
 import uploadImage from '@/utils/uploadImageToS3'
-import { useProfilePhotoStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 import { router } from 'expo-router'
-import fetchCurrentUserId from '@/utils/fetchCurrentUser'
+import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { useState } from 'react'
 import Spinner from '@/components/base/Spinner'
 import { fetchUserCredentials } from '@/utils/auth'
 
 export default function FinishButton() {
 	const [loading, setLoading] = useState<boolean>(false)
-	const { setPhoto, photo, setUploaded } = useProfilePhotoStore((state) => ({
+	const { setPhoto, photo, setUploaded } = useCurrentUserStore((state) => ({
 		setPhoto: state.setPhoto,
 		photo: state.photo,
 		setUploaded: state.setUploaded
@@ -56,8 +56,8 @@ export default function FinishButton() {
 	const handlePostData = async () => {
 		setLoading(true)
         const { username, refreshToken } = await fetchUserCredentials()
-		const userId = await fetchCurrentUserId()
-		const trip = { startDate, endDate, location, userId }
+		const { _id } = await fetchCurrentUser()
+		const trip = { startDate, endDate, location, userId: _id }
 		try {
 			const user = { 
 				username, 

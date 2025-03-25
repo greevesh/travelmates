@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios'
 import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { router } from 'expo-router'
 
 import { signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
 
@@ -14,7 +13,6 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 	try {
 		const { username, password } = data
 		const res = await axios.post(endpoint, { username, password })
-		endpoint === signInEndpoint ? router.push('/hub') : router.push('/setup')
 		return res.data
 	} catch (err) {
 		if (err instanceof AxiosError && err.response) {
@@ -72,6 +70,8 @@ export const fetchUserCredentials = async () => {
 		const username = await SecureStore.getItemAsync('username')
 		const refreshToken = await SecureStore.getItemAsync('refreshToken')
 		const accessToken = await SecureStore.getItemAsync('accessToken')
+		console.log('username: ', username)
+		console.log('refreshToken: ', refreshToken)
 		return {
 			username, refreshToken, accessToken
 		}

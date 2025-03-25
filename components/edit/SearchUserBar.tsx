@@ -7,10 +7,10 @@ import { useFriendshipStore } from '../../stores/useFriendshipStore'
 import { usersEndpoint } from '../../consts/api'
 import { type User } from '../../stores/useUserStore'
 import Output from '../setup/fourth-step/Output'
-import fetchCurrentUserId from '@/utils/fetchCurrentUser'
 import React from 'react'
 import debounce from '@/utils/debounce'
 import { fetchUserCredentials } from '@/utils/auth'
+import fetchCurrentUser from '@/utils/fetchCurrentUser'
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
@@ -56,13 +56,13 @@ export default function SearchUserBar() {
 
 	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [selectedUsers])
 
-	const handleUserSelect = async (user: User) => {
-		setSelectedUsers(user)
-		const currentUserId = await fetchCurrentUserId()
+	const handleUserSelect = async (selectedUser: User) => {
+		setSelectedUsers(selectedUser)
+		const { _id } = await fetchCurrentUser()
 		addFriendship(
 			{
-				recipientId: user._id,
-				senderId: currentUserId,
+				recipientId: selectedUser._id,
+				senderId: _id,
 				status: 'pending'
 			}
 		)

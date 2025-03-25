@@ -1,11 +1,11 @@
 import { Alert, StyleSheet, Text } from 'react-native'
 import { Button } from 'react-native-paper'
 
-import { useProfilePhotoStore } from '../../../stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '../../../stores/useProfilePhotoStore'
 import React from 'react'
 
 export default function DeletePhotoButton() {
-	const setUploaded = useProfilePhotoStore((state) => state.setUploaded)
+	const setUploaded = useCurrentUserStore((state) => state.setUploaded)
 
 	const handleDelete = () => {
 		setUploaded(false)

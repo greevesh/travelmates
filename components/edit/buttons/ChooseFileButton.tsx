@@ -1,12 +1,12 @@
 import * as ImagePicker from 'expo-image-picker'
 
 import BaseButton from '../../base/Button'
-import { useProfilePhotoStore } from '../../../stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '../../../stores/useProfilePhotoStore'
 import { useFileUploadModalStore } from '../../../stores/useFileUploadModalStore'
 
 export default function ChooseFileButton() {
-	const setPhoto = useProfilePhotoStore((state) => state.setPhoto)
-	const setUploaded = useProfilePhotoStore((state) => state.setUploaded)
+	const setPhoto = useCurrentUserStore((state) => state.setPhoto)
+	const setUploaded = useCurrentUserStore((state) => state.setUploaded)
 	const setVisible = useFileUploadModalStore((state) => state.setModalVisible)
 
 	const handleChoosePhoto = async () => {

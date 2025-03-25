@@ -13,6 +13,9 @@ import { signInEndpoint } from '../../../consts/api'
 import AuthLink from '../AuthLink'
 import Spinner from '@/components/base/Spinner'
 import { useState } from 'react'
+import { router } from 'expo-router'
+import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import fetchCurrentUser from '@/utils/fetchCurrentUser'
 
 export default function SignInForm() {
 	const {
@@ -27,14 +30,30 @@ export default function SignInForm() {
 		resolver: zodResolver(signInSchema),
 	})
 	const [isLoading, setIsLoading] = useState(false)
+	const { setUsername, setUploaded, setPhoto } = useCurrentUserStore((state) => ({
+		setUsername: state.setUsername,
+		setUploaded: state.setUploaded,
+		setPhoto: state.setPhoto,
+	}))
 
 	const onSubmit = async (data: SignInFormFields) => {
 		try {
 			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signInEndpoint)
 			await SecureStore.setItemAsync('username', data.username)
-			storeAuthTokens(accessToken, refreshToken)
-			console.log('data: ', data)
+			await storeAuthTokens(accessToken, refreshToken)
+			try {
+				const { username, pic } = await fetchCurrentUser()
+				setUsername(username)
+				if (pic) {
+					setUploaded(true)
+					setPhoto(pic)
+				}
+			}
+			catch (err) {
+				console.error('Error setting photo: ', err)
+			}
+			router.push('/hub')
 		} catch {
 			// error scenarios handled in authenticate()
 			return

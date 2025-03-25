@@ -1,11 +1,11 @@
-import { usersEndpoint } from "@/consts/api"
+import { tripsEndpoint } from "@/consts/api"
 import axios from 'axios'
 import { fetchUserCredentials } from "./auth"
 
-export default async function fetchCurrentUser() {
+export default async function fetchCurrentUserTrip() {
     try {
         const { username, refreshToken } = await fetchUserCredentials()
-        const res = await axios.get(usersEndpoint + username, {
+        const res = await axios.get(tripsEndpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export default async function fetchCurrentUser() {
         return res.data[0]
     }
     catch(err) {
-        console.error('Error: Failed to fetch the current user: ', err)
+        console.error('Error: Failed to fetch the current trip: ', err)
         throw err
     }
 }

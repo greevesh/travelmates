@@ -2,7 +2,7 @@ import { Modal, StyleSheet, Text, View } from 'react-native'
 import { Button, Icon } from 'react-native-paper'
 
 import ChooseFileButton from './ChooseFileButton'
-import { useProfilePhotoStore } from '../../../stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '../../../stores/useProfilePhotoStore'
 import { useFileUploadModalStore } from '../../../stores/useFileUploadModalStore'
 import React from 'react'
 
@@ -11,7 +11,7 @@ export default function UploadPhotoButton() {
 		modalVisible: state.modalVisible,
 		setModalVisible: state.setModalVisible,
 	}))
-	const uploaded = useProfilePhotoStore((state) => state.uploaded)
+	const uploaded = useCurrentUserStore((state) => state.uploaded)
 
 	const handleClick = () => {
 		setModalVisible(!modalVisible)
