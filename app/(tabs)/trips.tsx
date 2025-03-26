@@ -4,10 +4,20 @@ import EndDatePicker from "@/components/edit/EndDatePicker"
 import SearchLocationBar from "@/components/edit/SearchLocationBar"
 import StartDatePicker from "@/components/edit/StartDatePicker"
 import { useTripStore } from "@/stores/useTripStore"
+import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
 import { LinearGradient } from "expo-linear-gradient"
+import { useEffect, useState } from "react"
 import { View, StyleSheet } from "react-native"
 
+interface Trips {
+    location: undefined | string
+    startDate: undefined | Date
+    endDate: undefined | Date
+}
+
 export default function Trips() {
+    const [trips, setTrips] = useState<Trips[]>([{ location: 'undefined', startDate: undefined, endDate: undefined }])
+
     const { locationQuery: query, startDate, endDate } = useTripStore((state) => ({
         locationQuery: state.locationQuery,
         startDate: state.startDate,
@@ -15,6 +25,21 @@ export default function Trips() {
     }))
 
     const btnDisabled = !query || !startDate || !endDate
+
+    const fetchTrips = async () => {
+        try {
+            const { location, startDate, endDate } = await fetchCurrentUserTrip()
+            console.log('fetched trip: ', { location, startDate, endDate })
+            setTrips([{ location, startDate, endDate }])
+        }
+        catch (err) {
+            console.log('Error fetching trips: ', err)
+        }
+    }
+
+    useEffect(() => {
+        fetchTrips()
+    }, [])
 
     return (
         <LinearGradient colors={['#3b5998', '#8b9dc3']}>
@@ -29,6 +54,9 @@ export default function Trips() {
                         </View>
                         <View style={{ width: '90%', marginLeft: 20 }}>
                             <BaseButton disabled={btnDisabled} onPress={() => console.log('pressed')} icon={{ source: 'plus', size: 20 }} text="Add Trip" bgColor="#4285F4" mb={20} w={110} />
+                        </View>
+                        <View>
+                            
                         </View>
                     </View>
                 </View>
