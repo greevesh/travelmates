@@ -16,7 +16,7 @@ interface Trips {
 }
 
 export default function Trips() {
-    const [trips, setTrips] = useState<Trips[]>([{ location: 'undefined', startDate: undefined, endDate: undefined }])
+    const [trips, setTrips] = useState<Trips[]>([{ location: undefined, startDate: undefined, endDate: undefined }])
 
     const { locationQuery: query, startDate, endDate } = useTripStore((state) => ({
         locationQuery: state.locationQuery,
