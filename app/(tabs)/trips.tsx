@@ -125,18 +125,18 @@ export default function Trips() {
                             <StartDatePicker />
                             <EndDatePicker />
                         </View>
-                        <View style={{ width: '90%', marginLeft: 20 }}>
-                            <Button disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
+                        <View style={styles.btnContainer}>
+                            <Button style={{ backgroundColor: '#4285F4', borderRadius: 5 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
                         </View>
                         <View>
                             {
                                 trips && (
                                     trips.map((trip) => (
                                         trip.id && (
-                                            <View style={{ width: 330, marginTop: 10 }} key={trip?.id}>
-                                            <View style={{ flexDirection: 'row', flexWrap: 'wrap', backgroundColor: '#E8E8E8', borderWidth: 1.2, borderRadius: 20, padding: 10 }}>
-                                                <IconButton onPress={() => handleDeleteTrip(trip.id)} style={{ position: 'absolute', top: -7, right: -3 }} icon="delete" size={17} />
-                                                <View style={{ width: 285, flexDirection: 'row', flexWrap: 'wrap' }}>
+                                            <View style={{ width: 330, marginTop: 30 }} key={trip?.id}>
+                                            <View style={styles.tripContainer}>
+                                                <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
+                                                <View style={styles.trip}>
                                                     <Text>{trip.location} - </Text>
                                                     <Text>{trip.startDate?.toDateString()} - </Text>
                                                     <Text>{trip.endDate?.toDateString()}</Text>
@@ -181,5 +181,29 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 0,
         width: '90%',
+    },
+    btnContainer: {
+        width: '90%', 
+        marginTop: 30, 
+        marginLeft: 20, 
+        alignItems: 'flex-start'
+    },
+    tripContainer: {
+        flexDirection: 'row', 
+        flexWrap: 'wrap', 
+        backgroundColor: '#E8E8E8', 
+        borderWidth: 1.2, 
+        borderRadius: 20, 
+        padding: 10
+    },
+    deleteIcon: {
+        position: 'absolute', 
+        top: -7, 
+        right: -3
+    },
+    trip: {
+        width: 285, 
+        flexDirection: 'row', 
+        flexWrap: 'wrap'
     }
 })
