@@ -24,10 +24,13 @@ export default function Trips() {
     const [loading, setLoading] = useState<boolean>(false)
     const [trips, setTrips] = useState<Trips[]>([{ location: undefined, startDate: undefined, endDate: undefined }])
 
-    const { location, startDate, endDate } = useTripStore((state) => ({
-        location: state.location,
+    const { location, startDate, endDate, setLocationQuery, setStartDate, setEndDate } = useTripStore((state) => ({
+        location: state.locationQuery,
         startDate: state.startDate,
-        endDate: state.endDate
+        endDate: state.endDate,
+        setLocationQuery: state.setLocationQuery,
+        setStartDate: state.setStartDate,
+        setEndDate: state.setEndDate
     }))
 
     const btnDisabled = !location || !startDate || !endDate
@@ -58,6 +61,9 @@ export default function Trips() {
 				}
 			)
 			console.log('data: ', res.data)
+            setLocationQuery('')
+            setStartDate(undefined)
+            setEndDate(undefined)
             return res.data
         }
         catch(err) {
