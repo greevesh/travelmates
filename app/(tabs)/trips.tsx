@@ -1,13 +1,18 @@
-import BaseButton from "@/components/base/Button"
+import Spinner from "@/components/base/Spinner"
 import Title from "@/components/base/Title"
 import EndDatePicker from "@/components/edit/EndDatePicker"
 import SearchLocationBar from "@/components/edit/SearchLocationBar"
 import StartDatePicker from "@/components/edit/StartDatePicker"
+import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
+import { fetchUserCredentials } from "@/utils/auth"
+import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
+import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Alert } from "react-native"
+import { Button } from "react-native-paper"
 
 interface Trips {
     location: undefined | string
@@ -16,15 +21,16 @@ interface Trips {
 }
 
 export default function Trips() {
+    const [loading, setLoading] = useState<boolean>(false)
     const [trips, setTrips] = useState<Trips[]>([{ location: undefined, startDate: undefined, endDate: undefined }])
 
-    const { locationQuery: query, startDate, endDate } = useTripStore((state) => ({
-        locationQuery: state.locationQuery,
+    const { location, startDate, endDate } = useTripStore((state) => ({
+        location: state.location,
         startDate: state.startDate,
         endDate: state.endDate
     }))
 
-    const btnDisabled = !query || !startDate || !endDate
+    const btnDisabled = !location || !startDate || !endDate
 
     const fetchTrips = async () => {
         try {
@@ -33,7 +39,41 @@ export default function Trips() {
             setTrips([{ location, startDate, endDate }])
         }
         catch (err) {
-            console.log('Error fetching trips: ', err)
+            console.error('Error fetching trips: ', err)
+        }
+    }
+
+    const handlePostTrip = async () => {
+        setLoading(true)
+        const { username, refreshToken } = await fetchUserCredentials()
+        const { _id } = await fetchCurrentUser()
+        try {
+            const user = { 
+				username, 
+				refreshToken 
+			}
+            const trip = {
+                startDate,
+                endDate,
+                location,
+                userId: _id
+            }
+            const res = await axios.post(tripEndpoint, { user, trip },
+                {
+					headers: {
+						'Authorization': `Bearer ${user.refreshToken}`
+					}
+				}
+			)
+			console.log('data: ', res.data)
+            return res.data
+        }
+        catch(err) {
+            Alert.alert('Failed to add trip. Please try again.')
+            console.error('Error adding trip: ', err)
+        }
+        finally {
+            setLoading(false)
         }
     }
 
@@ -53,7 +93,7 @@ export default function Trips() {
                             <EndDatePicker />
                         </View>
                         <View style={{ width: '90%', marginLeft: 20 }}>
-                            <BaseButton disabled={btnDisabled} onPress={() => console.log('pressed')} icon={{ source: 'plus', size: 20 }} text="Add Trip" bgColor="#4285F4" mb={20} w={110} />
+                            <Button disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
                         </View>
                         <View>
                             
