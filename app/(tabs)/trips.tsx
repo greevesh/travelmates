@@ -7,14 +7,17 @@ import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
 import { fetchUserCredentials } from "@/utils/auth"
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
-import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
+import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrip"
 import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
-import { View, StyleSheet, Alert } from "react-native"
-import { Button } from "react-native-paper"
+import { View, StyleSheet, Alert, Text } from "react-native"
+import { Button, IconButton } from "react-native-paper"
+import { v4 as uuidv4 } from "uuid"
 
-interface Trips {
+interface Trip {
+    id: undefined | string
+    userId: undefined | number
     location: undefined | string
     startDate: undefined | Date
     endDate: undefined | Date
@@ -22,7 +25,7 @@ interface Trips {
 
 export default function Trips() {
     const [loading, setLoading] = useState<boolean>(false)
-    const [trips, setTrips] = useState<Trips[]>([{ location: undefined, startDate: undefined, endDate: undefined }])
+    const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
 
     const { location, startDate, endDate, setLocationQuery, setStartDate, setEndDate } = useTripStore((state) => ({
         location: state.locationQuery,
@@ -37,9 +40,16 @@ export default function Trips() {
 
     const fetchTrips = async () => {
         try {
-            const { location, startDate, endDate } = await fetchCurrentUserTrip()
-            console.log('fetched trip: ', { location, startDate, endDate })
-            setTrips([{ location, startDate, endDate }])
+            const loadedTrips: Trip[] = []
+            const fetchedTrips = await fetchCurrentUserTrips()
+            fetchedTrips.forEach((trip: any) => {
+                let { _id: id, userId, startDate, endDate, location } = trip
+                startDate = new Date(startDate)
+                endDate = new Date(endDate)
+                loadedTrips.push({ id, userId, startDate, endDate, location })
+            })
+            console.log('loaded trips: ', loadedTrips)
+            setTrips(loadedTrips)
         }
         catch (err) {
             console.error('Error fetching trips: ', err)
@@ -51,7 +61,7 @@ export default function Trips() {
         const { username, refreshToken } = await fetchUserCredentials()
         const { _id } = await fetchCurrentUser()
         const user = { username, refreshToken }
-        const trip = { startDate, endDate, location, userId: _id }
+        const trip = { userId: _id, startDate, endDate, location }
         try {
             const res = await axios.post(tripEndpoint, { user, trip },
                 {
@@ -64,6 +74,8 @@ export default function Trips() {
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
+            const tripWithId = { ...trip, id: uuidv4() }
+            setTrips((prevTrips) => [...prevTrips, tripWithId])
             return res.data
         }
         catch(err) {
@@ -75,9 +87,32 @@ export default function Trips() {
         }
     }
 
+    const handleDeleteTrip = async (tripId: undefined | string) => {
+        if (!tripId) return
+
+        try {
+            const { username, refreshToken } = await fetchUserCredentials()
+            await axios.delete(`${tripEndpoint}/${tripId}`, {
+                headers: {
+                    'Authorization': `Bearer ${refreshToken}`,
+                    'X-Username': username || ''
+                }
+            });
+            setTrips((prevTrips) => prevTrips.filter(trip => trip.id !== tripId));
+            console.log(`Trip with id ${tripId} deleted successfully.`);
+        } catch (err) {
+            Alert.alert('Failed to delete trip. Please try again.');
+            console.error('Error deleting trip: ', err);
+        }
+    }
+
     useEffect(() => {
         fetchTrips()
     }, [])
+
+    useEffect(() => {
+        console.log('trips: ', trips)
+    }, [trips])
 
     return (
         <LinearGradient colors={['#3b5998', '#8b9dc3']}>
@@ -94,7 +129,24 @@ export default function Trips() {
                             <Button disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
                         </View>
                         <View>
-                            
+                            {
+                                trips && (
+                                    trips.map((trip) => (
+                                        trip.id && (
+                                            <View style={{ width: 330, marginTop: 10 }} key={trip?.id}>
+                                            <View style={{ flexDirection: 'row', flexWrap: 'wrap', backgroundColor: '#E8E8E8', borderWidth: 1.2, borderRadius: 20, padding: 10 }}>
+                                                <IconButton onPress={() => handleDeleteTrip(trip.id)} style={{ position: 'absolute', top: -7, right: -3 }} icon="delete" size={17} />
+                                                <View style={{ width: 285, flexDirection: 'row', flexWrap: 'wrap' }}>
+                                                    <Text>{trip.location} - </Text>
+                                                    <Text>{trip.startDate?.toDateString()} - </Text>
+                                                    <Text>{trip.endDate?.toDateString()}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                        )
+                                    ))
+                                )
+                            }
                         </View>
                     </View>
                 </View>
@@ -115,7 +167,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
 		borderColor: '#d3d3d3',
 		backgroundColor: '#fff',
-		height: 350,
+		height: 500,
         alignItems: 'center',
     },
     title: {
