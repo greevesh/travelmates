@@ -47,17 +47,9 @@ export default function Trips() {
         setLoading(true)
         const { username, refreshToken } = await fetchUserCredentials()
         const { _id } = await fetchCurrentUser()
+        const user = { username, refreshToken }
+        const trip = { startDate, endDate, location, userId: _id }
         try {
-            const user = { 
-				username, 
-				refreshToken 
-			}
-            const trip = {
-                startDate,
-                endDate,
-                location,
-                userId: _id
-            }
             const res = await axios.post(tripEndpoint, { user, trip },
                 {
 					headers: {
