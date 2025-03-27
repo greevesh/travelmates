@@ -133,7 +133,7 @@ export default function Trips() {
                                 trips && (
                                     trips.map((trip) => (
                                         trip.id && (
-                                            <View style={{ width: 330, marginTop: 30 }} key={trip?.id}>
+                                            <View style={{ width: 330, marginTop: 15 }} key={trip?.id}>
                                             <View style={styles.tripContainer}>
                                                 <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
                                                 <View style={styles.trip}>
@@ -185,7 +185,8 @@ const styles = StyleSheet.create({
     btnContainer: {
         width: '90%', 
         marginTop: 30, 
-        marginLeft: 20, 
+        marginLeft: 20,
+        marginBottom: 20, 
         alignItems: 'flex-start'
     },
     tripContainer: {
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#E8E8E8', 
         borderWidth: 1.2, 
         borderRadius: 20, 
-        padding: 10
+        padding: 10,
     },
     deleteIcon: {
         position: 'absolute', 
