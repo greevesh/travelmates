@@ -26,6 +26,8 @@ interface Trip {
 export default function Trips() {
     const [loading, setLoading] = useState<boolean>(false)
     const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
+    const [tripDates, setTripDates] = useState<string[]>()
+    const [maxEndDate, setMaxEndDate] = useState<any>()
 
     const { location, startDate, endDate, setLocationQuery, setStartDate, setEndDate } = useTripStore((state) => ({
         location: state.locationQuery,
@@ -106,13 +108,67 @@ export default function Trips() {
         }
     }
 
+    const fetchTripDates = () => {
+        const dates: any[] = []
+        trips.forEach((trip) => {
+            let startDate = trip.startDate
+            const endDate = trip.endDate
+            if (startDate && endDate) {
+                let currentIterationDate = startDate
+                while (currentIterationDate <= endDate) {
+                    dates.push(currentIterationDate.toDateString())
+                    currentIterationDate = new Date(currentIterationDate)
+                    currentIterationDate.setDate(currentIterationDate.getDate() + 1)
+                }
+            }
+        })
+        setTripDates(dates)
+    }
+
+    // const preventDateOverlap = () => {
+    //     if (tripDates) {
+    //         const earliestNextDate = new Date(tripDates[0])
+    //         const lastAvailableDate = new Date(earliestNextDate)
+    //         lastAvailableDate.setDate(earliestNextDate.getDate() - 1)
+    //         console.log('earliest next date: ', lastAvailableDate)
+    //         if (startDate && lastAvailableDate) {
+    //             setMaxEndDate(lastAvailableDate)
+    //         }
+    //     }
+    // }
+
+    const sortTripDates = () => {
+        const sortedDates = tripDates && tripDates.sort((a: string, b: string) => {
+            const dateA = new Date(a)
+            const dateB = new Date(b)
+            if (dateA < dateB) {
+                return - 1
+            }
+            if (dateA > dateB) {
+                return 1
+            }
+            return 0
+        })
+        setTripDates(sortedDates)
+        console.log('sorted dates: ', sortedDates)
+    }
+
     useEffect(() => {
         fetchTrips()
     }, [])
 
     useEffect(() => {
-        console.log('trips: ', trips)
+        fetchTripDates()
     }, [trips])
+
+    useEffect(() => {
+        console.log('unsorted tripDates: ', tripDates)
+        sortTripDates()
+    }, [tripDates])
+
+    useEffect(() => {
+        // preventDateOverlap()
+    }, [startDate])
 
     return (
         <LinearGradient colors={['#3b5998', '#8b9dc3']}>
