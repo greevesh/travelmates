@@ -14,6 +14,9 @@ export default function StartDatePicker() {
 		event.type === 'dismissed' ? setStartDate(startDate) : setStartDate(selectedDate)
 	}
 
+	const threeYearsFromToday = new Date()
+	threeYearsFromToday.setFullYear(threeYearsFromToday.getFullYear() + 3)
+
 	return (
 		<>
 			<DateTimePicker
@@ -22,7 +25,7 @@ export default function StartDatePicker() {
 				display="default"
 				onChange={handleStartDateChange}
 				minimumDate={new Date()}
-				maximumDate={endDate}
+				maximumDate={endDate || threeYearsFromToday}
 			/>
 		</>
 	)

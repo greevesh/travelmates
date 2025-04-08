@@ -191,7 +191,7 @@ export default function Trips() {
                         <Title style={styles.title}>Trips</Title>
                         <SearchLocationBar />
                         <View style={styles.dateContainer}>
-                            <StartDatePicker disabledDates={tripDates} />
+                            <StartDatePicker />
                             <EndDatePicker maxDate={maxEndDate} />
                         </View>
                         <View style={styles.btnContainer}>

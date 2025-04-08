@@ -3,7 +3,11 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { useTripStore } from '../../stores/useTripStore'
 import React from 'react'
 
-export default function EndDatePicker() {
+interface IEndDatePickerProps {
+	maxDate?: Date
+}
+
+export default function EndDatePicker({ maxDate}: IEndDatePickerProps) {
 	const { startDate, endDate, setEndDate } = useTripStore((state) => ({
 		startDate: state.startDate,
 		endDate: state.endDate,
@@ -21,7 +25,8 @@ export default function EndDatePicker() {
 				mode="date"
 				display="default"
 				onChange={handleEndDateChange}
-				minimumDate={startDate ?? new Date()}
+				minimumDate={startDate || new Date()}
+				maximumDate={maxDate}
 			/>
 		</>
 	)
