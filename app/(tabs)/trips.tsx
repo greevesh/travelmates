@@ -13,10 +13,9 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
 import { View, StyleSheet, Alert, Text } from "react-native"
 import { Button, IconButton } from "react-native-paper"
-import { v4 as uuidv4 } from "uuid"
 
 interface Trip {
-    id: undefined | string
+    id?: undefined | string
     userId: undefined | number
     location: undefined | string
     startDate: undefined | Date
@@ -76,7 +75,9 @@ export default function Trips() {
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
-            const tripWithId = { ...trip, id: uuidv4() }
+            const trips = await fetchCurrentUserTrips()
+            const { _id } = trips[trips.length - 1] // Fetch just added trip by id
+            const tripWithId = { ...trip, id: _id }
             setTrips((prevTrips) => [...prevTrips, tripWithId])
             return res.data
         }
@@ -91,7 +92,6 @@ export default function Trips() {
 
     const handleDeleteTrip = async (tripId: undefined | string) => {
         if (!tripId) return
-
         try {
             const { username, refreshToken } = await fetchUserCredentials()
             await axios.delete(`${tripEndpoint}/${tripId}`, {
@@ -99,11 +99,26 @@ export default function Trips() {
                     'Authorization': `Bearer ${refreshToken}`,
                     'X-Username': username || ''
                 }
-            });
-            setTrips((prevTrips) => prevTrips.filter(trip => trip.id !== tripId));
-            console.log(`Trip with id ${tripId} deleted successfully.`);
+            })
+            setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
+            trips.map((trip) => {
+                if (trip.id === tripId) {
+                    setTripDates((prevTripDates) => prevTripDates?.filter(tripDate => {
+                        if (trip.startDate && trip.endDate) {
+                            // We only want date to be a distinguishing factor. Not time    
+                            const normalizedStartDate = new Date(trip.startDate)
+                            const normalizedEndDate = new Date(trip.endDate)
+                            normalizedStartDate.setHours(0, 0, 0, 0)
+                            normalizedEndDate.setHours(0, 0, 0, 0)
+                            const currentTripDate = new Date(tripDate) >= normalizedStartDate && new Date(tripDate) <= normalizedEndDate
+                            return !currentTripDate  
+                        }
+                    }))
+                }
+            })
+            console.log(`Trip with id ${tripId} deleted successfully.`)
         } catch (err) {
-            Alert.alert('Failed to delete trip. Please try again.');
+            Alert.alert('Failed to delete trip. Please try again.')
             console.error('Error deleting trip: ', err);
         }
     }
@@ -150,7 +165,6 @@ export default function Trips() {
             return 0
         })
         setTripDates(sortedDates)
-        console.log('sorted dates: ', sortedDates)
     }
 
     useEffect(() => {
@@ -162,7 +176,6 @@ export default function Trips() {
     }, [trips])
 
     useEffect(() => {
-        console.log('unsorted tripDates: ', tripDates)
         sortTripDates()
     }, [tripDates])
 
