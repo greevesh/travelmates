@@ -191,11 +191,11 @@ export default function Trips() {
                         <Title style={styles.title}>Trips</Title>
                         <SearchLocationBar />
                         <View style={styles.dateContainer}>
-                            <StartDatePicker />
-                            <EndDatePicker />
+                            <StartDatePicker disabledDates={tripDates} />
+                            <EndDatePicker maxDate={maxEndDate} />
                         </View>
                         <View style={styles.btnContainer}>
-                            <Button style={{ backgroundColor: '#4285F4', borderRadius: 5 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
+                            <Button style={{ backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#4285F4'}`, borderRadius: 5, width: 100 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
                         </View>
                         <View>
                             {
