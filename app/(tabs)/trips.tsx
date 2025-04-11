@@ -11,7 +11,7 @@ import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrip"
 import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
-import { View, StyleSheet, Alert, Text } from "react-native"
+import { View, StyleSheet, Alert, Text, FlatList } from "react-native"
 import { Button, IconButton } from "react-native-paper"
 
 interface Trip {
@@ -187,7 +187,7 @@ export default function Trips() {
         <LinearGradient colors={['#3b5998', '#8b9dc3']}>
             <View style={styles.container}>
                 <View style={styles.card}>
-                    <View style={{ alignItems: 'center', width: '100%' }}>
+                    <View style={styles.subcontainer}>
                         <Title style={styles.title}>Trips</Title>
                         <SearchLocationBar />
                         <View style={styles.dateContainer}>
@@ -197,26 +197,23 @@ export default function Trips() {
                         <View style={styles.btnContainer}>
                             <Button style={{ backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#4285F4'}`, borderRadius: 5, width: 100 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
                         </View>
-                        <View>
-                            {
-                                trips && (
-                                    trips.map((trip) => (
-                                        trip.id && (
-                                            <View style={{ width: 330, marginTop: 15 }} key={trip?.id}>
-                                            <View style={styles.tripContainer}>
-                                                <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
-                                                <View style={styles.trip}>
-                                                    <Text>{trip.location} - </Text>
-                                                    <Text>{trip.startDate?.toDateString()} - </Text>
-                                                    <Text>{trip.endDate?.toDateString()}</Text>
-                                                </View>
-                                            </View>
+                        <FlatList
+                            data={trips.filter(trip => trip.id)}
+                            keyExtractor={(item) => item.id || ''}
+                            renderItem={({ item: trip }) => (
+                                <View style={{ width: 330, marginTop: 15 }}>
+                                    <View style={styles.tripContainer}>
+                                        <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
+                                        <View style={styles.trip}>
+                                            <Text>{trip.location} - </Text>
+                                            <Text>{trip.startDate?.toDateString()} - </Text>
+                                            <Text>{trip.endDate?.toDateString()}</Text>
                                         </View>
-                                        )
-                                    ))
-                                )
-                            }
-                        </View>
+                                    </View>
+                                </View>
+                            )}
+                            contentContainerStyle={styles.tripsListContent}
+                        />
                     </View>
                 </View>
             </View>
@@ -228,7 +225,7 @@ const styles = StyleSheet.create({
     container: {
         height: '100%',
         justifyContent: 'center', 
-        alignItems: 'center'
+        alignItems: 'center',
     },
     card: {
         width: '90%',
@@ -238,6 +235,11 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		height: 500,
         alignItems: 'center',
+    },
+    subcontainer: {
+        alignItems: 'center', 
+        width: '100%', 
+        overflow: 'scroll'
     },
     title: {
         fontSize: 24,
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start', 
         marginTop: 20,
         marginLeft: 0,
-        width: '90%',
+        width: '90%'
     },
     btnContainer: {
         width: '90%', 
@@ -274,6 +276,10 @@ const styles = StyleSheet.create({
     trip: {
         width: 285, 
         flexDirection: 'row', 
-        flexWrap: 'wrap'
-    }
+        flexWrap: 'wrap',
+    },
+    tripsListContent: {
+        paddingBottom: 20,
+        alignItems: 'center'
+    },
 })
