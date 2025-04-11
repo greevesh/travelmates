@@ -4,10 +4,10 @@ import { useTripStore } from '../../stores/useTripStore'
 import React from 'react'
 
 interface IEndDatePickerProps {
-	maxDate?: Date
+	maxDate: Date | undefined
 }
 
-export default function EndDatePicker({ maxDate}: IEndDatePickerProps) {
+export default function EndDatePicker({ maxDate }: IEndDatePickerProps) {
 	const { startDate, endDate, setEndDate } = useTripStore((state) => ({
 		startDate: state.startDate,
 		endDate: state.endDate,

@@ -26,7 +26,7 @@ export default function Trips() {
     const [loading, setLoading] = useState<boolean>(false)
     const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
     const [tripDates, setTripDates] = useState<string[]>()
-    const [maxEndDate, setMaxEndDate] = useState<any>()
+    const [maxEndDate, setMaxEndDate] = useState<Date | undefined>()
 
     const { location, startDate, endDate, setLocationQuery, setStartDate, setEndDate } = useTripStore((state) => ({
         location: state.locationQuery,
@@ -140,17 +140,17 @@ export default function Trips() {
         setTripDates(dates)
     }
 
-    // const preventDateOverlap = () => {
-    //     if (tripDates) {
-    //         const earliestNextDate = new Date(tripDates[0])
-    //         const lastAvailableDate = new Date(earliestNextDate)
-    //         lastAvailableDate.setDate(earliestNextDate.getDate() - 1)
-    //         console.log('earliest next date: ', lastAvailableDate)
-    //         if (startDate && lastAvailableDate) {
-    //             setMaxEndDate(lastAvailableDate)
-    //         }
-    //     }
-    // }
+    const preventDateOverlap = () => {
+        if (tripDates) {
+            const earliestNextDate = new Date(tripDates[0])
+            const lastAvailableDate = new Date(earliestNextDate)
+            lastAvailableDate.setDate(earliestNextDate.getDate() - 1)
+            console.log('earliest next date: ', lastAvailableDate)
+            if (startDate && lastAvailableDate) {
+                setMaxEndDate(lastAvailableDate)
+            }
+        }
+    }
 
     const sortTripDates = () => {
         const sortedDates = tripDates && tripDates.sort((a: string, b: string) => {
@@ -180,7 +180,7 @@ export default function Trips() {
     }, [tripDates])
 
     useEffect(() => {
-        // preventDateOverlap()
+        preventDateOverlap()
     }, [startDate])
 
     return (
