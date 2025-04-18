@@ -140,18 +140,6 @@ export default function Trips() {
         setTripDates(dates)
     }
 
-    const preventDateOverlap = () => {
-        if (tripDates) {
-            const earliestNextDate = new Date(tripDates[0])
-            const lastAvailableDate = new Date(earliestNextDate)
-            lastAvailableDate.setDate(earliestNextDate.getDate() - 1)
-            console.log('earliest next date: ', lastAvailableDate)
-            if (startDate && lastAvailableDate) {
-                setMaxEndDate(lastAvailableDate)
-            }
-        }
-    }
-
     const sortTripDates = () => {
         const sortedDates = tripDates && tripDates.sort((a: string, b: string) => {
             const dateA = new Date(a)
@@ -177,11 +165,8 @@ export default function Trips() {
 
     useEffect(() => {
         sortTripDates()
+        console.log('trip dates: ', tripDates)
     }, [tripDates])
-
-    useEffect(() => {
-        preventDateOverlap()
-    }, [startDate])
 
     return (
         <LinearGradient colors={['#3b5998', '#8b9dc3']}>
