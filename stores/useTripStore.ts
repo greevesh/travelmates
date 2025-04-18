@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 type Location = string | undefined
-type TDate = Date | undefined
+export type TDate = Date | undefined
 
 interface TripState {
   locationQuery: string
@@ -12,6 +12,8 @@ interface TripState {
   setStartDate: (startDate: TDate) => void
   endDate: TDate
   setEndDate: (endDate: TDate) => void
+  tripDates: string[]
+  setTripDates: (dates: any) => void
 }
 
 export const useTripStore = create<TripState>((set) => ({
@@ -22,5 +24,7 @@ export const useTripStore = create<TripState>((set) => ({
 	startDate: undefined,
 	setStartDate: (startDate) => set({ startDate }),
 	endDate: undefined,
-	setEndDate: (endDate) => set({ endDate })
+	setEndDate: (endDate) => set({ endDate }),
+	tripDates: [],
+	setTripDates: (tripDates) => set({ tripDates })
 }))

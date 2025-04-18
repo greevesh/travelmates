@@ -25,16 +25,17 @@ interface Trip {
 export default function Trips() {
     const [loading, setLoading] = useState<boolean>(false)
     const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
-    const [tripDates, setTripDates] = useState<string[]>()
     const [maxEndDate, setMaxEndDate] = useState<Date | undefined>()
 
-    const { location, startDate, endDate, setLocationQuery, setStartDate, setEndDate } = useTripStore((state) => ({
+    const { location, startDate, endDate, tripDates, setLocationQuery, setStartDate, setEndDate, setTripDates } = useTripStore((state) => ({
         location: state.locationQuery,
         startDate: state.startDate,
         endDate: state.endDate,
+        tripDates: state.tripDates,
         setLocationQuery: state.setLocationQuery,
         setStartDate: state.setStartDate,
-        setEndDate: state.setEndDate
+        setEndDate: state.setEndDate,
+        setTripDates: state.setTripDates,
     }))
 
     const btnDisabled = !location || !startDate || !endDate
@@ -103,7 +104,7 @@ export default function Trips() {
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
             trips.map((trip) => {
                 if (trip.id === tripId) {
-                    setTripDates((prevTripDates) => prevTripDates?.filter(tripDate => {
+                    setTripDates((prevTripDates: string[]) => prevTripDates?.filter(tripDate => {
                         if (trip.startDate && trip.endDate) {
                             // We only want date to be a distinguishing factor. Not time    
                             const normalizedStartDate = new Date(trip.startDate)
