@@ -23,9 +23,9 @@ interface Trip {
 }
 
 export default function Trips() {
-    const [loading, setLoading] = useState<boolean>(false)
+    const [createTripLoading, setCreateTripLoading] = useState<boolean>(false)
+    const [deleteTriploading, setDeleteTripLoading] = useState<boolean>(false)
     const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
-    const [maxEndDate, setMaxEndDate] = useState<Date | undefined>()
 
     const { location, startDate, endDate, tripDates, setLocationQuery, setStartDate, setEndDate, setTripDates } = useTripStore((state) => ({
         location: state.locationQuery,
@@ -59,7 +59,7 @@ export default function Trips() {
     }
 
     const handlePostTrip = async () => {
-        setLoading(true)
+        setCreateTripLoading(true)
         const { username, refreshToken } = await fetchUserCredentials()
         const { _id } = await fetchCurrentUser()
         const user = { username, refreshToken }
@@ -87,13 +87,14 @@ export default function Trips() {
             console.error('Error adding trip: ', err)
         }
         finally {
-            setLoading(false)
+            setCreateTripLoading(false)
         }
     }
 
     const handleDeleteTrip = async (tripId: undefined | string) => {
         if (!tripId) return
         try {
+            setDeleteTripLoading(true)
             const { username, refreshToken } = await fetchUserCredentials()
             await axios.delete(`${tripEndpoint}/${tripId}`, {
                 headers: {
@@ -112,11 +113,13 @@ export default function Trips() {
                             normalizedStartDate.setHours(0, 0, 0, 0)
                             normalizedEndDate.setHours(0, 0, 0, 0)
                             const currentTripDate = new Date(tripDate) >= normalizedStartDate && new Date(tripDate) <= normalizedEndDate
+                            console.log('current trip date: ', currentTripDate)
                             return !currentTripDate  
                         }
                     }))
                 }
             })
+            setDeleteTripLoading(false)
             console.log(`Trip with id ${tripId} deleted successfully.`)
         } catch (err) {
             Alert.alert('Failed to delete trip. Please try again.')
@@ -178,18 +181,24 @@ export default function Trips() {
                         <SearchLocationBar />
                         <View style={styles.dateContainer}>
                             <StartDatePicker />
-                            <EndDatePicker maxDate={maxEndDate} />
+                            <EndDatePicker />
                         </View>
                         <View style={styles.btnContainer}>
-                            <Button style={{ backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#4285F4'}`, borderRadius: 5, width: 100 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{loading ? <Spinner /> : 'Add Trip'}</Button>
+                            <Button style={{ backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#4285F4'}`, borderRadius: 5, width: 100 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{createTripLoading ? <Spinner /> : 'Add Trip'}</Button>
                         </View>
                         <FlatList
                             data={trips.filter(trip => trip.id)}
                             keyExtractor={(item) => item.id || ''}
+                            contentContainerStyle={styles.tripsListContent}
+                            showsVerticalScrollIndicator={false}
                             renderItem={({ item: trip }) => (
                                 <View style={{ width: 330, marginTop: 15 }}>
                                     <View style={styles.tripContainer}>
-                                        <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
+                                        {deleteTriploading ?
+                                            <Spinner style={{ top: 5, right: 10 }} />
+                                            :
+                                            <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
+                                        }
                                         <View style={styles.trip}>
                                             <Text>{trip.location} - </Text>
                                             <Text>{trip.startDate?.toDateString()} - </Text>
@@ -198,7 +207,6 @@ export default function Trips() {
                                     </View>
                                 </View>
                             )}
-                            contentContainerStyle={styles.tripsListContent}
                         />
                     </View>
                 </View>
@@ -225,7 +233,8 @@ const styles = StyleSheet.create({
     subcontainer: {
         alignItems: 'center', 
         width: '100%', 
-        overflow: 'scroll'
+        overflow: 'scroll',
+        
     },
     title: {
         fontSize: 24,
