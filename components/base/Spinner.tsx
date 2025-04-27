@@ -2,7 +2,7 @@ import { ViewStyle } from "react-native"
 import { ActivityIndicator } from "react-native-paper"
 
 interface ISpinnerProps {
-    style: ViewStyle
+    style?: ViewStyle
 }
 
 export default function Spinner({ style }: ISpinnerProps) {

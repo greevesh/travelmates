@@ -24,7 +24,7 @@ interface Trip {
 
 export default function Trips() {
     const [createTripLoading, setCreateTripLoading] = useState<boolean>(false)
-    const [deleteTriploading, setDeleteTripLoading] = useState<boolean>(false)
+    const [deletingTripId, setDeletingTripId] = useState<string | null>(null)
     const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
 
     const { location, startDate, endDate, tripDates, setLocationQuery, setStartDate, setEndDate, setTripDates } = useTripStore((state) => ({
@@ -94,7 +94,7 @@ export default function Trips() {
     const handleDeleteTrip = async (tripId: undefined | string) => {
         if (!tripId) return
         try {
-            setDeleteTripLoading(true)
+            setDeletingTripId(tripId)
             const { username, refreshToken } = await fetchUserCredentials()
             await axios.delete(`${tripEndpoint}/${tripId}`, {
                 headers: {
@@ -119,11 +119,14 @@ export default function Trips() {
                     }))
                 }
             })
-            setDeleteTripLoading(false)
             console.log(`Trip with id ${tripId} deleted successfully.`)
-        } catch (err) {
+        } 
+        catch (err) {
             Alert.alert('Failed to delete trip. Please try again.')
             console.error('Error deleting trip: ', err);
+        }
+        finally {
+            setDeletingTripId(null)
         }
     }
 
@@ -194,7 +197,7 @@ export default function Trips() {
                             renderItem={({ item: trip }) => (
                                 <View style={{ width: 330, marginTop: 15 }}>
                                     <View style={styles.tripContainer}>
-                                        {deleteTriploading ?
+                                        {deletingTripId === trip.id ?
                                             <Spinner style={{ top: 5, right: 10 }} />
                                             :
                                             <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
