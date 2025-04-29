@@ -17,7 +17,7 @@ export default function StartDatePicker() {
 		tripDates: state.tripDates
 	}))
 
-	const getLatestAvailableDate = () => {
+	const getEarliestAvailableDate = () => {
 		if (!endDate) return undefined
 
         const latestDisabledDate = tripDates.findLast((date) => new Date(date) < endDate)
@@ -28,7 +28,7 @@ export default function StartDatePicker() {
         return undefined
     }
 
-	const minDate = getLatestAvailableDate() || isoFormatDate(new Date())
+	const minDate = getEarliestAvailableDate() || isoFormatDate(new Date())
 	const maxDate = isoFormatDate(endDate) || isoFormatDate(getThreeYearsFromToday())
 
 	const handleDateSelect = (date: DateData) => {
