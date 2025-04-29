@@ -10,11 +10,26 @@ export default function StartDatePicker() {
 	const [visible, setVisible] = useState(false)
 	const disabledDates = useDisableDates()
 
-	const { startDate, setStartDate, endDate } = useTripStore((state) => ({
+	const { startDate, setStartDate, endDate, tripDates } = useTripStore((state) => ({
 		startDate: state.startDate,
 		setStartDate: state.setStartDate,
 		endDate: state.endDate,
+		tripDates: state.tripDates
 	}))
+
+	const getLatestAvailableDate = () => {
+		if (!endDate) return undefined
+
+        const latestDisabledDate = tripDates.findLast((date) => new Date(date) < endDate)
+        const earliestAvailableDate = latestDisabledDate && new Date(latestDisabledDate).setDate(new Date(latestDisabledDate).getDate() + 1)
+        if (earliestAvailableDate) {
+            return new Date(earliestAvailableDate).toDateString()
+        }
+        return undefined
+    }
+
+	const minDate = getLatestAvailableDate() || isoFormatDate(new Date())
+	const maxDate = isoFormatDate(endDate) || isoFormatDate(getThreeYearsFromToday())
 
 	const handleDateSelect = (date: DateData) => {
 		setStartDate(new Date(date.dateString))
