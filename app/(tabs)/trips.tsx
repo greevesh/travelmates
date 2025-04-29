@@ -103,22 +103,6 @@ export default function Trips() {
                 }
             })
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
-            trips.map((trip) => {
-                if (trip.id === tripId) {
-                    setTripDates((prevTripDates: string[]) => prevTripDates?.filter(tripDate => {
-                        if (trip.startDate && trip.endDate) {
-                            // We only want date to be a distinguishing factor. Not time    
-                            const normalizedStartDate = new Date(trip.startDate)
-                            const normalizedEndDate = new Date(trip.endDate)
-                            normalizedStartDate.setHours(0, 0, 0, 0)
-                            normalizedEndDate.setHours(0, 0, 0, 0)
-                            const currentTripDate = new Date(tripDate) >= normalizedStartDate && new Date(tripDate) <= normalizedEndDate
-                            console.log('current trip date: ', currentTripDate)
-                            return !currentTripDate  
-                        }
-                    }))
-                }
-            })
             console.log(`Trip with id ${tripId} deleted successfully.`)
         } 
         catch (err) {
