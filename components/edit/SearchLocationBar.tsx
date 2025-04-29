@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
 	},
 	resultsContainer: {
 		position: 'absolute',
-		top: 50,
+		top: 102,
 		width: 345,
 		marginTop: 10,
 		backgroundColor: '#f9f9f9',
