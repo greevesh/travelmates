@@ -4,6 +4,7 @@ import { useTripStore } from '@/stores/useTripStore'
 import { useEffect, useState } from 'react'
 import { formatDate, getThreeYearsFromToday, isoFormatDate } from '@/utils/dates'
 import useDisableDates from '@/hooks/useDisableDates'
+import WithModal from '../hoc/WithModal'
 
 export default function StartDatePicker() {
 	const [visible, setVisible] = useState(false)
@@ -33,18 +34,19 @@ export default function StartDatePicker() {
 				style={styles.input}
 				readOnly 
 			/>
-			{visible &&
-				<View style={styles.container}>
-					<Calendar
-						onDayPress={handleDateSelect}
-						markedDates={{
-							...disabledDates
-						}}
-						minDate={isoFormatDate(new Date())}
-						maxDate={isoFormatDate(endDate) || isoFormatDate(getThreeYearsFromToday())}
-					/>
-				</View>
-			}
+			<WithModal
+				visible={visible}
+				onClose={() => setVisible(false)}
+			>
+				<Calendar
+					onDayPress={handleDateSelect}
+					markedDates={{
+						...disabledDates
+					}}
+					minDate={minDate}
+					maxDate={maxDate}
+				/>
+			</WithModal>
 		</View>
 	)
 }
@@ -59,12 +61,4 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 		backgroundColor: '#f0f0f0',
 	},
-	container: {
-		position: 'absolute',
-		zIndex: 50,
-		width: 250,
-		backgroundColor: '#fff',
-		borderRadius: 10,
-		padding: 10,
-	}
 })
