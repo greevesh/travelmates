@@ -12,12 +12,13 @@ interface IBaseButtonProps {
 		size: number
 	}
 	mb?: number
-	children?: ReactNode
+	children?: ReactNode,
+	disabled?: boolean,
 }
 
-export default function BaseButton({ onPress, children, bgColor, w, mb, icon, text }: IBaseButtonProps) {
+export default function BaseButton({ onPress, children, bgColor, w, mb, icon, text, disabled }: IBaseButtonProps) {
 	return (
-		<Pressable onPress={onPress} style={[styles.button, { backgroundColor: bgColor, width: w, marginBottom: mb }]}>
+		<Pressable disabled={disabled} onPress={onPress} style={[styles.button, { backgroundColor: bgColor, width: w, marginBottom: mb }]}>
 			{icon && <Icon size={icon.size} source={icon.source} color='#fff' /> }
 			<Text style={styles.text}>{text}</Text>
 			{children && children}
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
 	button: {
 		borderRadius: 4,
 		height: 48,
-		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',

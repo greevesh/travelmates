@@ -120,11 +120,16 @@ const styles = StyleSheet.create({
 		height: 45,
 		width: 345,
 		borderRadius: 50,
-		backgroundColor: '#f0f0f0'
+		shadowColor: '#000',
+		backgroundColor: '#f9f9f9',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 3, // For Android
 	},
 	resultsContainer: {
 		position: 'absolute',
-		top: 50,
+		top: 102,
 		width: 345,
 		marginTop: 10,
 		backgroundColor: '#f9f9f9',

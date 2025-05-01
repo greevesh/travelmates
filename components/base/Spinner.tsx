@@ -1,15 +1,12 @@
-import { StyleSheet } from "react-native"
+import { ViewStyle } from "react-native"
 import { ActivityIndicator } from "react-native-paper"
 
-export default function Spinner() {
-    return (
-        <ActivityIndicator style={styles.spinner} color="#fff" size={20} />
-    )
+interface ISpinnerProps {
+    style?: ViewStyle
 }
 
-const styles = StyleSheet.create({
-    spinner: {
-        position: 'absolute',
-        right: 20
-    }
-})
+export default function Spinner({ style }: ISpinnerProps) {
+    return (
+        <ActivityIndicator style={[ style, { position: 'absolute' } ]} color="#fff" size={20} />
+    )
+}
