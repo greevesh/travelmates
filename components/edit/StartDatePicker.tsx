@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { formatDate, getThreeYearsFromToday, isoFormatDate } from '@/utils/dates'
 import useDisableDates from '@/hooks/useDisableDates'
 import WithModal from '../hoc/WithModal'
+import { Icon } from 'react-native-paper'
 
 export default function StartDatePicker() {
 	const [visible, setVisible] = useState(false)
@@ -42,13 +43,18 @@ export default function StartDatePicker() {
 
 	return (
 		<View>
-			<TextInput 
-				onPress={() => setVisible(true)} 
-				placeholder={startDate ? formatDate(startDate) : formatDate(new Date())} 
-				placeholderTextColor='black'
-				style={styles.input}
-				readOnly 
-			/>
+			<View style={styles.inputContainer}>
+				<TextInput 
+					onPress={() => setVisible(true)} 
+					placeholder={startDate ? formatDate(startDate) : formatDate(new Date())} 
+					placeholderTextColor='black'
+					style={styles.input}
+					readOnly 
+				/>
+				<View style={styles.iconContainer}>
+					<Icon size={18} source="calendar" color='#3a9fff' />
+				</View>
+			</View>
 			<WithModal
 				visible={visible}
 				onClose={() => setVisible(false)}
@@ -67,13 +73,26 @@ export default function StartDatePicker() {
 }
 
 const styles = StyleSheet.create({
-	input: {
+	inputContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		backgroundColor: '#f9f9f9',
+		borderRadius: 10,
+		width: 160,
 		height: 35,
-		width: 120,
 		marginLeft: 10,
 		marginTop: 12,
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 6,
+		elevation: 3,
+	},
+	input: {
+		flex: 1,
 		padding: 10,
-		borderRadius: 5,
-		backgroundColor: '#f0f0f0',
+	},
+	iconContainer: {
+		marginRight: 10,
 	},
 })

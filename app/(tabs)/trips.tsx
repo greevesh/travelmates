@@ -12,7 +12,7 @@ import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
 import { View, StyleSheet, Alert, Text, FlatList } from "react-native"
-import { Button, IconButton } from "react-native-paper"
+import { Button, Icon, IconButton } from "react-native-paper"
 
 interface Trip {
     id?: undefined | string
@@ -160,18 +160,25 @@ export default function Trips() {
     }, [tripDates])
 
     return (
-        <LinearGradient colors={['#3b5998', '#8b9dc3']}>
+        <LinearGradient colors={['#8ec5fc', '#5f93d3']}>
             <View style={styles.container}>
                 <View style={styles.card}>
                     <View style={styles.subcontainer}>
-                        <Title style={styles.title}>Trips</Title>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={styles.planeContainer}>
+                                <Icon size={40} source="airplane" color='#3a9fff' />
+                            </View>
+                            <Title style={styles.title}>Trips</Title>
+                        </View>
                         <SearchLocationBar />
                         <View style={styles.dateContainer}>
                             <StartDatePicker />
                             <EndDatePicker />
                         </View>
                         <View style={styles.btnContainer}>
-                            <Button style={{ backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#4285F4'}`, borderRadius: 5, width: 100 }} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>{createTripLoading ? <Spinner /> : 'Add Trip'}</Button>
+                            <Button style={[styles.addTripBtn, { backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#3a9fff'}` }]} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>
+                                {createTripLoading ? <Spinner /> : <Text style={{ fontSize: 18, textAlign: 'center' }}>Add Trip</Text>}
+                            </Button>
                         </View>
                         <FlatList
                             data={trips.filter(trip => trip.id)}
@@ -182,14 +189,17 @@ export default function Trips() {
                                 <View style={{ width: 330, marginTop: 15 }}>
                                     <View style={styles.tripContainer}>
                                         {deletingTripId === trip.id ?
-                                            <Spinner style={{ top: 5, right: 10 }} />
+                                            <Spinner style={styles.spinner} />
                                             :
-                                            <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={17} />
+                                            <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={25} />
                                         }
                                         <View style={styles.trip}>
-                                            <Text>{trip.location} - </Text>
-                                            <Text>{trip.startDate?.toDateString()} - </Text>
-                                            <Text>{trip.endDate?.toDateString()}</Text>
+                                            <Icon color='#b22222' source="map-marker" size={25} />
+                                            <Text style={styles.locationText}>{trip.location}</Text>
+                                            <View style={styles.dateTextContainer}>
+                                                <Text style={{ fontSize: 13 }}>{trip.startDate?.toDateString()} - </Text>
+                                                <Text style={{ fontSize: 13 }}>{trip.endDate?.toDateString()}</Text>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
@@ -216,21 +226,31 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 		height: 500,
         alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4},
+        shadowOpacity: 0.1,
+        shadowRadius: 10, 
+        elevation: 5
     },
     subcontainer: {
         alignItems: 'center', 
         width: '100%', 
         overflow: 'scroll',
-        
+    },
+    planeContainer: {
+        position: 'absolute', 
+        top: 20, 
+        left: -100
     },
     title: {
-        fontSize: 24,
+        fontSize: 36,
 		textAlign: 'center',
-        margin: 20
+        margin: 20,
+        fontWeight: 600
     },
     dateContainer: {
         flexDirection: 'row', 
-        justifyContent: 'flex-start', 
+        justifyContent: 'center', 
         marginTop: 20,
         marginLeft: 0,
         width: '90%'
@@ -238,21 +258,43 @@ const styles = StyleSheet.create({
     btnContainer: {
         width: '90%', 
         marginTop: 30, 
-        marginLeft: 20,
         marginBottom: 20, 
         alignItems: 'flex-start'
+    },
+    addTripBtn: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 6,
+        borderRadius: 25, 
+        width: 345, 
+        height: 45, 
+        justifyContent: 'center'
     },
     tripContainer: {
         flexDirection: 'row', 
         flexWrap: 'wrap', 
-        backgroundColor: '#E8E8E8', 
-        borderWidth: 1.2, 
-        borderRadius: 20, 
+        backgroundColor: '#f9f9f9',
+        height: 80,
+        borderRadius: 12,
         padding: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 5, 
+        elevation: 5
+    },
+    spinner: {
+        position: 'absolute', 
+        top: 2, 
+        right: -15,
+        color: '#3a9fff',
+        height: 80,
+        width: 80
     },
     deleteIcon: {
         position: 'absolute', 
-        top: -7, 
+        top: 15, 
         right: -3
     },
     trip: {
@@ -264,4 +306,15 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         alignItems: 'center'
     },
+    locationText: {
+        fontWeight: 600, 
+        fontSize: 16, 
+        marginTop: 3, 
+        marginLeft: 15
+    },
+    dateTextContainer: {
+        flexDirection: 'row', 
+        marginTop: 10, 
+        marginLeft: 40
+    }
 })
