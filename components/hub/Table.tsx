@@ -1,10 +1,9 @@
-import fetchCurrentUserTrip from "@/utils/fetchCurrentUserTrip"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { DataTable, IconButton } from 'react-native-paper'
 import { ScrollView, View, Text, StyleSheet } from 'react-native'
-import React from "react"
 import ProfilePhoto from "../edit/ProfilePhoto"
 import { useCurrentUserStore } from "@/stores/useProfilePhotoStore"
+import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 
 interface TableTrip {
     location: string
@@ -26,52 +25,65 @@ export default function Table() {
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
 
-    const [trip, setTrip] = useState<TableTrip>({ location: '', startDay: undefined, endDay: undefined })
+    const [trips, setTrips] = useState<TableTrip[]>([])
     
     const username = useCurrentUserStore((state) => state.username)
 
-    const parseTrip = (trip: RawTrip) => {
+    /**
+     * Parses a trip into a format suitable for display in the monthly calendar
+     * Handles cases where:
+     * - Trip starts in current month
+     * - Trip ends in current month
+     * - Trip spans multiple months
+     * - Trip spans multiple years
+    */
+    
+    const parseTrip = (trip: RawTrip): TableTrip | null => {
         const { startDate, endDate, location } = trip
         let startDay = startDate.getDate()
         let endDay = endDate.getDate()
         let fullMonth = false
 
-        console.log('end date: ', displayYear < endDate.getFullYear())
+        const startsInCurrentMonth = startDate.getMonth() === month && startDate.getFullYear() === displayYear
+        const endsInCurrentMonth = endDate.getMonth() === month && endDate.getFullYear() === displayYear
+        const sameYear = startDate.getFullYear() === endDate.getFullYear() && startDate.getFullYear() === displayYear
+        const spansMonths = month > startDate.getMonth() && month < endDate.getMonth()
+        const spansMonthsNotYears = sameYear && spansMonths
+        const spansYears = endDate.getFullYear() > startDate.getFullYear()
+        const moreThanOneYearAndMonth = spansYears && month > startDate.getMonth() || spansYears && month < endDate.getMonth()
 
-        const isStartInCurrentMonth = startDate.getMonth() === month && startDate.getFullYear() === displayYear
-        const isEndInCurrentMonth = endDate.getMonth() === month && endDate.getFullYear() === displayYear
-        const betweenMonths = month > startDate.getMonth() && month < endDate.getMonth()
-        const moreThanOneYear = displayYear < endDate.getFullYear() || displayYear === endDate.getFullYear() && month < endDate.getMonth()
-
-        if (isStartInCurrentMonth && !isEndInCurrentMonth) {
+        if (startsInCurrentMonth && !endsInCurrentMonth) {
             endDay = monthDaysLength
         }
-        else if (betweenMonths || moreThanOneYear) {
+        else if (spansMonthsNotYears || moreThanOneYearAndMonth) {
             startDay = 1
             endDay = monthDaysLength
             fullMonth = true
         }
-        // If doesn't start in current month but ends in current month
-        else if (!isStartInCurrentMonth) {
+        else if (!startsInCurrentMonth && endsInCurrentMonth) {
             startDay = 1
         }
 
-        if (isStartInCurrentMonth || isEndInCurrentMonth || fullMonth) {
-            setTrip({ location, startDay, endDay })
+        if (startsInCurrentMonth || endsInCurrentMonth || fullMonth) {
+            return { location, startDay, endDay }
         }
-        else {
-            setTrip({ location: '', startDay: undefined, endDay: undefined })
-        }
+        return null
     }
     
-    const loadCurrentUserTrip = async () => {
+    const loadCurrentUserTrips = async () => {
         try {
-            const currentUserTrip = await fetchCurrentUserTrip()
-            const startDate = new Date(currentUserTrip.startDate)
-            const endDate = new Date(currentUserTrip.endDate)
-            const { location } = await fetchCurrentUserTrip()
-            parseTrip({ startDate, endDate, location })
-            // console.log('trip: ', { location, startDate, endDate, startDay, endDay })
+            const rawTrips = await fetchCurrentUserTrips()
+            const newTrips: TableTrip[] = []
+            
+            rawTrips.forEach((trip: any) => {
+                const startDate = new Date(trip.startDate)
+                const endDate = new Date(trip.endDate)
+                const { location } = trip
+                const parsedTrip = parseTrip({ startDate, endDate, location })
+                parsedTrip && newTrips.push(parsedTrip)
+            })
+            setTrips(newTrips)
+            console.log('trips loaded: ', newTrips)
         }
         catch (err) {
             console.error('Error storing current trip data: ', err)
@@ -113,14 +125,22 @@ export default function Table() {
     const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
 
     useEffect(() => {
-        loadCurrentUserTrip()
+        loadCurrentUserTrips()
         console.log('month: ', month)
     }, [month])
 
     useEffect(() => {
         loadDisplayDays()
-        console.log('trip: ', trip)
-    }, [monthDaysLength, trip])
+        console.log('trips: ', trips)
+    }, [monthDaysLength, trips])
+
+    const getTripDays = (day: number) => {
+        return trips.filter(trip => 
+            trip.startDay && trip.endDay && 
+            day >= trip.startDay && 
+            day <= trip.endDay
+        )
+    }
 
     return (
         <>
@@ -142,21 +162,20 @@ export default function Table() {
                                 <ProfilePhoto size={25} />
                                 <Text style={{ marginTop: 3, marginLeft: 7 }}>{username}</Text>
                             </View>
-                            {displayDays && displayDays.map((day) => (
-                                <React.Fragment key={day}>
-                                    {trip.startDay && day >= trip.startDay && trip.endDay && day <= trip.endDay ? (
-                                        <View style={{ backgroundColor: 'lightblue', width: 30 }}>
-                                            {trip.startDay === day && (
-                                                <Text>{trip.location}</Text>
-                                            )}
+                            {displayDays && displayDays.map((day) => {
+                                const dayTrips = getTripDays(day)
+                                return (
+                                    <React.Fragment key={day}>
+                                        <View style={{ backgroundColor: dayTrips.length > 0 ? 'lightblue' : undefined, width: 30 }}>
+                                            {dayTrips.map((trip, index) => (
+                                                trip.startDay === day && (
+                                                    <Text key={index} style={styles.locationText}>{trip.location}</Text>
+                                                )
+                                            ))}
                                         </View>
-                                    ) : (
-                                        <View style={{ width: 30 }}>
-                                            <Text></Text>
-                                        </View>
-                                    )}
-                                </React.Fragment>
-                            ))}
+                                    </React.Fragment>
+                                )
+                            })}
                         </DataTable.Row>
                     </DataTable>
                 </ScrollView>
@@ -182,6 +201,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center', 
         width: 30
+    },
+    locationText: {
+        marginTop: 15, 
+        marginLeft: 5, 
+        fontSize: 14, 
+        width: 400, 
+        zIndex: 50 
     },
     belowTableContainer: {
         display: 'flex',
