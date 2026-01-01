@@ -12,10 +12,30 @@ interface Credentials {
 export const authenticate = async (data: Credentials, endpoint: string) => {
 	try {
 		const { username, password } = data
-		const res = await axios.post(endpoint, { username, password })
+		const res = await axios.post(endpoint, { username, password }, {
+			timeout: 10000
+		})
 		return res.data
 	} catch (err) {
-		if (err instanceof AxiosError && err.response) {
+		if (err instanceof AxiosError) {
+			// Network error - endpoint not reachable
+			if (!err.response) {
+				if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND' || err.code === 'ETIMEDOUT') {
+					Alert.alert(
+						'Connection Error',
+						'Unable to reach the server. Please check your internet connection and ensure the server is running.'
+					)
+				} else {
+					Alert.alert(
+						'Network Error',
+						'Failed to connect to the server. Please check your internet connection and try again.'
+					)
+				}
+				console.log('Error: ', 'Endpoints may not match. Please check server configuration.')
+				throw err
+			}
+
+			// HTTP error responses
 			if (endpoint === signInEndpoint) {
 				switch (err.response.status) {
 				case 404:
@@ -36,6 +56,7 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 				}
 			}
 		} else {
+			console.log('err: ', err)
 			Alert.alert('There was an issue authenticating')
 		}
 		throw err
