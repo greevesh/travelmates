@@ -1,13 +1,14 @@
 import React, { ReactNode } from 'react'
-import { Modal, View, StyleSheet } from 'react-native'
+import { Modal, View, StyleSheet, StyleProp, ViewStyle } from 'react-native'
 
 interface WithModalProps {
   visible: boolean
   onClose: () => void
   children: ReactNode
+  style?: StyleProp<ViewStyle>
 }
 
-const WithModal = ({ visible, onClose, children }: WithModalProps) => {
+const WithModal = ({ visible, onClose, children, style }: WithModalProps) => {
     return (
         <Modal
           visible={visible}
@@ -16,7 +17,7 @@ const WithModal = ({ visible, onClose, children }: WithModalProps) => {
           onRequestClose={onClose}
         >
           <View style={styles.container}>
-            <View style={styles.content}>
+            <View style={[styles.content, style]}>
               {children}
             </View>
           </View>

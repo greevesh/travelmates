@@ -1,4 +1,8 @@
-import React from 'react'
+import { friendshipsEndpoint } from '@/consts/api'
+import { fetchUserCredentials } from '@/utils/auth'
+import fetchCurrentUser from '@/utils/fetchCurrentUser'
+import axios from 'axios'
+import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import { Badge, IconButton } from 'react-native-paper'
 
@@ -8,6 +12,36 @@ interface NotificationBadgeProps {
 }
 
 export default function NotificationBadge({ count, onPress }: NotificationBadgeProps) {
+
+    async function fetchFriendReqs() {
+        try {
+            const { username, refreshToken } = await fetchUserCredentials()
+            const { _id } = await fetchCurrentUser()
+            const res = await axios.get(friendshipsEndpoint, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${refreshToken}`,
+                    'X-Username': username || ''
+                },
+                params: {
+                    status: 'pending',
+                    recipientId: _id
+                }
+            },
+        )
+            console.log('fetched friend reqs: ', res.data)
+            return res.data[0]
+        }
+        catch(err) {
+            console.error('Error: Failed to fetch the current user: ', err)
+            throw err
+        }
+    }
+
+    useEffect(() => {
+        fetchFriendReqs()
+    }, [])
+
     return (
         <>
             <IconButton

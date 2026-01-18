@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
 
 import { useUserStore } from '../../stores/useUserStore'
 import { useFriendshipStore } from '../../stores/useFriendshipStore'
@@ -12,7 +12,11 @@ import debounce from '@/utils/debounce'
 import { fetchUserCredentials } from '@/utils/auth'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 
-export default function SearchUserBar() {
+interface SearchUserBarProps {
+	style?: StyleProp<ViewStyle>
+  }
+
+export default function SearchUserBar({ style }: SearchUserBarProps) {
 	const [query, setQuery] = useState<string>('')
 	const [users, setUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
@@ -100,7 +104,7 @@ export default function SearchUserBar() {
 			<Searchbar
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
-				style={styles.searchbar}
+				style={[styles.searchbar]}
 				value={query}
 				onChangeText={(text) => {
 					setQuery(text)
