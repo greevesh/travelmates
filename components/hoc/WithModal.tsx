@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Modal, View, StyleSheet, StyleProp, ViewStyle } from 'react-native'
+import { Modal, View, StyleSheet, StyleProp, ViewStyle, Pressable } from 'react-native'
 
 interface WithModalProps {
   visible: boolean
@@ -16,11 +16,17 @@ const WithModal = ({ visible, onClose, children, style }: WithModalProps) => {
           animationType="fade"
           onRequestClose={onClose}
         >
-          <View style={styles.container}>
-            <View style={[styles.content, style]}>
+          <Pressable 
+            style={styles.container}
+            onPress={onClose}
+          >
+            <View 
+              style={[styles.content, style]}
+              onStartShouldSetResponder={() => true}
+            >
               {children}
             </View>
-          </View>
+          </Pressable>
         </Modal>
     )
 }
