@@ -28,7 +28,7 @@ export default function Navbar() {
 				{pathname === '/hub' && (
 					<View style={{ flexDirection: 'row' }}>
 						<SendFriendRequestButton />
-						<NotificationBadge count={0} onPress={() => console.log('pressed')} />
+						<NotificationBadge onPress={() => console.log('pressed')} />
 					</View>
 				)}
 			</View>

@@ -2,16 +2,17 @@ import { friendshipsEndpoint } from '@/consts/api'
 import { fetchUserCredentials } from '@/utils/auth'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { Badge, IconButton } from 'react-native-paper'
 
 interface NotificationBadgeProps {
-    count: number
     onPress: () => void
 }
 
-export default function NotificationBadge({ count, onPress }: NotificationBadgeProps) {
+export default function NotificationBadge({ onPress }: NotificationBadgeProps) {
+
+    const [count, setCount] = useState(0)
 
     async function fetchFriendReqs() {
         try {
@@ -29,8 +30,8 @@ export default function NotificationBadge({ count, onPress }: NotificationBadgeP
                 }
             },
         )
-            console.log('fetched friend reqs: ', res.data)
-            return res.data[0]
+            const { friendReqs } = res.data
+            setCount(friendReqs.length)
         }
         catch(err) {
             console.error('Error: Failed to fetch the current user: ', err)
