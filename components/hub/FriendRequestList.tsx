@@ -1,10 +1,10 @@
-import { StyleSheet, View, FlatList } from 'react-native'
+import { StyleSheet, FlatList } from 'react-native'
 import { Card, Text } from 'react-native-paper'
-import { Friendship } from '@/stores/useFriendshipStore'
+import { FriendRequest } from '@/stores/useFriendRequestStore'
 import FriendRequestCard from './FriendRequestCard'
 
 interface FriendRequestListProps {
-    requests: Friendship[]
+    requests: FriendRequest[]
     onAccept: (requestId: number) => void
     onReject: (requestId: number) => void
 }
