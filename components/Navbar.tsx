@@ -5,8 +5,12 @@ import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 import { usePathname } from 'expo-router'
 import NotificationBadge from './hub/NotificationBadge'
 import SendFriendRequestButton from './hub/SendFriendRequestButton'
+import { useState } from 'react'
+import NotificationsModal from './hub/NotificationsButton'
+import NotificationsButton from './hub/NotificationsButton'
 
 export default function Navbar() {
+	const [notificationsModalVisible, setNotificationsModalVisible] = useState(false)
 	const pathname = usePathname()
 
 	const [fontsLoaded] = useFonts({
@@ -28,7 +32,7 @@ export default function Navbar() {
 				{pathname === '/hub' && (
 					<View style={{ flexDirection: 'row' }}>
 						<SendFriendRequestButton />
-						<NotificationBadge onPress={() => console.log('pressed')} />
+						<NotificationsButton />
 					</View>
 				)}
 			</View>
