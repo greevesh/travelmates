@@ -1,8 +1,10 @@
-export const signUpEndpoint = 'http://192.168.0.102:3500/signup'
-export const signInEndpoint = 'http://192.168.0.102:3500/signin'
-export const signOutEndpoint = 'http://192.168.0.102:3500/signout'
-export const usersEndpoint = 'http://192.168.0.102:3500/users?q='
-export const setupEndpoint = 'http://192.168.0.102:3500/user-setup'
-export const friendshipsEndpoint = 'http://192.168.0.102:3500/friendships'
+const url = process.env.EXPO_PUBLIC_DEV_URL
+
+export const signUpEndpoint = `${url}signup`
+export const signInEndpoint = `${url}signin`
+export const signOutEndpoint = `${url}signout`
+export const usersEndpoint = `${url}users?q=`
+export const setupEndpoint = `${url}user-setup`
+export const friendRequestsEndpoint = `${url}friend-requests`
 
 export const s3ProfilePicsEndpoint = 'https://travelmates-profile-pics.s3.ap-southeast-1.amazonaws.com/'
