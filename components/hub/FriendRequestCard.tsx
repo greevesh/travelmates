@@ -1,38 +1,43 @@
-import { StyleSheet, View, Pressable } from 'react-native'
-import { Avatar, Button, Text } from 'react-native-paper'
-import { Friendship } from '@/stores/useFriendshipStore'
+import { StyleSheet, View, Image, Icon } from 'react-native'
+import { Avatar, Button, IconButton, Text } from 'react-native-paper'
+import { FriendRequest } from '@/stores/useFriendRequestStore'
 
 interface FriendRequestCardProps {
-    request: Friendship
+    pic: string,
+    username: string
+    request: FriendRequest
     onAccept: (requestId: number) => void
     onReject: (requestId: number) => void
 }
 
-export default function FriendRequestCard({ request, onAccept, onReject }: FriendRequestCardProps) {
+export default function FriendRequestCard({ pic, username, request, onAccept, onReject }: FriendRequestCardProps) {
     return (
         <View style={styles.container}>
             <View style={styles.userInfo}>
-                <Avatar.Text 
-                    size={40} 
-                    label={request.senderId.toString().charAt(0).toUpperCase()} 
+                <Image
+                    src={pic} 
+                    source={require('../../assets/img/placeholder-profile2.webp')} 
+                    style={styles.img} 
                 />
-                <Text style={styles.username}>User</Text>
+                <View>
+                    <Text style={styles.username}>{username}</Text>
+                    <Text style={styles.message}>wants to add you</Text>
+                </View>
             </View>
             <View style={styles.actions}>
-                <Button 
+                <IconButton
+                    icon="check"
+                    iconColor='#fff' 
                     mode="contained" 
                     onPress={() => onAccept(request.recipientId)}
                     style={styles.acceptButton}
-                >
-                    Accept
-                </Button>
-                <Button 
+                />
+                <IconButton 
+                    icon="close"
                     mode="outlined" 
                     onPress={() => onReject(request.recipientId)}
                     style={styles.rejectButton}
-                >
-                    Reject
-                </Button>
+                />
             </View>
         </View>
     )
@@ -44,7 +49,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
-        backgroundColor: '#fff',
         borderRadius: 8,
         marginBottom: 8,
         elevation: 2,
@@ -52,19 +56,30 @@ const styles = StyleSheet.create({
     userInfo: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginHorizontal: 20,
     },
+    img: {
+		width: 50,
+		height: 50,
+		borderRadius: 25,
+        marginRight: 20
+	},
     username: {
-        marginLeft: 12,
-        fontSize: 16,
+        fontSize: 17,
+    },
+    message: {
+        fontSize: 13,
+        color: 'grey',
+        marginTop: 3
     },
     actions: {
         flexDirection: 'row',
         gap: 8,
     },
     acceptButton: {
-        backgroundColor: '#28A745',
+        backgroundColor: '#3a9fff',
     },
     rejectButton: {
-        borderColor: '#DC3545',
+        borderColor: '#94A3B8',
     },
 }) 
