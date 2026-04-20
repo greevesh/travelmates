@@ -1,43 +1,50 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
-import { Image, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { ActivityIndicator, Button, Icon, Searchbar } from 'react-native-paper'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 import { useUserStore } from '../../stores/useUserStore'
-import { useFriendshipStore } from '../../stores/useFriendshipStore'
-import { usersEndpoint } from '../../consts/api'
+import { friendRequestsEndpoint, usersEndpoint } from '../../consts/api'
 import { type User } from '../../stores/useUserStore'
-import Output from '../setup/fourth-step/Output'
 import React from 'react'
 import debounce from '@/utils/debounce'
-import { fetchUserCredentials } from '@/utils/auth'
+import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 
-interface SearchUserBarProps {
-	style?: StyleProp<ViewStyle>
-  }
+enum FriendRequestStatus {
+	PENDING = 'pending',
+	ACCEPTED = 'accepted',
+	REJECTED = 'rejected',
+	BLOCKED = 'blocked'
+}
 
-export default function SearchUserBar({ style }: SearchUserBarProps) {
+enum FriendRequestType {
+	INCOMING = 'incoming',
+	OUTGOING = 'outgoing'
+}
+interface FriendRequest {
+	senderId: string,
+	recipientId: string,
+	senderUsername: string,
+	status: FriendRequestStatus,
+	requestType: FriendRequestType
+}
+
+export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
 	const [users, setUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
+	const [loadingUserId, setLoadingUserId] = useState<string | null>(null)
+	const [alreadyAddedUsers, setAlreadyAddedUsers] = useState<Array<string>>([])
 	const [error, setError] = useState<string | null>(null)
 
-	const { selectedUsers, setSelectedUsers, removeSelectedUser } = useUserStore((state) => ({
+	const { selectedUsers } = useUserStore((state) => ({
 		selectedUsers: state.selectedUsers,
-		setSelectedUsers: state.setSelectedUsers,
-		removeSelectedUser: state.removeSelectedUser
-	}))
-
-	const { friendships, addFriendship, setFriendships } = useFriendshipStore((state) => ({
-		friendships: state.friendships,
-		addFriendship: state.addFriendship,
-		setFriendships: state.setFriendships,
 	}))
 
 	const fetchUsers = async (input: string) => {
 		try {
 			setLoading(true)
-			const {username, refreshToken} = await fetchUserCredentials()
+			const { _id, username, refreshToken } = await fetchCurrentUser()
 			const res = await fetch(usersEndpoint + input, {
 				method: 'GET',
 				headers: {
@@ -46,9 +53,11 @@ export default function SearchUserBar({ style }: SearchUserBarProps) {
 					'X-Username': username || ''
 				},
 			})
-			const data = await res.json()
-			const filteredData = data.filter((user: { _id: number }) => !selectedUsers.some((selectedUser) => selectedUser._id === user._id))
-			setUsers(filteredData)
+			const userData = await res.json()
+			const usersExceptCurrentUser = userData.filter((user: User) => user._id.toString() !== _id.toString())
+			console.log('users: ', users)
+			console.log('currentUserId: ', _id)
+			setUsers(usersExceptCurrentUser)
 		} catch (error) {
 			console.error('Error: Failed to fetch users: ', error)
 			setError('Failed to fetch users. Please try again.')
@@ -58,29 +67,64 @@ export default function SearchUserBar({ style }: SearchUserBarProps) {
 		}
 	}
 
-	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [selectedUsers])
+	const fetchAlreadyAddedUsers = async () => {
+		const { _id, username, refreshToken } = await fetchCurrentUser()
+		try {
+			const res = await axios.get(friendRequestsEndpoint, {
+				headers: {
+					'Authorization': `Bearer ${refreshToken}`,
+					'X-Username': username || ''
+				},
+				params: {
+                    status: 'pending',
+                    senderId: _id,
+					requestType: 'outgoing'
+                }
+			})
+			const pendingFriendRequests = res.data.pendingFriendRequests.map((friendship) => friendship.recipientId)
+			setAlreadyAddedUsers(pendingFriendRequests)
+			return res.data
+		}
+		catch (err) {
+			console.error('Error: Failed to fetch already added users: ', err)
+		}
+	}
 
-	const handleUserSelect = async (selectedUser: User) => {
-		setSelectedUsers(selectedUser)
-		const { _id } = await fetchCurrentUser()
-		addFriendship(
-			{
-				recipientId: selectedUser._id,
-				senderId: _id,
-				status: 'pending'
+	const handleSendFriendRequest = async (recipientId: string) => {
+		setLoadingUserId(recipientId)
+		const { _id, username, refreshToken } = await fetchCurrentUser()
+		try {
+            const user = { 
+				username, 
+				refreshToken 
 			}
-		)
-		setUsers([])
-		setQuery('')
+			const friendRequest: FriendRequest = {
+				senderId: _id,
+				recipientId,
+				senderUsername: user.username || '',
+				status: FriendRequestStatus.PENDING,
+				requestType: FriendRequestType.OUTGOING
+			}
+			const res = await axios.post(friendRequestsEndpoint, { user, friendRequest },
+				{
+					headers: {
+						'Authorization': `Bearer ${user.refreshToken}`
+					}
+				}
+			)
+			setAlreadyAddedUsers([...alreadyAddedUsers, recipientId])
+			console.log('pending friend reqs: ', res.data)
+			return res.data
+		}
+		catch (err) {
+			console.log('Could not send friend request: ', err)
+		}
+		finally {
+			setLoadingUserId(null)
+		}
 	}
 
-	const handleRemoveUser = (user: User) => {
-		removeSelectedUser(user)
-		const updatedFriendships = friendships.filter((friendship) => {
-			return user._id !== friendship.recipientId
-		})
-		setFriendships(updatedFriendships)
-	}
+	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [selectedUsers])
 
 	useEffect(() => {
 		if (!query) {
@@ -98,6 +142,15 @@ export default function SearchUserBar({ style }: SearchUserBarProps) {
 
 		return () => clearTimeout(timeoutId)
 	}, [users, query, loading])
+
+	useEffect(() => {
+		fetchAlreadyAddedUsers()
+		console.log('added users: ', alreadyAddedUsers)
+	}, [])
+
+	useEffect(() => {
+		console.log('selected users: ', selectedUsers)
+	}, [selectedUsers])
 
 	return (
 		<>
@@ -124,18 +177,26 @@ export default function SearchUserBar({ style }: SearchUserBarProps) {
 			}
 			<View style={styles.resultsContainer}>
 				{users.slice(0, 5).map((user, index) => (
-					<TouchableOpacity onPress={() => handleUserSelect(user)} key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === users.length - 1 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
-							<View style={styles.skeletonLoader} />
-							<Image 
-								src={user.pic} 
-								source={require('../../assets/img/placeholder-profile2.webp')} 
-								style={styles.img} 
-							/>
-						<Text style={{ marginLeft: 10, fontWeight: '500' }}>{user.username}</Text>
-					</TouchableOpacity>
+					<View key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === users.length - 1 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
+						<View style={styles.skeletonLoader} />
+						<Image 
+							src={user.pic} 
+							source={require('../../assets/img/placeholder-profile2.webp')} 
+							style={styles.img} 
+						/>
+						<Text style={{ left: 10, fontWeight: '500', width: 200 }}>{user.username}</Text>
+						{!alreadyAddedUsers.includes(user._id.toString()) ? 
+							<Button onPress={() => handleSendFriendRequest(user._id.toString())}>
+								{!loadingUserId?.includes(user._id.toString()) 
+								? 'Add friend' 
+								: 
+								<ActivityIndicator size="small" color="#007BFF" />}</Button> 
+							:
+							<Button disabled>Added</Button>
+						}
+					</View>		
 				))}
 			</View>
-			<Output selectedUsers={selectedUsers} handleRemoveUser={handleRemoveUser} />
 		</>
 	)
 }
@@ -143,7 +204,7 @@ export default function SearchUserBar({ style }: SearchUserBarProps) {
 const styles = StyleSheet.create({
 	searchbar: {
 		position: 'absolute',
-		top: 20,
+		top: 90,
 		height: 45,
 		width: 345,
 		borderRadius: 50,
@@ -155,7 +216,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
-		top: 55,
+		top: 75,
 		marginLeft: 25,
 	},
 	errorText: {
@@ -164,7 +225,7 @@ const styles = StyleSheet.create({
 	},
 	resultsContainer: {
 		position: 'absolute',
-		top: 50,
+		top: 125,
 		width: 345,
 		marginTop: 10,
 		backgroundColor: '#f9f9f9',
