@@ -5,7 +5,6 @@ import axios from 'axios'
 
 import { s3ProfilePicsEndpoint, setupEndpoint } from '@/consts/api'
 import { useTripStore } from '@/stores/useTripStore'
-import { useFriendshipStore } from '@/stores/useFriendshipStore'
 import { useUserStore } from '@/stores/useUserStore'
 import uploadImage from '@/utils/uploadImageToS3'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
@@ -37,11 +36,6 @@ export default function FinishButton() {
 		clearSelectedUsers: state.clearSelectedUsers
 	}))
 
-	const { friendships, clearFriendships } = useFriendshipStore((state) => ({
-		friendships: state.friendships,
-		clearFriendships: state.clearFriendships
-	}))
-
 	const clearSetupForm = () => {
 		setPhoto('')
 		setUploaded(false)
@@ -50,7 +44,6 @@ export default function FinishButton() {
 		setStartDate(undefined)
 		setEndDate(undefined)
 		clearSelectedUsers()
-		clearFriendships()
 	}
 
 	const handlePostData = async () => {
@@ -64,7 +57,7 @@ export default function FinishButton() {
 				...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
 				refreshToken 
 			}
-			const res = await axios.post(setupEndpoint, { user, trip, friendships },
+			const res = await axios.post(setupEndpoint, { user, trip },
 				{
 					headers: {
 						'Authorization': `Bearer ${user.refreshToken}`

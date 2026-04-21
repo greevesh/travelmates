@@ -3,6 +3,8 @@ import { Text } from 'react-native-paper'
 import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 
 import { usePathname } from 'expo-router'
+import SendFriendRequestButton from './hub/SendFriendRequestButton'
+import NotificationsButton from './hub/NotificationsButton'
 
 export default function Navbar() {
 	const pathname = usePathname()
@@ -23,6 +25,12 @@ export default function Navbar() {
 						<Text style={styles.text}>{pathname === '/settings' ? 'Settings' : 'TravelM@tes'}</Text>
 					</View>
 				</View>
+				{pathname === '/hub' && (
+					<View style={{ flexDirection: 'row' }}>
+						<SendFriendRequestButton />
+						<NotificationsButton />
+					</View>
+				)}
 			</View>
 		</View>
 	)
