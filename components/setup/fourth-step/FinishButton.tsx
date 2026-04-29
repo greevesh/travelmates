@@ -48,19 +48,19 @@ export default function FinishButton() {
 
 	const handlePostData = async () => {
 		setLoading(true)
-        const { username, refreshToken } = await fetchUserCredentials()
+        const { username, accessToken } = await fetchUserCredentials()
 		const { _id } = await fetchCurrentUser()
 		const trip = { startDate, endDate, location, userId: _id }
 		try {
 			const user = { 
 				username, 
 				...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
-				refreshToken 
+				accessToken 
 			}
 			const res = await axios.post(setupEndpoint, { user, trip },
 				{
 					headers: {
-						'Authorization': `Bearer ${user.refreshToken}`
+						'Authorization': `Bearer ${user.accessToken}`
 					}
 				}
 			)
