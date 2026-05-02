@@ -60,15 +60,15 @@ export default function Trips() {
 
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
-        const { username, refreshToken } = await fetchUserCredentials()
+        const { username, accessToken } = await fetchUserCredentials()
         const { _id } = await fetchCurrentUser()
-        const user = { username, refreshToken }
+        const user = { username, accessToken }
         const trip = { userId: _id, startDate, endDate, location }
         try {
             const res = await axios.post(tripEndpoint, { user, trip },
                 {
 					headers: {
-						'Authorization': `Bearer ${user.refreshToken}`
+						'Authorization': `Bearer ${user.accessToken}`
 					}
 				}
 			)
@@ -95,10 +95,10 @@ export default function Trips() {
         if (!tripId) return
         try {
             setDeletingTripId(tripId)
-            const { username, refreshToken } = await fetchUserCredentials()
+            const { username, accessToken } = await fetchUserCredentials()
             await axios.delete(`${tripEndpoint}/${tripId}`, {
                 headers: {
-                    'Authorization': `Bearer ${refreshToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'X-Username': username || ''
                 }
             })

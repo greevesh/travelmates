@@ -44,12 +44,12 @@ export default function SearchUserBar() {
 	const fetchUsers = async (input: string) => {
 		try {
 			setLoading(true)
-			const { _id, username, refreshToken } = await fetchCurrentUser()
+			const { _id, username, accessToken } = await fetchCurrentUser()
 			const res = await fetch(usersEndpoint + input, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${refreshToken}`,
+					'Authorization': `Bearer ${accessToken}`,
 					'X-Username': username || ''
 				},
 			})
@@ -68,11 +68,11 @@ export default function SearchUserBar() {
 	}
 
 	const fetchAlreadyAddedUsers = async () => {
-		const { _id, username, refreshToken } = await fetchCurrentUser()
+		const { _id, username, accessToken } = await fetchCurrentUser()
 		try {
 			const res = await axios.get(friendRequestsEndpoint, {
 				headers: {
-					'Authorization': `Bearer ${refreshToken}`,
+					'Authorization': `Bearer ${accessToken}`,
 					'X-Username': username || ''
 				},
 				params: {
@@ -92,11 +92,11 @@ export default function SearchUserBar() {
 
 	const handleSendFriendRequest = async (recipientId: string) => {
 		setLoadingUserId(recipientId)
-		const { _id, username, refreshToken } = await fetchCurrentUser()
+		const { _id, username, accessToken } = await fetchCurrentUser()
 		try {
             const user = { 
 				username, 
-				refreshToken 
+				accessToken 
 			}
 			const friendRequest: FriendRequest = {
 				senderId: _id,
@@ -108,7 +108,7 @@ export default function SearchUserBar() {
 			const res = await axios.post(friendRequestsEndpoint, { user, friendRequest },
 				{
 					headers: {
-						'Authorization': `Bearer ${user.refreshToken}`
+						'Authorization': `Bearer ${user.accessToken}`
 					}
 				}
 			)

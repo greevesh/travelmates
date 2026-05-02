@@ -4,12 +4,12 @@ import { fetchUserCredentials } from "./auth"
 
 export default async function fetchCurrentUser() {
     try {
-        const { username, refreshToken } = await fetchUserCredentials()
+        const { username, accessToken } = await fetchUserCredentials()
         const res = await axios.get(usersEndpoint + username, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${refreshToken}`,
+                'Authorization': `Bearer ${accessToken}`,
                 'X-Username': username || ''
             },
     })

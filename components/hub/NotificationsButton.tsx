@@ -18,12 +18,12 @@ export default function NotificationsModal() {
 
     async function fetchFriendReqs() {
         try {
-            const { username, refreshToken } = await fetchUserCredentials()
+            const { username, accessToken } = await fetchUserCredentials()
             const { _id } = await fetchCurrentUser()
             const res = await axios.get(friendRequestsEndpoint, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${refreshToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'X-Username': username || ''
                 },
                 params: {
@@ -46,16 +46,16 @@ export default function NotificationsModal() {
 
     const handlePostData = async () => {
 		setLoading(true)
-        const { username, refreshToken } = await fetchUserCredentials()
+        const { username, accessToken } = await fetchUserCredentials()
 		try {
             const user = { 
 				username, 
-				refreshToken 
+				accessToken 
 			}
 			const res = await axios.post(friendRequestsEndpoint, { user },
 				{
 					headers: {
-						'Authorization': `Bearer ${user.refreshToken}`
+						'Authorization': `Bearer ${user.accessToken}`
 					}
 				}
 			)
@@ -72,11 +72,11 @@ export default function NotificationsModal() {
 
     const handleAccept = async (requestId: string) => {
         try {
-            const { username, refreshToken } = await fetchUserCredentials()
+            const { username, accessToken } = await fetchUserCredentials()
             await axios.patch(friendRequestsEndpoint + requestId, {
                 status: 'accepted',
                 headers: {
-                    'Authorization': `Bearer ${refreshToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 }
             })
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
@@ -90,11 +90,11 @@ export default function NotificationsModal() {
 
     const handleReject = async (requestId: string) => {
         try {
-            const { username, refreshToken } = await fetchUserCredentials()
+            const { username, accessToken } = await fetchUserCredentials()
              await axios.patch(friendRequestsEndpoint + requestId, {
                 status: 'rejected',
                 headers: {
-                    'Authorization': `Bearer ${refreshToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 }
             })
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))

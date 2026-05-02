@@ -4,12 +4,12 @@ import { fetchUserCredentials } from "./auth"
 
 export default async function fetchCurrentUserTrips() {
     try {
-        const { username, refreshToken } = await fetchUserCredentials()
+        const { username, accessToken } = await fetchUserCredentials()
         const res = await axios.get(tripsEndpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${refreshToken}`,
+                'Authorization': `Bearer ${accessToken}`,
                 'X-Username': username || ''
             },
     })
