@@ -9,6 +9,7 @@ import React from 'react'
 import debounce from '@/utils/debounce'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
+import { handleError } from '@/utils/errorHandler'
 
 enum FriendRequestStatus {
 	PENDING = 'pending',
@@ -66,7 +67,7 @@ export default function SearchUserBar() {
 			}
 			setUsers(usersExceptCurrentUser)
 		} catch (error) {
-			console.error('Error: Failed to fetch users: ', error)
+			handleError(error, 'Failed to fetch users')
 			setError('Failed to fetch users. Please try again.')
 		}
 		finally {
@@ -93,7 +94,7 @@ export default function SearchUserBar() {
 			return res.data
 		}
 		catch (err) {
-			console.error('Error: Failed to fetch already added users: ', err)
+			handleError(err, 'Failed to fetch friend requests')
 		}
 	}
 

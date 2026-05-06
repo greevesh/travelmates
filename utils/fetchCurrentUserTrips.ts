@@ -1,6 +1,7 @@
 import { tripsEndpoint } from "@/consts/api"
 import axios from 'axios'
 import { fetchUserCredentials } from "./auth"
+import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUserTrips() {
     try {
@@ -17,7 +18,7 @@ export default async function fetchCurrentUserTrips() {
         return res.data
     }
     catch(err) {
-        console.error('Error: Failed to fetch the current trip: ', err)
+        handleError(err, 'Failed to fetch the current trip')
         throw err
     }
 }

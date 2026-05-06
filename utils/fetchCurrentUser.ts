@@ -1,6 +1,7 @@
 import { usersEndpoint } from "@/consts/api"
 import axios from 'axios'
 import { fetchUserCredentials } from "./auth"
+import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUser() {
     try {
@@ -16,7 +17,7 @@ export default async function fetchCurrentUser() {
         return res.data[0]
     }
     catch(err) {
-        console.error('Error: Failed to fetch the current user: ', err)
+        handleError(err, 'Failed to fetch the current user')
         throw err
     }
 }

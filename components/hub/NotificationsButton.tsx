@@ -8,6 +8,7 @@ import { fetchUserCredentials } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
+import { handleError } from '@/utils/errorHandler'
 
 interface Notification {
   _id: string;
@@ -45,7 +46,7 @@ export default function NotificationsModal() {
             setNotifications(friendReqs)
         }
         catch(err) {
-            console.error('Error: Failed to fetch the current user: ', err)
+            handleError(err, 'Failed to fetch friend requests')
             throw err
         }
     }
@@ -88,7 +89,7 @@ export default function NotificationsModal() {
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {
-            console.error('Error: Failed to accept the friend request: ', err)
+            handleError(err, 'Failed to accept the friend request')
             throw err
         }
     }
@@ -105,7 +106,7 @@ export default function NotificationsModal() {
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {
-            console.error('Error: Failed to reject the friend request: ', err)
+            handleError(err, 'Failed to reject the friend request')
             throw err
         }
     }

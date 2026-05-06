@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
 import { View, StyleSheet, Alert, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
+import { handleError } from "@/utils/errorHandler"
 
 interface Trip {
     id?: undefined | string
@@ -54,7 +55,7 @@ export default function Trips() {
             setTrips(loadedTrips)
         }
         catch (err) {
-            console.error('Error fetching trips: ', err)
+            handleError(err, 'Error fetching trips')
         }
     }
 
@@ -83,8 +84,7 @@ export default function Trips() {
             return res.data
         }
         catch(err) {
-            Alert.alert('Failed to add trip. Please try again.')
-            console.error('Error adding trip: ', err)
+            handleError(err, 'Failed to add trip. Please try again.')
         }
         finally {
             setCreateTripLoading(false)
@@ -105,8 +105,7 @@ export default function Trips() {
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
         } 
         catch (err) {
-            Alert.alert('Failed to delete trip. Please try again.')
-            console.error('Error deleting trip: ', err);
+            handleError(err, 'Failed to delete trip. Please try again.')
         }
         finally {
             setDeletingTripId(null)

@@ -3,6 +3,7 @@ import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 
 import { signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
+import { handleError } from './errorHandler'
 
 interface Credentials {
     username: string
@@ -80,7 +81,7 @@ export const signOut = async (username: string | null, refreshToken: string | nu
 	}
 	catch (err) {
 		if (err instanceof AxiosError) {
-			console.error('Error: Sign out failed: ', err.response ? err.response.data : err.message)
+			handleError(err, 'Sign out failed')
 		}
 	}
 }
@@ -99,7 +100,7 @@ export const fetchUserCredentials = async () => {
 		}
 	}
 	catch (err) {
-		console.error('Error: Failed to fetch user credentials: ', err)
+		handleError(err, 'Failed to fetch user credentials')
 		throw err
 	}
 }
@@ -110,8 +111,7 @@ export const removeAuthTokens = async () => {
 		await SecureStore.deleteItemAsync('refreshToken')
 	}
 	catch (err) {
-		Alert.alert('There was an issue signing out')
-		console.error('Error: Failed to remove tokens on sign out', err)
+		handleError(err, 'There was an issue signing out')
 		throw err
 	}
 }
