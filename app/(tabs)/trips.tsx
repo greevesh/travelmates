@@ -62,6 +62,11 @@ export default function Trips() {
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
         const { username, accessToken } = await fetchUserCredentials()
+        if (!username || !accessToken) {
+            handleError(new Error('Missing credentials'), 'Unable to create trip')
+            setCreateTripLoading(false)
+            return
+        }
         const { _id } = await fetchCurrentUser()
         const user = { username, accessToken }
         const trip = { userId: _id, startDate, endDate, location }
@@ -96,6 +101,11 @@ export default function Trips() {
         try {
             setDeletingTripId(tripId)
             const { username, accessToken } = await fetchUserCredentials()
+            if (!username || !accessToken) {
+                handleError(new Error('Missing credentials'), 'Unable to delete trip')
+                setDeletingTripId(null)
+                return
+            }
             await axios.delete(`${tripEndpoint}/${tripId}`, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,

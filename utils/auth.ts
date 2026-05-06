@@ -11,6 +11,12 @@ interface Credentials {
 }
 
 export const authenticate = async (data: Credentials, endpoint: string) => {
+	if (!data?.username?.trim() || !data?.password?.trim()) {
+		throw new Error('Invalid credentials: username and password are required')
+	}
+	if (!endpoint) {
+		throw new Error('Invalid endpoint provided')
+	}
 	try {
 		const { username, password } = data
 		const res = await axios.post(endpoint, { username, password }, {
@@ -65,6 +71,9 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 }
 
 export const storeAuthTokens = async (accessToken: string, refreshToken: string) => {
+	if (!accessToken?.trim() || !refreshToken?.trim()) {
+		throw new Error('Invalid tokens: access token and refresh token are required')
+	}
 	try {
 		await SecureStore.setItemAsync('accessToken', accessToken)
 		await SecureStore.setItemAsync('refreshToken', refreshToken)
@@ -75,6 +84,9 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 }
 
 export const signOut = async (username: string | null, refreshToken: string | null) => {
+	if (!username || !refreshToken) {
+		throw new Error('Username and refresh token are required for sign out')
+	}
 	try {
 		const res = await axios.post(signOutEndpoint, { username, refreshToken })
 		return res.data

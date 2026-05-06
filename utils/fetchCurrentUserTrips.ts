@@ -4,8 +4,11 @@ import { fetchUserCredentials } from "./auth"
 import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUserTrips() {
+    const { username, accessToken } = await fetchUserCredentials()
+    if (!username || !accessToken) {
+        throw new Error('Missing user credentials')
+    }
     try {
-        const { username, accessToken } = await fetchUserCredentials()
         const res = await axios.get(tripsEndpoint, {
             method: 'GET',
             headers: {
