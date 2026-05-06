@@ -9,12 +9,18 @@ import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
 
+interface Notification {
+  _id: string;
+  senderUsername: string;
+  senderPic: string;
+}
+
 export default function NotificationsModal() {
     const [visible, setVisible] = useState(false)
     const [loading, setLoading] = useState<boolean>(false)
 
     const [count, setCount] = useState(0)
-    const [notifications, setNotifications] = useState([])
+    const [notifications, setNotifications] = useState<Notification[]>([])
 
     async function fetchFriendReqs() {
         try {

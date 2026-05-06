@@ -21,12 +21,17 @@ enum FriendRequestType {
 	INCOMING = 'incoming',
 	OUTGOING = 'outgoing'
 }
+
 interface FriendRequest {
 	senderId: string,
 	recipientId: string,
 	senderUsername: string,
 	status: FriendRequestStatus,
 	requestType: FriendRequestType
+}
+
+interface Friendship {
+	recipientId: string,
 }
 
 export default function SearchUserBar() {
@@ -81,7 +86,7 @@ export default function SearchUserBar() {
 					requestType: 'outgoing'
                 }
 			})
-			const pendingFriendRequests = res.data.pendingFriendRequests.map((friendship) => friendship.recipientId)
+			const pendingFriendRequests = res.data.pendingFriendRequests.map((friendship: Friendship) => friendship.recipientId)
 			setAlreadyAddedUsers(pendingFriendRequests)
 			return res.data
 		}
