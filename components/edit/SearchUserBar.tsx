@@ -60,8 +60,10 @@ export default function SearchUserBar() {
 			})
 			const userData = await res.json()
 			const usersExceptCurrentUser = userData.filter((user: User) => user._id.toString() !== _id.toString())
-			console.log('users: ', users)
-			console.log('currentUserId: ', _id)
+			if (__DEV__) {
+				console.log('users: ', users)
+				console.log('current user id: ', _id)
+			}
 			setUsers(usersExceptCurrentUser)
 		} catch (error) {
 			console.error('Error: Failed to fetch users: ', error)
@@ -118,11 +120,11 @@ export default function SearchUserBar() {
 				}
 			)
 			setAlreadyAddedUsers([...alreadyAddedUsers, recipientId])
-			console.log('pending friend reqs: ', res.data)
+			if (__DEV__) console.log('pending friend reqs: ', res.data)
 			return res.data
 		}
 		catch (err) {
-			console.log('Could not send friend request: ', err)
+			if (__DEV__) console.log('could not send friend request: ', err)
 		}
 		finally {
 			setLoadingUserId(null)
@@ -150,11 +152,11 @@ export default function SearchUserBar() {
 
 	useEffect(() => {
 		fetchAlreadyAddedUsers()
-		console.log('added users: ', alreadyAddedUsers)
+		if (__DEV__) console.log('added users: ', alreadyAddedUsers)
 	}, [])
 
 	useEffect(() => {
-		console.log('selected users: ', selectedUsers)
+		if (__DEV__) console.log('selected users: ', selectedUsers)
 	}, [selectedUsers])
 
 	return (

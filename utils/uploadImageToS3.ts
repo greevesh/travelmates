@@ -25,7 +25,6 @@ const uploadImageToS3 = async (fileUri: string) => {
     const command = new PutObjectCommand(params)
     const data = await s3Client.send(command)
 
-    console.log('Success uploading image to s3 bucket: ', data)
   } catch (err) {
     console.error('Error: Failed to upload file:', err)
   }

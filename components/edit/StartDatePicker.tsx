@@ -38,7 +38,7 @@ export default function StartDatePicker() {
 	}
 
 	useEffect(() => {
-		console.log('start date: ', startDate)
+		if (__DEV__) console.log('start date: ', startDate)
 	}, [startDate])
 
 	return (

@@ -13,7 +13,7 @@ export default async function fetchCurrentUserTrips() {
                 'X-Username': username || ''
             },
     })
-        console.log('fetched trips: ', res.data)
+        if (__DEV__) console.log('fetched trips: ', res.data)
         return res.data
     }
     catch(err) {

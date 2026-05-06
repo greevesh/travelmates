@@ -66,7 +66,7 @@ export default function FinishButton() {
 			)
 			photo !== '' && await uploadImage(photo)
 			clearSetupForm()
-			console.log('data: ', res.data)
+			if (__DEV__) console.log('data: ', res.data)
 			router.push('/hub')
 			return res.data
 		}

@@ -50,7 +50,7 @@ export default function Trips() {
                 endDate = new Date(endDate)
                 loadedTrips.push({ id, userId, startDate, endDate, location })
             })
-            console.log('loaded trips: ', loadedTrips)
+            if (__DEV__) console.log('loaded trips: ', loadedTrips)
             setTrips(loadedTrips)
         }
         catch (err) {
@@ -72,7 +72,7 @@ export default function Trips() {
 					}
 				}
 			)
-			console.log('data: ', res.data)
+			if (__DEV__) console.log('data: ', res.data)
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
@@ -103,7 +103,6 @@ export default function Trips() {
                 }
             })
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
-            console.log(`Trip with id ${tripId} deleted successfully.`)
         } 
         catch (err) {
             Alert.alert('Failed to delete trip. Please try again.')
@@ -156,7 +155,7 @@ export default function Trips() {
 
     useEffect(() => {
         sortTripDates()
-        console.log('trip dates: ', tripDates)
+        if (__DEV__) console.log('trip dates: ', tripDates)
     }, [tripDates])
 
     return (

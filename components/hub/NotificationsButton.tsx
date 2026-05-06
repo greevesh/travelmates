@@ -40,7 +40,7 @@ export default function NotificationsModal() {
             },
         )
             const friendReqs = await res.data.pendingFriendRequests
-            console.log('friend reqs: ', friendReqs)
+            if (__DEV__) console.log('friend reqs: ', friendReqs)
             setCount(friendReqs.length)
             setNotifications(friendReqs)
         }
@@ -65,7 +65,7 @@ export default function NotificationsModal() {
 					}
 				}
 			)
-			console.log('data: ', res.data)
+			if (__DEV__) console.log('data: ', res.data)
 			return res.data
 		}
 		catch (err) {
@@ -86,7 +86,6 @@ export default function NotificationsModal() {
                 }
             })
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
-            console.log('successfully accepted the friend request')
         }
         catch(err) {
             console.error('Error: Failed to accept the friend request: ', err)
@@ -104,7 +103,6 @@ export default function NotificationsModal() {
                 }
             })
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
-            console.log('successfully rejected the friend request')
         }
         catch(err) {
             console.error('Error: Failed to reject the friend request: ', err)
@@ -117,7 +115,7 @@ export default function NotificationsModal() {
     }, [])
 
     useEffect(() => {
-        console.log('notifications: ', notifications)
+        if (__DEV__) console.log('notifications: ', notifications)
     }, [notifications])
 
     return (

@@ -31,7 +31,7 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 						'Failed to connect to the server. Please check your internet connection and try again.'
 					)
 				}
-				console.log('Error: ', 'Endpoints may not match. Please check server configuration.')
+				if (__DEV__) console.error('Error: ', 'Endpoints may not match. Please check server configuration.')
 				throw err
 			}
 
@@ -56,7 +56,7 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 				}
 			}
 		} else {
-			console.log('err: ', err)
+			if (__DEV__) console.log('err: ', err)
 			Alert.alert('There was an issue authenticating')
 		}
 		throw err
@@ -76,7 +76,6 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 export const signOut = async (username: string | null, refreshToken: string | null) => {
 	try {
 		const res = await axios.post(signOutEndpoint, { username, refreshToken })
-		console.log('sign out res data: ', res.data)
 		return res.data
 	}
 	catch (err) {
@@ -91,8 +90,10 @@ export const fetchUserCredentials = async () => {
 		const username = await SecureStore.getItemAsync('username')
 		const refreshToken = await SecureStore.getItemAsync('refreshToken')
 		const accessToken = await SecureStore.getItemAsync('accessToken')
-		console.log('username: ', username)
-		console.log('refreshToken: ', refreshToken)
+		if (__DEV__) {
+			console.log('username: ', username)
+			console.log('refresh token: ', refreshToken)
+		}
 		return {
 			username, refreshToken, accessToken
 		}
