@@ -13,15 +13,16 @@ export default function SignInCard() {
 			<Title text='Sign in' style={{ marginTop: 20 }} />
 			<Subtitle text='Welcome back!' />
 			<SignInForm />
-			<GoogleSignInButton />
-			<AuthLink path='./forgot-password' text='Forgot your password?' />
+			{/* <GoogleSignInButton /> */}
+			{/* <AuthLink path='./forgot-password' text='Forgot your password?' /> */}
 		</Card>
 	)
 }
 
 const styles = StyleSheet.create({
 	card: {
-		height: 530,
+		// height: 530,
+		height: 450,
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',

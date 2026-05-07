@@ -12,14 +12,15 @@ export default function SignUpCard() {
 			<Title text='Sign up' style={{ marginTop: 20 }} />
 			<Subtitle text='Become a Travel Mate today' />
 			<SignUpForm />
-			<GoogleSignUpButton />
+			{/* <GoogleSignUpButton /> */}
 		</Card>
 	)
 }
 
 const styles = StyleSheet.create({
 	card: {
-		height: 600,
+		// height: 600,
+		height: 540,
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
