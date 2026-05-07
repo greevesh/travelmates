@@ -5,7 +5,7 @@ import SearchLocationBar from "@/components/edit/SearchLocationBar"
 import StartDatePicker from "@/components/edit/StartDatePicker"
 import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
-import { fetchUserCredentials } from "@/utils/auth"
+import { getAuthContext } from "@/utils/auth"
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import axios from "axios"
@@ -61,35 +61,27 @@ export default function Trips() {
 
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
-        const { username, accessToken } = await fetchUserCredentials()
-        if (!username || !accessToken) {
-            handleError(new Error('Missing credentials'), 'Unable to create trip')
-            setCreateTripLoading(false)
-            return
-        }
-        const { _id } = await fetchCurrentUser()
-        const user = { username, accessToken }
-        const trip = { userId: _id, startDate, endDate, location }
         try {
-            const res = await axios.post(tripEndpoint, { user, trip },
-                {
-					headers: {
-						'Authorization': `Bearer ${user.accessToken}`
-					}
-				}
-			)
+            const { username, accessToken, headers } = await getAuthContext()
+            const { _id } = await fetchCurrentUser()
+            const user = { username, accessToken }
+            const trip = { userId: _id, startDate, endDate, location }
+            const res = await axios.post(tripEndpoint, { user, trip }, { headers })
 			if (__DEV__) console.log('data: ', res.data)
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
             const trips = await fetchCurrentUserTrips()
-            const { _id } = trips[trips.length - 1] // Fetch just added trip by id
-            const tripWithId = { ...trip, id: _id }
+            const tripWithId = { ...trip, id: trips[trips.length - 1]._id }
             setTrips((prevTrips) => [...prevTrips, tripWithId])
             return res.data
         }
-        catch(err) {
-            handleError(err, 'Failed to add trip. Please try again.')
+        catch (err) {
+            if (err instanceof Error && err.message === 'Missing user credentials') {
+                handleError(new Error('Missing credentials'), 'Unable to create trip')
+            } else {
+                handleError(err, 'Failed to add trip. Please try again.')
+            }
         }
         finally {
             setCreateTripLoading(false)
@@ -100,22 +92,16 @@ export default function Trips() {
         if (!tripId) return
         try {
             setDeletingTripId(tripId)
-            const { username, accessToken } = await fetchUserCredentials()
-            if (!username || !accessToken) {
-                handleError(new Error('Missing credentials'), 'Unable to delete trip')
-                setDeletingTripId(null)
-                return
-            }
-            await axios.delete(`${tripEndpoint}/${tripId}`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-Username': username || ''
-                }
-            })
+            const { headers } = await getAuthContext()
+            await axios.delete(`${tripEndpoint}/${tripId}`, { headers })
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
         } 
         catch (err) {
-            handleError(err, 'Failed to delete trip. Please try again.')
+            if (err instanceof Error && err.message === 'Missing user credentials') {
+                handleError(new Error('Missing credentials'), 'Unable to delete trip')
+            } else {
+                handleError(err, 'Failed to delete trip. Please try again.')
+            }
         }
         finally {
             setDeletingTripId(null)
