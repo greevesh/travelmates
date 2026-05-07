@@ -1,23 +1,18 @@
-import { tripsEndpoint } from "@/consts/api"
+import { tripEndpoint } from "@/consts/api"
 import axios from 'axios'
-import { fetchUserCredentials } from "./auth"
+import { getAuthHeaders } from "./auth"
+import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUserTrips() {
     try {
-        const { username, accessToken } = await fetchUserCredentials()
-        const res = await axios.get(tripsEndpoint, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-                'X-Username': username || ''
-            },
-    })
-        console.log('fetched trips: ', res.data)
+        const res = await axios.get(tripEndpoint, {
+            headers: await getAuthHeaders(),
+        })
+        if (__DEV__) console.log('fetched trips: ', res.data)
         return res.data
     }
     catch(err) {
-        console.error('Error: Failed to fetch the current trip: ', err)
+        handleError(err, 'Failed to fetch the current trip')
         throw err
     }
 }

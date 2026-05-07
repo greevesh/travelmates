@@ -4,6 +4,7 @@ import { TouchableOpacity, View, StyleSheet, Text, Alert } from 'react-native'
 import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import { handleError } from '@/utils/errorHandler'
 
 export default function SignOutButton() {
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
@@ -25,11 +26,10 @@ export default function SignOutButton() {
 			router.push('/')
 		}
 		catch (err) {
-			console.error('Error: There was a problem signing out: ', err)
+			handleError(err, 'There was a problem signing out')
 			if (!refreshToken) {
 				throw new Error('No refresh token available to sign out')
 			}
-			Alert.alert('There was a problem signing out.')
 		}
 	}
 

@@ -4,28 +4,30 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
 import { friendRequestsEndpoint } from '@/consts/api'
-import { fetchUserCredentials } from '@/utils/auth'
+import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
+import { handleError } from '@/utils/errorHandler'
+
+interface Notification {
+  _id: string;
+  senderUsername: string;
+  senderPic: string;
+}
 
 export default function NotificationsModal() {
     const [visible, setVisible] = useState(false)
     const [loading, setLoading] = useState<boolean>(false)
 
     const [count, setCount] = useState(0)
-    const [notifications, setNotifications] = useState([])
+    const [notifications, setNotifications] = useState<Notification[]>([])
 
     async function fetchFriendReqs() {
         try {
-            const { username, accessToken } = await fetchUserCredentials()
             const { _id } = await fetchCurrentUser()
             const res = await axios.get(friendRequestsEndpoint, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-Username': username || ''
-                },
+                headers: await getAuthHeaders(),
                 params: {
                     status: 'pending',
                     recipientId: _id,
@@ -34,12 +36,12 @@ export default function NotificationsModal() {
             },
         )
             const friendReqs = await res.data.pendingFriendRequests
-            console.log('friend reqs: ', friendReqs)
+            if (__DEV__) console.log('friend reqs: ', friendReqs)
             setCount(friendReqs.length)
             setNotifications(friendReqs)
         }
         catch(err) {
-            console.error('Error: Failed to fetch the current user: ', err)
+            handleError(err, 'Failed to fetch friend requests')
             throw err
         }
     }
@@ -54,12 +56,10 @@ export default function NotificationsModal() {
 			}
 			const res = await axios.post(friendRequestsEndpoint, { user },
 				{
-					headers: {
-						'Authorization': `Bearer ${user.accessToken}`
-					}
+					headers: await getAuthHeaders(),
 				}
 			)
-			console.log('data: ', res.data)
+			if (__DEV__) console.log('data: ', res.data)
 			return res.data
 		}
 		catch (err) {
@@ -72,36 +72,30 @@ export default function NotificationsModal() {
 
     const handleAccept = async (requestId: string) => {
         try {
-            const { username, accessToken } = await fetchUserCredentials()
-            await axios.patch(friendRequestsEndpoint + requestId, {
-                status: 'accepted',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
+            await axios.patch(
+                friendRequestsEndpoint + requestId,
+                { status: 'accepted' },
+                { headers: await getAuthHeaders() }
+            )
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
-            console.log('successfully accepted the friend request')
         }
         catch(err) {
-            console.error('Error: Failed to accept the friend request: ', err)
+            handleError(err, 'Failed to accept the friend request')
             throw err
         }
     }
 
     const handleReject = async (requestId: string) => {
         try {
-            const { username, accessToken } = await fetchUserCredentials()
-             await axios.patch(friendRequestsEndpoint + requestId, {
-                status: 'rejected',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
+            await axios.patch(
+                friendRequestsEndpoint + requestId,
+                { status: 'rejected' },
+                { headers: await getAuthHeaders() }
+            )
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
-            console.log('successfully rejected the friend request')
         }
         catch(err) {
-            console.error('Error: Failed to reject the friend request: ', err)
+            handleError(err, 'Failed to reject the friend request')
             throw err
         }
     }
@@ -111,7 +105,7 @@ export default function NotificationsModal() {
     }, [])
 
     useEffect(() => {
-        console.log('notifications: ', notifications)
+        if (__DEV__) console.log('notifications: ', notifications)
     }, [notifications])
 
     return (

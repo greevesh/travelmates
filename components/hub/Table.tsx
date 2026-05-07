@@ -83,7 +83,7 @@ export default function Table() {
                 parsedTrip && newTrips.push(parsedTrip)
             })
             setTrips(newTrips)
-            console.log('trips loaded: ', newTrips)
+            if (__DEV__) console.log('trips loaded: ', newTrips)
         }
         catch (err) {
             console.error('Error storing current trip data: ', err)
@@ -126,12 +126,12 @@ export default function Table() {
 
     useEffect(() => {
         loadCurrentUserTrips()
-        console.log('month: ', month)
+        if (__DEV__) console.log('month: ', month)
     }, [month])
 
     useEffect(() => {
         loadDisplayDays()
-        console.log('trips: ', trips)
+        if (__DEV__) console.log('trips: ', trips)
     }, [monthDaysLength, trips])
 
     const getTripDays = (day: number) => {

@@ -1,6 +1,7 @@
 // fixes crypto call err
 import "react-native-get-random-values"
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { handleError } from './errorHandler'
 
 const s3Client = new S3Client({
   region: 'ap-southeast-1',
@@ -25,9 +26,8 @@ const uploadImageToS3 = async (fileUri: string) => {
     const command = new PutObjectCommand(params)
     const data = await s3Client.send(command)
 
-    console.log('Success uploading image to s3 bucket: ', data)
   } catch (err) {
-    console.error('Error: Failed to upload file:', err)
+    handleError(err, 'Failed to upload file')
   }
 }
 

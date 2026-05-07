@@ -3,6 +3,7 @@ import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 
 import { signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
+import { handleError } from './errorHandler'
 
 interface Credentials {
     username: string
@@ -10,6 +11,12 @@ interface Credentials {
 }
 
 export const authenticate = async (data: Credentials, endpoint: string) => {
+	if (!data?.username?.trim() || !data?.password?.trim()) {
+		throw new Error('Invalid credentials: username and password are required')
+	}
+	if (!endpoint) {
+		throw new Error('Invalid endpoint provided')
+	}
 	try {
 		const { username, password } = data
 		const res = await axios.post(endpoint, { username, password }, {
@@ -31,7 +38,7 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 						'Failed to connect to the server. Please check your internet connection and try again.'
 					)
 				}
-				console.log('Error: ', 'Endpoints may not match. Please check server configuration.')
+				if (__DEV__) console.error('Error: ', 'Endpoints may not match. Please check server configuration.')
 				throw err
 			}
 
@@ -56,7 +63,7 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 				}
 			}
 		} else {
-			console.log('err: ', err)
+			if (__DEV__) console.log('err: ', err)
 			Alert.alert('There was an issue authenticating')
 		}
 		throw err
@@ -64,6 +71,9 @@ export const authenticate = async (data: Credentials, endpoint: string) => {
 }
 
 export const storeAuthTokens = async (accessToken: string, refreshToken: string) => {
+	if (!accessToken?.trim() || !refreshToken?.trim()) {
+		throw new Error('Invalid tokens: access token and refresh token are required')
+	}
 	try {
 		await SecureStore.setItemAsync('accessToken', accessToken)
 		await SecureStore.setItemAsync('refreshToken', refreshToken)
@@ -74,14 +84,16 @@ export const storeAuthTokens = async (accessToken: string, refreshToken: string)
 }
 
 export const signOut = async (username: string | null, refreshToken: string | null) => {
+	if (!username || !refreshToken) {
+		throw new Error('Username and refresh token are required for sign out')
+	}
 	try {
 		const res = await axios.post(signOutEndpoint, { username, refreshToken })
-		console.log('sign out res data: ', res.data)
 		return res.data
 	}
 	catch (err) {
 		if (err instanceof AxiosError) {
-			console.error('Error: Sign out failed: ', err.response ? err.response.data : err.message)
+			handleError(err, 'Sign out failed')
 		}
 	}
 }
@@ -91,14 +103,16 @@ export const fetchUserCredentials = async () => {
 		const username = await SecureStore.getItemAsync('username')
 		const refreshToken = await SecureStore.getItemAsync('refreshToken')
 		const accessToken = await SecureStore.getItemAsync('accessToken')
-		console.log('username: ', username)
-		console.log('refreshToken: ', refreshToken)
+		if (__DEV__) {
+			console.log('username: ', username)
+			console.log('refresh token: ', refreshToken)
+		}
 		return {
 			username, refreshToken, accessToken
 		}
 	}
 	catch (err) {
-		console.error('Error: Failed to fetch user credentials: ', err)
+		handleError(err, 'Failed to fetch user credentials')
 		throw err
 	}
 }
@@ -109,8 +123,32 @@ export const removeAuthTokens = async () => {
 		await SecureStore.deleteItemAsync('refreshToken')
 	}
 	catch (err) {
-		Alert.alert('There was an issue signing out')
-		console.error('Error: Failed to remove tokens on sign out', err)
+		handleError(err, 'There was an issue signing out')
 		throw err
 	}
+}
+
+export type AuthRequestHeaders = {
+	'Content-Type': 'application/json'
+	'Authorization': string
+	'X-Username': string
+}
+
+/** One SecureStore read; use when you need headers and tokens in the same request (e.g. POST body). */
+export const getAuthContext = async () => {
+	const { username, accessToken } = await fetchUserCredentials()
+	if (!username || !accessToken) {
+		throw new Error('Missing user credentials')
+	}
+	const headers: AuthRequestHeaders = {
+		'Content-Type': 'application/json',
+		'Authorization': `Bearer ${accessToken}`,
+		'X-Username': username || '',
+	}
+	return { username, accessToken, headers }
+}
+
+export const getAuthHeaders = async () => {
+	const { headers } = await getAuthContext()
+	return headers
 }

@@ -5,7 +5,7 @@ import SearchLocationBar from "@/components/edit/SearchLocationBar"
 import StartDatePicker from "@/components/edit/StartDatePicker"
 import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
-import { fetchUserCredentials } from "@/utils/auth"
+import { getAuthContext } from "@/utils/auth"
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import axios from "axios"
@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
 import { View, StyleSheet, Alert, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
+import { handleError } from "@/utils/errorHandler"
 
 interface Trip {
     id?: undefined | string
@@ -50,41 +51,37 @@ export default function Trips() {
                 endDate = new Date(endDate)
                 loadedTrips.push({ id, userId, startDate, endDate, location })
             })
-            console.log('loaded trips: ', loadedTrips)
+            if (__DEV__) console.log('loaded trips: ', loadedTrips)
             setTrips(loadedTrips)
         }
         catch (err) {
-            console.error('Error fetching trips: ', err)
+            handleError(err, 'Error fetching trips')
         }
     }
 
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
-        const { username, accessToken } = await fetchUserCredentials()
-        const { _id } = await fetchCurrentUser()
-        const user = { username, accessToken }
-        const trip = { userId: _id, startDate, endDate, location }
         try {
-            const res = await axios.post(tripEndpoint, { user, trip },
-                {
-					headers: {
-						'Authorization': `Bearer ${user.accessToken}`
-					}
-				}
-			)
-			console.log('data: ', res.data)
+            const { username, accessToken, headers } = await getAuthContext()
+            const { _id } = await fetchCurrentUser()
+            const user = { username, accessToken }
+            const trip = { userId: _id, startDate, endDate, location }
+            const res = await axios.post(tripEndpoint, { user, trip }, { headers })
+			if (__DEV__) console.log('data: ', res.data)
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
             const trips = await fetchCurrentUserTrips()
-            const { _id } = trips[trips.length - 1] // Fetch just added trip by id
-            const tripWithId = { ...trip, id: _id }
+            const tripWithId = { ...trip, id: trips[trips.length - 1]._id }
             setTrips((prevTrips) => [...prevTrips, tripWithId])
             return res.data
         }
-        catch(err) {
-            Alert.alert('Failed to add trip. Please try again.')
-            console.error('Error adding trip: ', err)
+        catch (err) {
+            if (err instanceof Error && err.message === 'Missing user credentials') {
+                handleError(new Error('Missing credentials'), 'Unable to create trip')
+            } else {
+                handleError(err, 'Failed to add trip. Please try again.')
+            }
         }
         finally {
             setCreateTripLoading(false)
@@ -95,19 +92,16 @@ export default function Trips() {
         if (!tripId) return
         try {
             setDeletingTripId(tripId)
-            const { username, accessToken } = await fetchUserCredentials()
-            await axios.delete(`${tripEndpoint}/${tripId}`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-Username': username || ''
-                }
-            })
+            const { headers } = await getAuthContext()
+            await axios.delete(`${tripEndpoint}/${tripId}`, { headers })
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
-            console.log(`Trip with id ${tripId} deleted successfully.`)
         } 
         catch (err) {
-            Alert.alert('Failed to delete trip. Please try again.')
-            console.error('Error deleting trip: ', err);
+            if (err instanceof Error && err.message === 'Missing user credentials') {
+                handleError(new Error('Missing credentials'), 'Unable to delete trip')
+            } else {
+                handleError(err, 'Failed to delete trip. Please try again.')
+            }
         }
         finally {
             setDeletingTripId(null)
@@ -156,7 +150,7 @@ export default function Trips() {
 
     useEffect(() => {
         sortTripDates()
-        console.log('trip dates: ', tripDates)
+        if (__DEV__) console.log('trip dates: ', tripDates)
     }, [tripDates])
 
     return (

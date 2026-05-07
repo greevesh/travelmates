@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "test",
-    "slug": "test",
+    "name": "travelmates",
+    "slug": "travelmates",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "myapp",
