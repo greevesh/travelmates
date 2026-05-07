@@ -9,6 +9,7 @@ import React from 'react'
 import debounce from '@/utils/debounce'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
+import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
 import { handleError } from '@/utils/errorHandler'
 
 enum FriendRequestStatus {
@@ -50,14 +51,10 @@ export default function SearchUserBar() {
 	const fetchUsers = async (input: string) => {
 		try {
 			setLoading(true)
-			const { _id, username, accessToken } = await fetchCurrentUser()
+			const { _id } = await fetchCurrentUser()
 			const res = await fetch(usersEndpoint + input, {
 				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${accessToken}`,
-					'X-Username': username || ''
-				},
+				headers: await getAuthHeaders(),
 			})
 			const userData = await res.json()
 			const usersExceptCurrentUser = userData.filter((user: User) => user._id.toString() !== _id.toString())
@@ -76,13 +73,10 @@ export default function SearchUserBar() {
 	}
 
 	const fetchAlreadyAddedUsers = async () => {
-		const { _id, username, accessToken } = await fetchCurrentUser()
+		const { _id } = await fetchCurrentUser()
 		try {
 			const res = await axios.get(friendRequestsEndpoint, {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'X-Username': username || ''
-				},
+				headers: await getAuthHeaders(),
 				params: {
                     status: 'pending',
                     senderId: _id,
@@ -100,11 +94,12 @@ export default function SearchUserBar() {
 
 	const handleSendFriendRequest = async (recipientId: string) => {
 		setLoadingUserId(recipientId)
-		const { _id, username, accessToken } = await fetchCurrentUser()
+		const { _id } = await fetchCurrentUser()
+		const { username, accessToken } = await fetchUserCredentials()
 		try {
             const user = { 
-				username, 
-				accessToken 
+				username: username || '', 
+				accessToken: accessToken || ''
 			}
 			const friendRequest: FriendRequest = {
 				senderId: _id,
@@ -115,9 +110,7 @@ export default function SearchUserBar() {
 			}
 			const res = await axios.post(friendRequestsEndpoint, { user, friendRequest },
 				{
-					headers: {
-						'Authorization': `Bearer ${user.accessToken}`
-					}
+					headers: await getAuthHeaders(),
 				}
 			)
 			setAlreadyAddedUsers([...alreadyAddedUsers, recipientId])

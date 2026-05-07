@@ -127,3 +127,28 @@ export const removeAuthTokens = async () => {
 		throw err
 	}
 }
+
+export type AuthRequestHeaders = {
+	'Content-Type': 'application/json'
+	'Authorization': string
+	'X-Username': string
+}
+
+/** One SecureStore read; use when you need headers and tokens in the same request (e.g. POST body). */
+export const getAuthContext = async () => {
+	const { username, accessToken } = await fetchUserCredentials()
+	if (!username || !accessToken) {
+		throw new Error('Missing user credentials')
+	}
+	const headers: AuthRequestHeaders = {
+		'Content-Type': 'application/json',
+		'Authorization': `Bearer ${accessToken}`,
+		'X-Username': username || '',
+	}
+	return { username, accessToken, headers }
+}
+
+export const getAuthHeaders = async () => {
+	const { headers } = await getAuthContext()
+	return headers
+}

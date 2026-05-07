@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
 import { friendRequestsEndpoint } from '@/consts/api'
-import { fetchUserCredentials } from '@/utils/auth'
+import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
@@ -25,18 +25,9 @@ export default function NotificationsModal() {
 
     async function fetchFriendReqs() {
         try {
-            const { username, accessToken } = await fetchUserCredentials()
-            if (!username || !accessToken) {
-                handleError(new Error('Missing credentials'), 'Unable to fetch friend requests')
-                return
-            }
             const { _id } = await fetchCurrentUser()
             const res = await axios.get(friendRequestsEndpoint, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-Username': username || ''
-                },
+                headers: await getAuthHeaders(),
                 params: {
                     status: 'pending',
                     recipientId: _id,
@@ -65,9 +56,7 @@ export default function NotificationsModal() {
 			}
 			const res = await axios.post(friendRequestsEndpoint, { user },
 				{
-					headers: {
-						'Authorization': `Bearer ${user.accessToken}`
-					}
+					headers: await getAuthHeaders(),
 				}
 			)
 			if (__DEV__) console.log('data: ', res.data)
@@ -83,17 +72,11 @@ export default function NotificationsModal() {
 
     const handleAccept = async (requestId: string) => {
         try {
-            const { username, accessToken } = await fetchUserCredentials()
-            if (!username || !accessToken) {
-                handleError(new Error('Missing refresh token'), 'Unable to accept friend request')
-                return
-            }
-            await axios.patch(friendRequestsEndpoint + requestId, {
-                status: 'accepted',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
+            await axios.patch(
+                friendRequestsEndpoint + requestId,
+                { status: 'accepted' },
+                { headers: await getAuthHeaders() }
+            )
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {
@@ -104,17 +87,11 @@ export default function NotificationsModal() {
 
     const handleReject = async (requestId: string) => {
         try {
-            const { username, accessToken } = await fetchUserCredentials()
-            if (!username || !accessToken) {
-                handleError(new Error('Missing refresh token'), 'Unable to reject friend request')
-                return
-            }
-             await axios.patch(friendRequestsEndpoint + requestId, {
-                status: 'rejected',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            })
+            await axios.patch(
+                friendRequestsEndpoint + requestId,
+                { status: 'rejected' },
+                { headers: await getAuthHeaders() }
+            )
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {

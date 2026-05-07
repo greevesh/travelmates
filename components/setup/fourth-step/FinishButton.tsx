@@ -12,7 +12,7 @@ import { router } from 'expo-router'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { useState } from 'react'
 import Spinner from '@/components/base/Spinner'
-import { fetchUserCredentials } from '@/utils/auth'
+import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
 
 export default function FinishButton() {
 	const [loading, setLoading] = useState<boolean>(false)
@@ -59,9 +59,7 @@ export default function FinishButton() {
 			}
 			const res = await axios.post(setupEndpoint, { user, trip },
 				{
-					headers: {
-						'Authorization': `Bearer ${user.accessToken}`
-					}
+					headers: await getAuthHeaders(),
 				}
 			)
 			photo !== '' && await uploadImage(photo)

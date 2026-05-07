@@ -1,22 +1,13 @@
-import { tripsEndpoint } from "@/consts/api"
+import { tripEndpoint } from "@/consts/api"
 import axios from 'axios'
-import { fetchUserCredentials } from "./auth"
+import { getAuthHeaders } from "./auth"
 import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUserTrips() {
-    const { username, accessToken } = await fetchUserCredentials()
-    if (!username || !accessToken) {
-        throw new Error('Missing user credentials')
-    }
     try {
-        const res = await axios.get(tripsEndpoint, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-                'X-Username': username || ''
-            },
-    })
+        const res = await axios.get(tripEndpoint, {
+            headers: await getAuthHeaders(),
+        })
         if (__DEV__) console.log('fetched trips: ', res.data)
         return res.data
     }
