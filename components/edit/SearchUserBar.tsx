@@ -9,7 +9,7 @@ import React from 'react'
 import debounce from '@/utils/debounce'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
-import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
+import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 import { handleError } from '@/utils/errorHandler'
 
 enum FriendRequestStatus {
@@ -52,10 +52,10 @@ export default function SearchUserBar() {
 		try {
 			setLoading(true)
 			const { _id } = await fetchCurrentUser()
-			const res = await fetch(usersEndpoint + input, {
+			const res = await withAuthRetry((headers) => fetch(usersEndpoint + input, {
 				method: 'GET',
-				headers: await getAuthHeaders(),
-			})
+				headers,
+			}))
 			const userData = await res.json()
 			const usersExceptCurrentUser = userData.filter((user: User) => user._id.toString() !== _id.toString())
 			if (__DEV__) {
@@ -75,14 +75,14 @@ export default function SearchUserBar() {
 	const fetchAlreadyAddedUsers = async () => {
 		const { _id } = await fetchCurrentUser()
 		try {
-			const res = await axios.get(friendRequestsEndpoint, {
-				headers: await getAuthHeaders(),
+			const res = await withAuthRetry((headers) => axios.get(friendRequestsEndpoint, {
+				headers,
 				params: {
                     status: 'pending',
                     senderId: _id,
 					requestType: 'outgoing'
                 }
-			})
+			}))
 			const pendingFriendRequests = res.data.pendingFriendRequests.map((friendship: Friendship) => friendship.recipientId)
 			setAlreadyAddedUsers(pendingFriendRequests)
 			return res.data
@@ -108,11 +108,7 @@ export default function SearchUserBar() {
 				status: FriendRequestStatus.PENDING,
 				requestType: FriendRequestType.OUTGOING
 			}
-			const res = await axios.post(friendRequestsEndpoint, { user, friendRequest },
-				{
-					headers: await getAuthHeaders(),
-				}
-			)
+			const res = await withAuthRetry((headers) => axios.post(friendRequestsEndpoint, { user, friendRequest }, { headers }))
 			setAlreadyAddedUsers([...alreadyAddedUsers, recipientId])
 			if (__DEV__) console.log('pending friend reqs: ', res.data)
 			return res.data

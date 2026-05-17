@@ -12,7 +12,7 @@ import { router } from 'expo-router'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { useState } from 'react'
 import Spinner from '@/components/base/Spinner'
-import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
+import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 
 export default function FinishButton() {
 	const [loading, setLoading] = useState<boolean>(false)
@@ -57,11 +57,7 @@ export default function FinishButton() {
 				...(photo !== '' ? { pic: s3ProfilePicsEndpoint + photo.split('/').pop() } : {}),
 				accessToken 
 			}
-			const res = await axios.post(setupEndpoint, { user, trip },
-				{
-					headers: await getAuthHeaders(),
-				}
-			)
+			const res = await withAuthRetry((headers) => axios.post(setupEndpoint, { user, trip }, { headers }))
 			photo !== '' && await uploadImage(photo)
 			clearSetupForm()
 			if (__DEV__) console.log('data: ', res.data)

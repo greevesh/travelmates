@@ -5,7 +5,7 @@ import SearchLocationBar from "@/components/edit/SearchLocationBar"
 import StartDatePicker from "@/components/edit/StartDatePicker"
 import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
-import { getAuthContext } from "@/utils/auth"
+import { getAuthContext, withAuthRetry } from "@/utils/auth"
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import axios from "axios"
@@ -62,11 +62,11 @@ export default function Trips() {
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
         try {
-            const { username, accessToken, headers } = await getAuthContext()
+            const { username, accessToken } = await getAuthContext()
             const { _id } = await fetchCurrentUser()
             const user = { username, accessToken }
             const trip = { userId: _id, startDate, endDate, location }
-            const res = await axios.post(tripEndpoint, { user, trip }, { headers })
+            const res = await withAuthRetry((retryHeaders) => axios.post(tripEndpoint, { user, trip }, { headers: retryHeaders }))
 			if (__DEV__) console.log('data: ', res.data)
             setLocationQuery('')
             setStartDate(undefined)
@@ -92,8 +92,7 @@ export default function Trips() {
         if (!tripId) return
         try {
             setDeletingTripId(tripId)
-            const { headers } = await getAuthContext()
-            await axios.delete(`${tripEndpoint}/${tripId}`, { headers })
+            await withAuthRetry((headers) => axios.delete(`${tripEndpoint}/${tripId}`, { headers }))
             setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
         } 
         catch (err) {
