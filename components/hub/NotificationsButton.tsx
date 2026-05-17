@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
 import { friendRequestsEndpoint } from '@/consts/api'
-import { fetchUserCredentials, getAuthHeaders } from '@/utils/auth'
+import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
@@ -26,15 +26,14 @@ export default function NotificationsModal() {
     async function fetchFriendReqs() {
         try {
             const { _id } = await fetchCurrentUser()
-            const res = await axios.get(friendRequestsEndpoint, {
-                headers: await getAuthHeaders(),
+            const res = await withAuthRetry((headers) => axios.get(friendRequestsEndpoint, {
+                headers,
                 params: {
                     status: 'pending',
                     recipientId: _id,
                     requestType: 'incoming'
                 }
-            },
-        )
+            }))
             const friendReqs = await res.data.pendingFriendRequests
             if (__DEV__) console.log('friend reqs: ', friendReqs)
             setCount(friendReqs.length)
@@ -54,11 +53,7 @@ export default function NotificationsModal() {
 				username, 
 				accessToken 
 			}
-			const res = await axios.post(friendRequestsEndpoint, { user },
-				{
-					headers: await getAuthHeaders(),
-				}
-			)
+			const res = await withAuthRetry((headers) => axios.post(friendRequestsEndpoint, { user }, { headers }))
 			if (__DEV__) console.log('data: ', res.data)
 			return res.data
 		}
@@ -72,11 +67,11 @@ export default function NotificationsModal() {
 
     const handleAccept = async (requestId: string) => {
         try {
-            await axios.patch(
+            await withAuthRetry((headers) => axios.patch(
                 friendRequestsEndpoint + requestId,
                 { status: 'accepted' },
-                { headers: await getAuthHeaders() }
-            )
+                { headers }
+            ))
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {
@@ -87,11 +82,11 @@ export default function NotificationsModal() {
 
     const handleReject = async (requestId: string) => {
         try {
-            await axios.patch(
+            await withAuthRetry((headers) => axios.patch(
                 friendRequestsEndpoint + requestId,
                 { status: 'rejected' },
-                { headers: await getAuthHeaders() }
-            )
+                { headers }
+            ))
             // setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {

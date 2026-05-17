@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 
-import { signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
+import { refreshEndpoint, signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
 import { handleError } from './errorHandler'
 
 interface Credentials {
@@ -151,4 +151,55 @@ export const getAuthContext = async () => {
 export const getAuthHeaders = async () => {
 	const { headers } = await getAuthContext()
 	return headers
+}
+
+export const refreshAccessToken = async () => {
+	const { username, refreshToken } = await fetchUserCredentials()
+	if (!username || !refreshToken) {
+		throw new Error('Missing credentials required for token refresh')
+	}
+
+	try {
+		const res = await axios.post(
+			refreshEndpoint,
+			{ username },
+			{
+				timeout: 10000,
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${refreshToken}`,
+				},
+			}
+		)
+		const nextAccessToken = res?.data?.accessToken
+		const nextRefreshToken = res?.data?.refreshToken
+		if (!nextAccessToken) {
+			throw new Error('Refresh endpoint did not return an access token')
+		}
+
+		await SecureStore.setItemAsync('accessToken', nextAccessToken)
+		if (nextRefreshToken) {
+			await SecureStore.setItemAsync('refreshToken', nextRefreshToken)
+		}
+		return nextAccessToken
+	}
+	catch (err) {
+		handleError(err, 'Failed to refresh access token')
+		throw err
+	}
+}
+
+export const withAuthRetry = async (
+	request: (headers: AuthRequestHeaders) => Promise<any>,
+): Promise<any> => {
+	try {
+		return await request(await getAuthHeaders())
+	}
+	catch (err) {
+		if (err instanceof AxiosError && (err.response?.status === 401 || err.response?.status === 403)) {
+			await refreshAccessToken()
+			return await request(await getAuthHeaders())
+		}
+		throw err
+	}
 }

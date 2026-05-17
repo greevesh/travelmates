@@ -1,6 +1,6 @@
 import { usersEndpoint } from "@/consts/api"
 import axios from 'axios'
-import { fetchUserCredentials, getAuthHeaders } from "./auth"
+import { fetchUserCredentials, withAuthRetry } from "./auth"
 import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUser() {
@@ -9,9 +9,7 @@ export default async function fetchCurrentUser() {
         throw new Error('Missing user credentials')
     }
     try {
-        const res = await axios.get(usersEndpoint + username, {
-            headers: await getAuthHeaders(),
-        })
+        const res = await withAuthRetry((headers) => axios.get(usersEndpoint + username, { headers }))
         return res.data[0]
     }
     catch(err) {
