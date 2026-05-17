@@ -12,10 +12,12 @@ import { authenticate, storeAuthTokens } from '../../../utils/auth'
 import { signInEndpoint } from '../../../consts/api'
 import AuthLink from '../AuthLink'
 import Spinner from '@/components/base/Spinner'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
+
+const DEV_CREDENTIALS = { username: process.env.EXPO_PUBLIC_DEV_USERNAME!, password: process.env.EXPO_PUBLIC_DEV_PASS! }
 
 export default function SignInForm() {
 	const {
@@ -62,6 +64,12 @@ export default function SignInForm() {
 			setIsLoading(false)
 		}
 	}
+
+	useEffect(() => {
+		if (__DEV__) {
+			onSubmit(DEV_CREDENTIALS)
+		}
+	}, [])
 
 	return (
 		<View style={{ marginTop: 55 }}>

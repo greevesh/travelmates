@@ -1,11 +1,11 @@
-import { tripEndpoint } from "@/consts/api"
+import { tripsEndpoint } from "@/consts/api"
 import axios from 'axios'
 import { withAuthRetry } from "./auth"
 import { handleError } from "./errorHandler"
 
 export default async function fetchCurrentUserTrips() {
     try {
-        const res = await withAuthRetry((headers) => axios.get(tripEndpoint, { headers }))
+        const res = await withAuthRetry((headers) => axios.get(tripsEndpoint, { headers }))
         if (__DEV__) console.log('fetched trips: ', res.data)
         return res.data
     }
