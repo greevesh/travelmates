@@ -1,11 +1,14 @@
 import { View, StyleSheet } from "react-native"
 import Hub from "@/components/hub/Hub"
+import { LinearGradient } from "expo-linear-gradient"
 
 export default function Page() {
     return (
-        <View style={styles.container}>
-            <Hub />
-        </View>
+        <LinearGradient colors={['#8ec5fc', '#5f93d3']}>
+            <View style={styles.container}>
+                <Hub />
+            </View>
+        </LinearGradient>
     )
 }
 
