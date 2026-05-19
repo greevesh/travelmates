@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native'
-import { IconButton, Text } from 'react-native-paper'
+import { StyleSheet, View } from 'react-native'
+import { Icon, IconButton, Text } from 'react-native-paper'
 import { useState } from 'react'
 import SearchUserBar from '../edit/SearchUserBar'
 import React from 'react'
@@ -21,6 +21,9 @@ export default function SendFriendRequestButton() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
+                <View style={styles.planeContainer}>
+                    <Icon size={40} source="airplane" color='#3a9fff' />
+                </View>
                 <Text style={styles.title}>Add Friend</Text>
                 <SearchUserBar />
             </WithModal>
@@ -43,5 +46,10 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         textAlign: 'center',
         color: '#000',
+    },
+    planeContainer: {
+        position: 'absolute', 
+        top: 10, 
+        left: 10
     },
 }) 
