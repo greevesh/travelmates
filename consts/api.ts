@@ -8,6 +8,6 @@ export const usersEndpoint = `${url}users?q=`
 export const setupEndpoint = `${url}user-setup`
 export const tripEndpoint = `${url}trip`
 export const tripsEndpoint = `${url}trips`
-export const friendRequestsEndpoint = `${url}friend-requests`
+export const friendRequestsEndpoint = `${url}friend-requests/`
 
 export const s3ProfilePicsEndpoint = 'https://travelmates-profile-pics.s3.ap-southeast-1.amazonaws.com/'
