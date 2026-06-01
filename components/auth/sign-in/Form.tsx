@@ -16,8 +16,8 @@ import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
-
-const DEV_CREDENTIALS = { username: process.env.EXPO_PUBLIC_DEV_USERNAME!, password: process.env.EXPO_PUBLIC_DEV_PASS! }
+import { useTableStore } from '@/stores/useTableStore'
+import { DEV_CREDENTIALS, DEV_META } from '@/consts/env'
 
 export default function SignInForm() {
 	const {
@@ -37,6 +37,8 @@ export default function SignInForm() {
 		setUploaded: state.setUploaded,
 		setPhoto: state.setPhoto,
 	}))
+
+	const addFriend = useTableStore((s) => s.addFriend)
 
 	const onSubmit = async (data: SignInFormFields) => {
 		try {
@@ -68,6 +70,7 @@ export default function SignInForm() {
 	useEffect(() => {
 		if (__DEV__) {
 			onSubmit(DEV_CREDENTIALS)
+			addFriend(DEV_META)
 		}
 	}, [])
 
