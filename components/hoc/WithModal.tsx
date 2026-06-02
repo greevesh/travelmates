@@ -16,17 +16,12 @@ const WithModal = ({ visible, onClose, children, style }: WithModalProps) => {
           animationType="fade"
           onRequestClose={onClose}
         >
-          <Pressable 
-            style={styles.container}
-            onPress={onClose}
-          >
-            <View 
-              style={[styles.content, style]}
-              onStartShouldSetResponder={() => true}
-            >
+          <View style={styles.container}>
+            <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+            <View style={[styles.content, style]}>
               {children}
             </View>
-          </Pressable>
+          </View>
         </Modal>
     )
 }

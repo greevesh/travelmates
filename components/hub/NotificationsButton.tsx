@@ -124,9 +124,14 @@ export default function NotificationsModal() {
 				onClose={() => setVisible(false)}
             >
                 <Text style={styles.title}>Notifications</Text>
-                {notifications.map((notification) => (
-                    <FriendRequestCard pic={notification.senderPic} username={notification.senderUsername} onAccept={() => handleAccept(notification._id)} onReject={() => handleReject(notification._id)} key={notification._id} request={notification} />
-                ))}
+                <ScrollView
+                    style={{ maxHeight: 220 }}
+                    nestedScrollEnabled
+                >
+                    {notifications.map((notification) => (
+                        <FriendRequestCard pic={notification.senderPic} username={notification.senderUsername} onAccept={() => handleAccept(notification._id)} onReject={() => handleReject(notification._id)} key={notification._id} request={notification} />
+                    ))}
+                </ScrollView>
             </WithModal>
         </>
     )
@@ -145,7 +150,6 @@ const styles = StyleSheet.create({
     modal: {
         width: '90%',
         height: 300,
-        alignItems: 'center',
     },
     title: {
         fontSize: 28,
