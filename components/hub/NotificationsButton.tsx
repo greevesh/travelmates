@@ -45,26 +45,6 @@ export default function NotificationsModal() {
         }
     }
 
-    const handlePostData = async () => {
-		setLoading(true)
-        const { username, accessToken } = await fetchUserCredentials()
-		try {
-            const user = { 
-				username, 
-				accessToken 
-			}
-			const res = await withAuthRetry((headers) => axios.post(friendRequestsEndpoint, { user }, { headers }))
-			if (__DEV__) console.log('data: ', res.data)
-			return res.data
-		}
-		catch (err) {
-			
-		}
-		finally {
-			setLoading(false)
-		}
-	}
-
     const handleAccept = async (requestId: string) => {
         try {
             await withAuthRetry((headers) => axios.patch(
@@ -123,6 +103,9 @@ export default function NotificationsModal() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
+                <View style={styles.planeContainer}>
+                    <Icon size={40} source="airplane" color='#3a9fff' />
+                </View>
                 <Text style={styles.title}>Notifications</Text>
                 <ScrollView
                     style={{ maxHeight: 220 }}
@@ -150,6 +133,11 @@ const styles = StyleSheet.create({
     modal: {
         width: '90%',
         height: 300,
+    },
+    planeContainer: {
+        position: 'absolute', 
+        top: 10, 
+        left: 10
     },
     title: {
         fontSize: 28,
