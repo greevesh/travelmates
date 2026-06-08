@@ -1,27 +1,30 @@
-import { StyleSheet } from 'react-native'
-import { IconButton, Text, Badge } from 'react-native-paper'
+import { ScrollView, StyleSheet, View } from 'react-native'
+import { IconButton, Text, Badge, Icon } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
 import { friendRequestsEndpoint } from '@/consts/api'
-import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
+import { withAuthRetry } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
 import { handleError } from '@/utils/errorHandler'
+import { useTableStore } from '@/stores/useTableStore'
 
 interface Notification {
-  _id: string;
-  senderUsername: string;
-  senderPic: string;
+  _id: string
+  senderId: string
+  senderUsername: string
+  senderPic: string
 }
 
 export default function NotificationsModal() {
     const [visible, setVisible] = useState(false)
-    const [loading, setLoading] = useState<boolean>(false)
 
     const [count, setCount] = useState(0)
     const [notifications, setNotifications] = useState<Notification[]>([])
+
+    const addRow = useTableStore((state) => state.addRow)
 
     async function fetchFriendReqs() {
         try {
@@ -52,7 +55,10 @@ export default function NotificationsModal() {
                 { status: 'accepted' },
                 { headers }
             ))
-            // setNotifications(notifications.filter((notification) => notification._id !== requestId))
+            setNotifications(notifications.filter((notification) => notification._id !== requestId))
+            const newFriend = notifications.find((n) => n._id === requestId)
+            newFriend && addRow({ senderId: newFriend.senderId, senderUsername: newFriend.senderUsername, senderPic: newFriend.senderPic })
+            setCount(count - 1)
         }
         catch(err) {
             handleError(err, 'Failed to accept the friend request')
@@ -67,7 +73,7 @@ export default function NotificationsModal() {
                 { status: 'rejected' },
                 { headers }
             ))
-            // setNotifications(notifications.filter((notification) => notification._id !== requestId))
+            setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {
             handleError(err, 'Failed to reject the friend request')
@@ -112,7 +118,7 @@ export default function NotificationsModal() {
                     nestedScrollEnabled
                 >
                     {notifications.map((notification) => (
-                        <FriendRequestCard pic={notification.senderPic} username={notification.senderUsername} onAccept={() => handleAccept(notification._id)} onReject={() => handleReject(notification._id)} key={notification._id} request={notification} />
+                        <FriendRequestCard pic={notification.senderPic} username={notification.senderUsername} onAccept={() => handleAccept(notification._id)} onReject={() => handleReject(notification._id)} key={notification._id} />
                     ))}
                 </ScrollView>
             </WithModal>
