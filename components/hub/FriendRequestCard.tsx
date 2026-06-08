@@ -1,16 +1,14 @@
-import { StyleSheet, View, Image, Icon } from 'react-native'
-import { Avatar, Button, IconButton, Text } from 'react-native-paper'
-import { FriendRequest } from '@/stores/useFriendRequestStore'
+import { StyleSheet, View, Image } from 'react-native'
+import { IconButton, Text } from 'react-native-paper'
 
 interface FriendRequestCardProps {
     pic: string,
     username: string
-    request: FriendRequest
-    onAccept: (requestId: number) => void
-    onReject: (requestId: number) => void
+    onAccept: () => void
+    onReject: () => void
 }
 
-export default function FriendRequestCard({ pic, username, request, onAccept, onReject }: FriendRequestCardProps) {
+export default function FriendRequestCard({ pic, username, onAccept, onReject }: FriendRequestCardProps) {
     return (
         <View style={styles.container}>
             <View style={styles.userInfo}>
@@ -29,13 +27,13 @@ export default function FriendRequestCard({ pic, username, request, onAccept, on
                     icon="check"
                     iconColor='#fff' 
                     mode="contained" 
-                    onPress={() => onAccept(request.recipientId)}
+                    onPress={onAccept}
                     style={styles.acceptButton}
                 />
                 <IconButton 
                     icon="close"
                     mode="outlined" 
-                    onPress={() => onReject(request.recipientId)}
+                    onPress={onReject}
                     style={styles.rejectButton}
                 />
             </View>
@@ -52,17 +50,20 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 8,
         elevation: 2,
+        width: '70%'
     },
     userInfo: {
         flexDirection: 'row',
         alignItems: 'center',
         marginHorizontal: 20,
+        width: '80%'
     },
     img: {
 		width: 50,
 		height: 50,
 		borderRadius: 25,
-        marginRight: 20
+        marginRight: 20,
+        marginLeft: -25
 	},
     username: {
         fontSize: 17,
