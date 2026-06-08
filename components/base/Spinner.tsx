@@ -7,6 +7,6 @@ interface ISpinnerProps {
 
 export default function Spinner({ style }: ISpinnerProps) {
     return (
-        <ActivityIndicator style={[ style, { position: 'absolute' } ]} color="#fff" size={20} />
+        <ActivityIndicator style={[ style, { position: 'absolute', right: 20 } ]} color="#fff" size={20} />
     )
 }
