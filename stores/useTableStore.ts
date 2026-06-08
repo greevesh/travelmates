@@ -7,27 +7,19 @@ export interface Friend {
 }
 
 interface TableState {
-    friends: Friend[]
-    tableHeight: number
-    addFriend: (friend: Friend) => void
-    setFriends: (friends: Friend[]) => void
-    setTableHeight: (val: number) => void
+    rows: Friend[]
+    addRow: (friend: Friend) => void
+    setRows: (friends: Friend[]) => void
 }
 
 export const useTableStore = create<TableState>((set) => ({
-    friends: [],
-    tableHeight: 300,
+    rows: [],
 
-    addFriend: (friend) =>
+    addRow: (row) =>
       set((state) => ({
-        friends: [...state.friends, friend],
+        rows: [...state.rows, row],
       })),
 
-    setFriends: (friends) =>
-      set({ friends }),
-
-    setTableHeight: (val) =>
-      set((state) => ({
-        tableHeight: state.tableHeight = val
-      }))
+    setRows: (rows) =>
+      set({ rows }),
   }))
