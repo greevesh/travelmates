@@ -38,7 +38,7 @@ export default function SignInForm() {
 		setPhoto: state.setPhoto,
 	}))
 
-	const addFriend = useTableStore((s) => s.addFriend)
+	const addRow = useTableStore((state) => state.addRow)
 
 	const onSubmit = async (data: SignInFormFields) => {
 		try {
@@ -70,7 +70,7 @@ export default function SignInForm() {
 	useEffect(() => {
 		if (__DEV__) {
 			onSubmit(DEV_CREDENTIALS)
-			addFriend(DEV_META)
+			addRow(DEV_META)
 		}
 	}, [])
 
