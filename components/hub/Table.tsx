@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from "react"
 import { DataTable, IconButton } from 'react-native-paper'
-import { ScrollView, View, Text, StyleSheet } from 'react-native'
-import ProfilePhoto from "../edit/ProfilePhoto"
-import { useCurrentUserStore } from "@/stores/useProfilePhotoStore"
-import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
+import { ScrollView, View, Text, StyleSheet, Image } from 'react-native'
+import fetchCurrentUser from "@/utils/fetchCurrentUser"
+import { friendRequestsEndpoint } from "@/consts/api"
+import { withAuthRetry } from "@/utils/auth"
+import axios from "axios"
+import { handleError } from "@/utils/errorHandler"
+import { Friend, useTableStore } from "@/stores/useTableStore"
+import fetchTrips from "@/utils/fetchTrips"
+import { widthsByDaySpan, DAY_CELL_WIDTH, marginsByDays } from "@/consts/table"
 
 interface TableTrip {
     location: string
     startDay: number | undefined
     endDay: number | undefined
+    userId: string
 }
 
 interface RawTrip {
     startDate: Date
     endDate: Date
     location: string
+    userId: string
 }
 
 export default function Table() {
@@ -27,7 +34,15 @@ export default function Table() {
 
     const [trips, setTrips] = useState<TableTrip[]>([])
     
-    const username = useCurrentUserStore((state) => state.username)
+    const rows = useTableStore((state) => state.rows)
+    const setRows = useTableStore((state) => state.setRows)
+    const [tableHeight, setTableHeight] = useState<number>(50)
+
+    const HEADER_HEIGHT = 50
+    const ROW_HEIGHT = 50
+    const MAX_VISIBLE_ROWS = 7
+
+    const visibleRows = Math.min(rows.length, MAX_VISIBLE_ROWS)
 
     /**
      * Parses a trip into a format suitable for display in the monthly calendar
@@ -39,7 +54,7 @@ export default function Table() {
     */
     
     const parseTrip = (trip: RawTrip): TableTrip | null => {
-        const { startDate, endDate, location } = trip
+        const { startDate, endDate, location, userId } = trip
         let startDay = startDate.getDate()
         let endDay = endDate.getDate()
         let fullMonth = false
@@ -63,30 +78,29 @@ export default function Table() {
         else if (!startsInCurrentMonth && endsInCurrentMonth) {
             startDay = 1
         }
-
         if (startsInCurrentMonth || endsInCurrentMonth || fullMonth) {
-            return { location, startDay, endDay }
+            return { location, startDay, endDay, userId }
         }
         return null
     }
     
-    const loadCurrentUserTrips = async () => {
+    const loadTrips = async () => {
         try {
-            const rawTrips = await fetchCurrentUserTrips()
+            const rawTrips = await fetchTrips()
             const newTrips: TableTrip[] = []
             
             rawTrips.forEach((trip: any) => {
                 const startDate = new Date(trip.startDate)
                 const endDate = new Date(trip.endDate)
-                const { location } = trip
-                const parsedTrip = parseTrip({ startDate, endDate, location })
+                const { location, userId } = trip
+                const parsedTrip = parseTrip({ startDate, endDate, location, userId })
                 parsedTrip && newTrips.push(parsedTrip)
             })
             setTrips(newTrips)
             if (__DEV__) console.log('trips loaded: ', newTrips)
         }
         catch (err) {
-            console.error('Error storing current trip data: ', err)
+            if (__DEV__) console.error('Error storing current trip data: ', err)
         }
     }
 
@@ -125,7 +139,7 @@ export default function Table() {
     const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
 
     useEffect(() => {
-        loadCurrentUserTrips()
+        loadTrips()
         if (__DEV__) console.log('month: ', month)
     }, [month])
 
@@ -135,18 +149,58 @@ export default function Table() {
     }, [monthDaysLength, trips])
 
     const getTripDays = (day: number) => {
-        return trips.filter(trip => 
+        const filteredTrips = trips.filter(trip => 
             trip.startDay && trip.endDay && 
             day >= trip.startDay && 
             day <= trip.endDay
         )
+        return filteredTrips
+    }
+
+    const fetchFriends = async () => {
+        try {
+            const { _id } = await fetchCurrentUser()
+            const res = await withAuthRetry((headers) => axios.get(friendRequestsEndpoint, {
+                headers,
+                params: {
+                    status: 'accepted',
+                    recipientId: _id,
+            }
+        }))
+        const currentUser = rows[0]
+        const fetchedFriends = await res.data.friends
+        const filteredFriends: Friend[] = []
+        fetchedFriends && fetchedFriends.map((friend: Friend) => {
+            const { senderId, senderPic, senderUsername } = friend
+            filteredFriends.push({senderId, senderPic, senderUsername})
+        })
+        setRows([currentUser, ...filteredFriends])
+        }
+        catch (err) {
+            handleError(err, 'Failed to fetch friends')
+            throw err
+        }
+    }
+
+    useEffect(() => {
+        setTableHeight(HEADER_HEIGHT + ROW_HEIGHT * visibleRows)
+      }, [rows.length])
+
+    useEffect(() => {
+        fetchFriends()
+    }, [])
+
+    const getTripWidthInMonth = (trip: TableTrip) => {
+        if (!trip.startDay || !trip.endDay) return 0
+        const daysInMonth = trip.endDay - trip.startDay + 1
+        return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
     }
 
     return (
         <>
-            <View style={{ height: 100, backgroundColor: '#fff' }}>
+            <View style={{ maxHeight: tableHeight, backgroundColor: '#fff' }}>
                 <ScrollView horizontal={true}>
-                    <DataTable style={{ width: 1100 }}>
+                    <DataTable style={{ width: 1716 }}>
                         <DataTable.Header>
                             <View style={styles.userTxt}>
                                 <Text>User</Text>
@@ -157,26 +211,41 @@ export default function Table() {
                                 </View>
                             ))}
                         </DataTable.Header>
-                        <DataTable.Row>
-                            <View style={{ flexDirection: 'row', marginTop: 14 }}>
-                                <ProfilePhoto size={25} />
-                                <Text style={{ marginTop: 3, marginLeft: 7 }}>{username}</Text>
-                            </View>
-                            {displayDays && displayDays.map((day) => {
-                                const dayTrips = getTripDays(day)
-                                return (
-                                    <React.Fragment key={day}>
-                                        <View style={{ backgroundColor: dayTrips.length > 0 ? 'lightblue' : undefined, width: 30 }}>
-                                            {dayTrips.map((trip, index) => (
+                        <ScrollView
+                            style={{ maxHeight: tableHeight }}
+                            nestedScrollEnabled
+                        >
+                            {rows.map((row) => (
+                                <DataTable.Row key={row.senderId}>
+                                    <View style={{ flexDirection: 'row', marginTop: 14 }}>
+                                    <Image 
+                                        src={row.senderPic} 
+                                        source={require('../../assets/img/placeholder-profile2.webp')} 
+                                        style={styles.userPic} 
+                                    />
+                                        <Text style={styles.username}>{row.senderUsername}</Text>
+                                    </View>
+                                    {displayDays && displayDays.map((day) => {
+                                    const dayTrips = getTripDays(day)
+                                    return (
+                                        <View
+                                            key={`${row.senderId}-${day}`}
+                                            style={{ justifyContent: 'center', height: 50 }}
+                                        >
+                                            {dayTrips.map((trip) => (
+                                                row.senderId === trip.userId &&
                                                 trip.startDay === day && (
-                                                    <Text key={index} style={styles.locationText}>{trip.location}</Text>
+                                                    <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, { width: getTripWidthInMonth(trip) + 5, marginLeft: marginsByDays[day] }]}>
+                                                        <Text style={styles.locationText}>{trip.location}</Text>
+                                                    </View>
                                                 )
                                             ))}
                                         </View>
-                                    </React.Fragment>
-                                )
-                            })}
-                        </DataTable.Row>
+                                    )
+                                })}
+                            </DataTable.Row>
+                            ))}
+                    </ScrollView>
                     </DataTable>
                 </ScrollView>
             </View>
@@ -192,22 +261,38 @@ export default function Table() {
 }
 
 const styles = StyleSheet.create({
+    userPic: {
+        width: 25,
+		height: 25,
+		borderRadius: 25,
+    },
     userTxt: {
         justifyContent: 'center', 
         width: 100, 
-        height: 50
+        height: 50,
+        marginRight: 50
     },
     day: {
         justifyContent: 'center', 
         alignItems: 'center', 
-        width: 30
+        width: 50,
+    },
+    username: {
+        marginTop: 3, 
+        marginLeft: 7,
+        width: 115
+    },
+    locationContainer: {
+        backgroundColor: 'lightgreen',  
+        height: 35, 
+        borderRadius: 6, 
+        justifyContent: 'center'
     },
     locationText: {
-        marginTop: 15, 
         marginLeft: 5, 
         fontSize: 14, 
         width: 400, 
-        zIndex: 50 
+        zIndex: 50,
     },
     belowTableContainer: {
         display: 'flex',
