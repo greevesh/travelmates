@@ -7,13 +7,13 @@ import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
 import { getAuthContext, withAuthRetry } from "@/utils/auth"
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
-import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
-import { View, StyleSheet, Alert, Text, FlatList } from "react-native"
+import { View, StyleSheet, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
 import { handleError } from "@/utils/errorHandler"
+import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 
 interface Trip {
     id?: undefined | string
@@ -41,7 +41,7 @@ export default function Trips() {
 
     const btnDisabled = !location || !startDate || !endDate
 
-    const fetchTrips = async () => {
+    const handleFetchTrips = async () => {
         try {
             const loadedTrips: Trip[] = []
             const fetchedTrips = await fetchCurrentUserTrips()
@@ -53,6 +53,7 @@ export default function Trips() {
             })
             if (__DEV__) console.log('loaded trips: ', loadedTrips)
             setTrips(loadedTrips)
+            return loadedTrips
         }
         catch (err) {
             handleError(err, 'Error fetching trips')
@@ -71,8 +72,8 @@ export default function Trips() {
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
-            const trips = await fetchCurrentUserTrips()
-            const tripWithId = { ...trip, id: trips[trips.length - 1]._id }
+            const trips = await handleFetchTrips()
+            const tripWithId = { ...trip, id: trips && trips[trips.length - 1].id }
             setTrips((prevTrips) => [...prevTrips, tripWithId])
             return res.data
         }
@@ -140,7 +141,7 @@ export default function Trips() {
     }
 
     useEffect(() => {
-        fetchTrips()
+        handleFetchTrips()
     }, [])
 
     useEffect(() => {
