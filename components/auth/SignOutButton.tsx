@@ -5,6 +5,7 @@ import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 import { handleError } from '@/utils/errorHandler'
+import { useTableStore } from '@/stores/useTableStore'
 
 export default function SignOutButton() {
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
@@ -13,6 +14,7 @@ export default function SignOutButton() {
 		setPhoto: state.setPhoto,
 		setUsername: state.setUsername
 	}))
+	const setRows = useTableStore((state) => state.setRows)
 
 	const onSubmit = async () => {
 		const { username, refreshToken, accessToken } = await fetchUserCredentials()
@@ -23,6 +25,7 @@ export default function SignOutButton() {
 			setUploaded(false)
 			setPhoto('')
 			setUsername('')
+			setRows([])
 			router.push('/')
 		}
 		catch (err) {
