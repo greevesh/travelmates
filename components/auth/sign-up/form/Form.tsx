@@ -43,7 +43,7 @@ export default function SignUpForm() {
 
 			useAuthStore.getState().setIsSignedIn(true)
 			reset()
-			router.push('/setup')
+			router.push('/hub')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
