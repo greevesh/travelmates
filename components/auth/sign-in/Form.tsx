@@ -47,17 +47,18 @@ export default function SignInForm() {
 			await SecureStore.setItemAsync('username', data.username)
 			await storeAuthTokens(accessToken, refreshToken)
 			try {
-				const { username, pic } = await fetchCurrentUser()
+				const { _id, username, pic } = await fetchCurrentUser()
 				setUsername(username)
 				if (pic) {
 					setUploaded(true)
 					setPhoto(pic)
 				}
+				addRow({ senderId: _id, senderUsername: username, senderPic: pic })
+				router.push('/hub')
 			}
 			catch (err) {
 				console.error('Error setting photo: ', err)
 			}
-			router.push('/hub')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
