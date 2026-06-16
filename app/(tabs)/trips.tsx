@@ -72,9 +72,7 @@ export default function Trips() {
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
-            const trips = await handleFetchTrips()
-            const tripWithId = { ...trip, id: trips && trips[trips.length - 1].id }
-            setTrips((prevTrips) => [...prevTrips, tripWithId])
+            await handleFetchTrips()
             return res.data
         }
         catch (err) {
