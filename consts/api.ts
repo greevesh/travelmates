@@ -5,6 +5,7 @@ export const signInEndpoint = `${url}signin`
 export const signOutEndpoint = `${url}signout`
 export const refreshEndpoint = `${url}refresh`
 export const usersEndpoint = `${url}users?q=`
+export const currentUserEndpoint = `${url}currentUser`
 export const tripEndpoint = `${url}trip`
 export const tripsEndpoint = `${url}trips`
 export const currentUserTripsEndpoint = `${url}trips/currentUser`
