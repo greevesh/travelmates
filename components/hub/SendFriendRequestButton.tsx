@@ -13,6 +13,7 @@ export default function SendFriendRequestButton() {
             <IconButton
                 icon="account-plus"
                 size={32}
+                iconColor="#183a75"
                 onPress={() => setVisible(true)}
                 style={styles.icon}
             />

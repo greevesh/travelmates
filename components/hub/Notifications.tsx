@@ -94,6 +94,7 @@ export default function NotificationsModal() {
             <IconButton
                 icon="bell"
                 size={28}
+                iconColor="#183a75"
                 onPress={() => setVisible(true)}
             />
             {count > 0 && (
