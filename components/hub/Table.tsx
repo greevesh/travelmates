@@ -8,7 +8,7 @@ import axios from "axios"
 import { handleError } from "@/utils/errorHandler"
 import { Friend, useTableStore } from "@/stores/useTableStore"
 import fetchTrips from "@/utils/fetchTrips"
-import { widthsByDaySpan, DAY_CELL_WIDTH, marginsByDays } from "@/consts/table"
+import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 
 interface TableTrip {
     location: string
@@ -196,28 +196,31 @@ export default function Table() {
         return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
     }
 
+    const tableWidth = monthDaysLength === 31 ? 1766 : 1716
+
     return (
         <>
-            <View style={{ maxHeight: tableHeight, backgroundColor: '#fff' }}>
-                <ScrollView horizontal={true}>
-                    <DataTable style={{ width: 1716 }}>
-                        <DataTable.Header>
+            <View style={styles.tableCard}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    <DataTable style={{ width: tableWidth }}>
+                        <DataTable.Header style={styles.headerRow}>
                             <View style={styles.userTxt}>
-                                <Text>User</Text>
+                                <Text style={styles.headerText}>User</Text>
                             </View>
                             {displayDays && displayDays.map((day) => (
                                 <View style={styles.day} key={day}>
-                                    <Text>{day}</Text>
+                                    <Text style={styles.headerText}>{day}</Text>
                                 </View>
                             ))}
                         </DataTable.Header>
                         <ScrollView
                             style={{ maxHeight: tableHeight }}
                             nestedScrollEnabled
+                            showsVerticalScrollIndicator={false}
                         >
                             {rows.map((row) => (
-                                <DataTable.Row key={row.senderId}>
-                                    <View style={{ flexDirection: 'row', marginTop: 14 }}>
+                                <DataTable.Row key={row.senderId} style={styles.dataRow}>
+                                    <View style={styles.userCell}>
                                     <Image 
                                         source={
                                             row.senderPic
@@ -233,12 +236,12 @@ export default function Table() {
                                     return (
                                         <View
                                             key={`${row.senderId}-${day}`}
-                                            style={{ justifyContent: 'center', height: 50 }}
+                                            style={styles.dayCell}
                                         >
                                             {dayTrips.map((trip) => (
                                                 row.senderId === trip.userId &&
                                                 trip.startDay === day && (
-                                                    <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, { width: getTripWidthInMonth(trip) + 5, marginLeft: marginsByDays[day] }]}>
+                                                    <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) }]}>
                                                         <Text style={styles.locationText}>{trip.location}</Text>
                                                     </View>
                                                 )
@@ -253,10 +256,10 @@ export default function Table() {
                 </ScrollView>
             </View>
             <View style={styles.belowTableContainer}>
-                <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
+                <Text style={styles.monthLabel}>{displayMonth} {displayYear}</Text>
                 <View style={styles.chevronBtns}>
-                    <IconButton disabled={previousBtnDisabled} onPress={decrementMonth} icon="chevron-left" />
-                    <IconButton disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
+                    <IconButton size={30} disabled={previousBtnDisabled} onPress={decrementMonth} icon="chevron-left" />
+                    <IconButton size={30} disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
                 </View>
             </View>
         </>
@@ -264,47 +267,97 @@ export default function Table() {
 }
 
 const styles = StyleSheet.create({
+    tableCard: {
+        maxHeight: 410,
+        backgroundColor: '#ffffff',
+    },
+    headerRow: {
+        backgroundColor: '#f7f9fc',
+    },
+    headerText: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#1f2937',
+    },
     userPic: {
-        width: 25,
-		height: 25,
-		borderRadius: 25,
+        width: 34,
+		height: 34,
+		borderRadius: 17,
     },
     userTxt: {
         justifyContent: 'center', 
-        width: 100, 
+        width: 120, 
         height: 50,
-        marginRight: 50
+        marginRight: 40,
     },
     day: {
         justifyContent: 'center', 
         alignItems: 'center', 
-        width: 50,
+        width: DAY_CELL_WIDTH,
+        borderLeftWidth: 1,
+        borderLeftColor: '#e5e7eb',
+    },
+    dataRow: {
+        height: 56,
+    },
+    dayCell: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        height: 56,
+        width: DAY_CELL_WIDTH,
+        borderLeftWidth: 1,
+        borderLeftColor: '#eceff4',
+        overflow: 'visible',
+        left: 1
+    },
+    userCell: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 50,
+        marginTop: 3,
     },
     username: {
-        marginTop: 3, 
-        marginLeft: 7,
+        marginTop: 0,
+        marginLeft: 10,
         width: 115
     },
     locationContainer: {
-        backgroundColor: 'lightgreen',  
-        height: 35, 
-        borderRadius: 6, 
-        justifyContent: 'center'
+        backgroundColor: '#98ea93',
+        borderColor: '#6cd16c',
+        borderWidth: 1,
+        height: 34,
+        borderRadius: 10,
+        justifyContent: 'center',
+    },
+    tripBar: {
+        position: 'absolute',
+        left: -1,
+        top: 11,
+        zIndex: 10,
     },
     locationText: {
-        marginLeft: 5, 
-        fontSize: 14, 
-        width: 400, 
+        marginLeft: 10,
+        fontSize: 14,
+        color: '#1f2937',
+        width: 400,
         zIndex: 50,
     },
     belowTableContainer: {
-        display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 12,
+        marginTop: 8,
+    },
+    monthLabel: {
+        margin: 6,
+        fontSize: 37 - 17,
+        fontWeight: '600',
+        color: '#183a75',
     },
     chevronBtns: {
-        display: 'flex', 
         flexDirection: 'row', 
-        marginTop: -3
-    }
+        alignItems: 'center',
+    },
 })
