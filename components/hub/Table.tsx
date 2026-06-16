@@ -219,8 +219,11 @@ export default function Table() {
                                 <DataTable.Row key={row.senderId}>
                                     <View style={{ flexDirection: 'row', marginTop: 14 }}>
                                     <Image 
-                                        src={row.senderPic} 
-                                        source={require('../../assets/img/placeholder-profile2.webp')} 
+                                        source={
+                                            row.senderPic
+                                                ? { uri: row.senderPic }
+                                                : require('../../assets/img/placeholder-profile2.webp')
+                                        }
                                         style={styles.userPic} 
                                     />
                                         <Text style={styles.username}>{row.senderUsername}</Text>
