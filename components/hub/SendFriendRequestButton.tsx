@@ -4,6 +4,7 @@ import { useState } from 'react'
 import SearchUserBar from '../edit/SearchUserBar'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
+import PlaneIcon from '../base/PlaneIcon'
 
 export default function SendFriendRequestButton() {
     const [visible, setVisible] = useState(false)
@@ -22,9 +23,7 @@ export default function SendFriendRequestButton() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
-                <View style={styles.planeContainer}>
-                    <Icon size={40} source="airplane" color='#3a9fff' />
-                </View>
+                <PlaneIcon />
                 <Text style={styles.title}>Add Friend</Text>
                 <SearchUserBar />
             </WithModal>

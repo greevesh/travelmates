@@ -10,6 +10,7 @@ import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
 import { handleError } from '@/utils/errorHandler'
 import { useTableStore } from '@/stores/useTableStore'
+import PlaneIcon from '../base/PlaneIcon'
 
 interface Notification {
   _id: string
@@ -110,9 +111,7 @@ export default function NotificationsModal() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
-                <View style={styles.planeContainer}>
-                    <Icon size={40} source="airplane" color='#3a9fff' />
-                </View>
+                <PlaneIcon />
                 <Text style={styles.title}>Notifications</Text>
                 <ScrollView
                     style={{ maxHeight: 220 }}

@@ -68,12 +68,12 @@ export default function SignInForm() {
 		}
 	}
 
-	useEffect(() => {
-		if (__DEV__) {
-			onSubmit(DEV_CREDENTIALS)
-			addRow(DEV_META)
-		}
-	}, [])
+	// useEffect(() => {
+	// 	if (__DEV__) {
+	// 		onSubmit(DEV_CREDENTIALS)
+	// 		addRow(DEV_META)
+	// 	}
+	// }, [])
 
 	return (
 		<View style={{ marginTop: 55 }}>
