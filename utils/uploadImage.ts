@@ -1,7 +1,7 @@
 // fixes crypto call err
 import "react-native-get-random-values"
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { s3ProfilePicsEndpoint, currentUserEndpoint } from '@/consts/api'
+import { s3ProfilePicsEndpoint, currentUserEndpoint, prodS3ProfilePicsEndpoint } from '@/consts/api'
 import { handleError } from './errorHandler'
 import axios from "axios"
 import { withAuthRetry } from "./auth"
@@ -21,20 +21,28 @@ const uploadImageToS3 = async (fileUri: string): Promise<string> => {
     throw new Error('Invalid file URI')
   }
 
+  const bucket = __DEV__ ? process.env.EXPO_PUBLIC_S3_BUCKET : 
+                          process.env.EXPO_PUBLIC_PROD_S3_BUCKET
+
   try {
     const res = await fetch(fileUri)
     const arrayBuffer = await res.arrayBuffer()
     const body = new Uint8Array(arrayBuffer)
 
     const command = new PutObjectCommand({
-      Bucket: 'travelmates-profile-pics',
+      Bucket: bucket,
       Key: key,
       Body: body,
-      ContentType: 'image/png',
+      ContentType: 'image/jpeg',
     })
 
     await s3Client.send(command)
-    return s3ProfilePicsEndpoint + key
+    if (__DEV__) {
+      return s3ProfilePicsEndpoint + key
+    }
+    else {
+      return prodS3ProfilePicsEndpoint + key
+    }
   } catch (err) {
       handleError(err, 'Failed to upload file to S3')
       throw err

@@ -12,3 +12,4 @@ export const currentUserTripsEndpoint = `${url}trips/currentUser`
 export const friendRequestsEndpoint = `${url}friend-requests/`
 
 export const s3ProfilePicsEndpoint = 'https://travelmates-profile-pics.s3.ap-southeast-1.amazonaws.com/'
+export const prodS3ProfilePicsEndpoint = 'https://prod-travelmates-profile-pics.s3.ap-southeast-1.amazonaws.com/'
