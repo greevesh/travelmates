@@ -3,7 +3,7 @@ import { IconButton, Text, Badge, Icon } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
-import { friendRequestsEndpoint } from '@/consts/api'
+import { friendRequestsEndpoint, usersEndpoint } from '@/consts/api'
 import { withAuthRetry } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
@@ -58,7 +58,11 @@ export default function NotificationsModal() {
             ))
             setNotifications(notifications.filter((notification) => notification._id !== requestId))
             const newFriend = notifications.find((n) => n._id === requestId)
-            newFriend && addRow({ senderId: newFriend.senderId, senderUsername: newFriend.senderUsername, senderPic: newFriend.senderPic })
+            if (!newFriend) return
+
+            const res = await withAuthRetry((headers) => axios.get(usersEndpoint + newFriend.senderUsername, { headers }))
+            const { _id, username, pic } = res.data[0]
+            newFriend && addRow({ _id, username, pic })
             setCount(count - 1)
         }
         catch(err) {
