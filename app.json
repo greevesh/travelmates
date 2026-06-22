@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "backgroundColor": "#1f4fa8",
     "newArchEnabled": false,
     "ios": {
       "supportsTablet": true
@@ -24,9 +25,7 @@
       [
         "expo-splash-screen",
         {
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#1f4fa8"
         }
       ]
     ],
