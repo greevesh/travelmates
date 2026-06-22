@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import { DataTable, IconButton } from 'react-native-paper'
 import { ScrollView, View, Text, StyleSheet, Image } from 'react-native'
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
-import { friendRequestsEndpoint } from "@/consts/api"
+import { friendsEndpoint } from "@/consts/api"
 import { withAuthRetry } from "@/utils/auth"
 import axios from "axios"
 import { handleError } from "@/utils/errorHandler"
-import { Friend, useTableStore } from "@/stores/useTableStore"
+import { useTableStore } from "@/stores/useTableStore"
 import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 
@@ -138,6 +138,15 @@ export default function Table() {
     const previousBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear()
     const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
 
+    const getTripDays = (day: number) => {
+        const filteredTrips = trips.filter(trip => 
+            trip.startDay && trip.endDay && 
+            day >= trip.startDay && 
+            day <= trip.endDay
+        )
+        return filteredTrips
+    }
+
     useEffect(() => {
         loadTrips()
         if (__DEV__) console.log('month: ', month)
@@ -148,46 +157,23 @@ export default function Table() {
         if (__DEV__) console.log('trips: ', trips)
     }, [monthDaysLength, trips])
 
-    const getTripDays = (day: number) => {
-        const filteredTrips = trips.filter(trip => 
-            trip.startDay && trip.endDay && 
-            day >= trip.startDay && 
-            day <= trip.endDay
-        )
-        return filteredTrips
-    }
-
-    const fetchFriends = async () => {
-        try {
-            const { _id } = await fetchCurrentUser()
-            const res = await withAuthRetry((headers) => axios.get(friendRequestsEndpoint, {
-                headers,
-                params: {
-                    status: 'accepted',
-                    recipientId: _id,
-            }
-        }))
-        const currentUser = rows[0]
-        const fetchedFriends = await res.data.friends
-        const filteredFriends: Friend[] = []
-        fetchedFriends && fetchedFriends.map((friend: Friend) => {
-            const { senderId, senderPic, senderUsername } = friend
-            filteredFriends.push({senderId, senderPic, senderUsername})
-        })
-        setRows([currentUser, ...filteredFriends])
-        }
-        catch (err) {
-            handleError(err, 'Failed to fetch friends')
-            throw err
-        }
-    }
-
     useEffect(() => {
         setTableHeight(HEADER_HEIGHT + ROW_HEIGHT * visibleRows)
       }, [rows.length])
 
     useEffect(() => {
-        fetchFriends()
+        async function loadRows() {
+            try {
+                const { _id, username, pic } = await fetchCurrentUser()
+                const res = await withAuthRetry((headers) => axios.get(friendsEndpoint, { headers }))
+                const friends = res.data ?? []
+                setRows([{ _id, username, pic }, ...friends])
+            }
+            catch (err) {
+                handleError(err, 'Failed to load users')
+            }
+        }
+        loadRows()
     }, [])
 
     const getTripWidthInMonth = (trip: TableTrip) => {
@@ -219,27 +205,27 @@ export default function Table() {
                             showsVerticalScrollIndicator={false}
                         >
                             {rows.map((row) => (
-                                <DataTable.Row key={row.senderId} style={styles.dataRow}>
+                                <DataTable.Row key={row._id} style={styles.dataRow}>
                                     <View style={styles.userCell}>
                                     <Image 
                                         source={
-                                            row.senderPic
-                                                ? { uri: row.senderPic }
+                                            row.pic
+                                                ? { uri: row.pic }
                                                 : require('../../assets/img/placeholder-profile2.webp')
                                         }
                                         style={styles.userPic} 
                                     />
-                                        <Text style={styles.username}>{row.senderUsername}</Text>
+                                        <Text style={styles.username}>{row.username}</Text>
                                     </View>
                                     {displayDays && displayDays.map((day) => {
                                     const dayTrips = getTripDays(day)
                                     return (
                                         <View
-                                            key={`${row.senderId}-${day}`}
+                                            key={`${row._id}-${day}`}
                                             style={styles.dayCell}
                                         >
                                             {dayTrips.map((trip) => (
-                                                row.senderId === trip.userId &&
+                                                row._id === trip.userId &&
                                                 trip.startDay === day && (
                                                     <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) }]}>
                                                         <Text style={styles.locationText}>{trip.location}</Text>

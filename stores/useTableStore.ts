@@ -1,15 +1,15 @@
 import { create } from 'zustand'
 
-export interface Friend {
-    senderId: string | undefined
-    senderUsername: string | undefined
-    senderPic: string | undefined
+export interface Row {
+    _id: string | undefined
+    username: string | undefined
+    pic: string | undefined
 }
 
 interface TableState {
-    rows: Friend[]
-    addRow: (friend: Friend) => void
-    setRows: (friends: Friend[]) => void
+    rows: Row[]
+    addRow: (friend: Row) => void
+    setRows: (friends: Row[]) => void
 }
 
 export const useTableStore = create<TableState>((set) => ({
