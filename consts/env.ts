@@ -4,7 +4,7 @@ export const DEV_CREDENTIALS = {
 }
   
 export const DEV_META = {
-    senderId: process.env.EXPO_PUBLIC_DEV_USER_ID!,
-    senderUsername: process.env.EXPO_PUBLIC_DEV_USERNAME!,
-    senderPic: process.env.EXPO_PUBLIC_DEV_PIC!,
+    _id: process.env.EXPO_PUBLIC_DEV_USER_ID!,
+    username: process.env.EXPO_PUBLIC_DEV_USERNAME!,
+    pic: process.env.EXPO_PUBLIC_DEV_PIC!,
 }
