@@ -16,8 +16,7 @@ import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
-import { useTableStore } from '@/stores/useTableStore'
-import { DEV_CREDENTIALS, DEV_META } from '@/consts/env'
+import { DEV_CREDENTIALS } from '@/consts/env'
 
 export default function SignInForm() {
 	const {
@@ -38,8 +37,6 @@ export default function SignInForm() {
 		setPhoto: state.setPhoto,
 	}))
 
-	const addRow = useTableStore((state) => state.addRow)
-
 	const onSubmit = async (data: SignInFormFields) => {
 		try {
 			setIsLoading(true)
@@ -53,7 +50,6 @@ export default function SignInForm() {
 					setUploaded(true)
 					setPhoto(pic)
 				}
-				addRow({ senderId: _id, senderUsername: username, senderPic: pic })
 				router.push('/hub')
 			}
 			catch (err) {
@@ -68,12 +64,11 @@ export default function SignInForm() {
 		}
 	}
 
-	// useEffect(() => {
-	// 	if (__DEV__) {
-	// 		onSubmit(DEV_CREDENTIALS)
-	// 		addRow(DEV_META)
-	// 	}
-	// }, [])
+	useEffect(() => {
+		if (__DEV__) {
+			onSubmit(DEV_CREDENTIALS)
+		}
+	}, [])
 
 	return (
 		<View style={{ marginTop: 55 }}>
