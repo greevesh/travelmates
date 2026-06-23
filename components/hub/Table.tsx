@@ -40,7 +40,9 @@ export default function Table() {
 
     const HEADER_HEIGHT = 50
     const ROW_HEIGHT = 50
-    const MAX_VISIBLE_ROWS = 7
+    const MAX_VISIBLE_ROWS = 5
+
+    const tableWidth = monthDaysLength === 31 ? 1766 : 1716
 
     const visibleRows = Math.min(rows.length, MAX_VISIBLE_ROWS)
 
@@ -182,11 +184,9 @@ export default function Table() {
         return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
     }
 
-    const tableWidth = monthDaysLength === 31 ? 1766 : 1716
-
     return (
         <>
-            <View style={styles.tableCard}>
+            <View style={{ maxHeight: tableHeight, backgroundColor: '#ffffff' }}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <DataTable style={{ width: tableWidth }}>
                         <DataTable.Header style={styles.headerRow}>
@@ -253,10 +253,6 @@ export default function Table() {
 }
 
 const styles = StyleSheet.create({
-    tableCard: {
-        maxHeight: 410,
-        backgroundColor: '#ffffff',
-    },
     headerRow: {
         backgroundColor: '#f7f9fc',
     },
