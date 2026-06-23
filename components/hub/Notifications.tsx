@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { IconButton, Text, Badge, Icon } from 'react-native-paper'
+import { IconButton, Text, Badge } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
@@ -8,6 +8,7 @@ import { withAuthRetry } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
+import NotificationsEmptyState from './NotificationsEmptyState'
 import { handleError } from '@/utils/errorHandler'
 import { useTableStore } from '@/stores/useTableStore'
 import PlaneIcon from '../base/PlaneIcon'
@@ -117,14 +118,24 @@ export default function NotificationsModal() {
             >
                 <PlaneIcon />
                 <Text style={styles.title}>Notifications</Text>
-                <ScrollView
-                    style={{ maxHeight: 220 }}
-                    nestedScrollEnabled
-                >
-                    {notifications.map((notification) => (
-                        <FriendRequestCard pic={notification.senderPic} username={notification.senderUsername} onAccept={() => handleAccept(notification._id)} onReject={() => handleReject(notification._id)} key={notification._id} />
-                    ))}
-                </ScrollView>
+                {notifications.length === 0 ? (
+                    <NotificationsEmptyState />
+                ) : (
+                    <ScrollView
+                        style={{ maxHeight: 320 }}
+                        nestedScrollEnabled
+                    >
+                        {notifications.map((notification) => (
+                            <FriendRequestCard
+                                pic={notification.senderPic}
+                                username={notification.senderUsername}
+                                onAccept={() => handleAccept(notification._id)}
+                                onReject={() => handleReject(notification._id)}
+                                key={notification._id}
+                            />
+                        ))}
+                    </ScrollView>
+                )}
             </WithModal>
         </>
     )
@@ -142,7 +153,7 @@ const styles = StyleSheet.create({
     },
     modal: {
         width: '90%',
-        height: 300,
+        minHeight: 380,
     },
     planeContainer: {
         position: 'absolute', 
