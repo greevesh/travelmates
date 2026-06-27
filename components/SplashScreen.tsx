@@ -1,4 +1,5 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { useEffect, useRef } from 'react'
+import { Animated, Easing, StyleSheet, View, Text } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { StatusBar } from 'expo-status-bar'
 import { Icon } from 'react-native-paper'
@@ -12,6 +13,52 @@ const FLIGHT_PATH =
 
 type SplashScreenProps = {
     fontsLoaded?: boolean
+}
+
+const WAVE_HEIGHT = 6
+const WAVE_DURATION = 400
+const WAVE_STAGGER = 200
+
+function WaveDots() {
+    const dot1 = useRef(new Animated.Value(0)).current
+    const dot2 = useRef(new Animated.Value(0)).current
+    const dot3 = useRef(new Animated.Value(0)).current
+
+    useEffect(() => {
+        const bounce = (value: Animated.Value) =>
+            Animated.sequence([
+                Animated.timing(value, {
+                    toValue: -WAVE_HEIGHT,
+                    duration: WAVE_DURATION,
+                    easing: Easing.out(Easing.quad),
+                    useNativeDriver: true,
+                }),
+                Animated.timing(value, {
+                    toValue: 0,
+                    duration: WAVE_DURATION,
+                    easing: Easing.in(Easing.quad),
+                    useNativeDriver: true,
+                }),
+            ])
+
+        const animation = Animated.loop(
+            Animated.stagger(WAVE_STAGGER, [bounce(dot1), bounce(dot2), bounce(dot3)]),
+        )
+
+        animation.start()
+        return () => animation.stop()
+    }, [dot1, dot2, dot3])
+
+    return (
+        <View style={styles.dots}>
+            {[dot1, dot2, dot3].map((translateY, index) => (
+                <Animated.View
+                    key={index}
+                    style={[styles.dot, { transform: [{ translateY }] }]}
+                />
+            ))}
+        </View>
+    )
 }
 
 function FlightPathAndPlane() {
@@ -45,11 +92,7 @@ export default function SplashScreen({ fontsLoaded = false }: SplashScreenProps)
 
             <View style={styles.textBlock}>
                 <Text style={[styles.title, fontsLoaded && styles.titleFont]}>TravelM@tes</Text>
-                <View style={styles.dots}>
-                    <View style={styles.dot} />
-                    <View style={styles.dot} />
-                    <View style={styles.dot} />
-                </View>
+                <WaveDots />
                 <Text style={[styles.tagline, fontsLoaded && styles.taglineFont]}>
                     See where your friends are going.
                 </Text>
@@ -100,7 +143,9 @@ const styles = StyleSheet.create({
     },
     dots: {
         flexDirection: 'row',
+        alignItems: 'flex-end',
         gap: 8,
+        height: 14,
     },
     dot: {
         width: 7,
