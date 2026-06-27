@@ -9,7 +9,7 @@ export default function NotificationsEmptyState() {
         <View style={styles.container}>
             <View style={styles.illustration}>
                 <View style={styles.circle}>
-                    <Icon source="bell-outline" size={56} color={BLUE} />
+                    <Icon source="bell-off" size={56} color={BLUE} />
                 </View>
             </View>
             <Text style={styles.headline}>You&apos;re all caught up!</Text>
