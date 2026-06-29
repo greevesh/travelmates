@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient"
 
 export default function Page() {
     return (
-        <LinearGradient colors={['#8ec5fc', '#5f93d3']}>
+        <LinearGradient style={styles.gradient} colors={['#8ec5fc', '#5f93d3']}>
             <View style={styles.container}>
                 <Hub />
             </View>
@@ -13,9 +13,12 @@ export default function Page() {
 }
 
 const styles = StyleSheet.create({
+    gradient: {
+        flex: 1,
+    },
 	container: {
+		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-		height: '100%',
 	},
 })

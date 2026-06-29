@@ -206,6 +206,7 @@ export default function Table() {
                     <ActivityIndicator size="large" color="#3a9fff" />
                 </View>
             ) : showTable ? (
+                <View style={styles.tableSection}>
                 <View style={{ maxHeight: tableHeight, backgroundColor: '#ffffff' }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         <DataTable style={{ width: tableWidth }}>
@@ -261,10 +262,6 @@ export default function Table() {
                         </DataTable>
                     </ScrollView>
                 </View>
-            ) : (
-                <TableLoadError onRetry={loadRows} />
-            )}
-            {showTable && (
             <View style={styles.belowTableContainer}>
                 <Text style={styles.monthLabel}>{displayMonth} {displayYear}</Text>
                 <View style={styles.chevronBtns}>
@@ -272,6 +269,9 @@ export default function Table() {
                     <IconButton size={30} disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
                 </View>
             </View>
+                </View>
+            ) : (
+                <TableLoadError onRetry={loadRows} />
             )}
         </>
     )
@@ -348,6 +348,9 @@ const styles = StyleSheet.create({
         color: '#1f2937',
         width: 400,
         zIndex: 50,
+    },
+    tableSection: {
+        width: '100%',
     },
     loadingContainer: {
         flex: 1,
