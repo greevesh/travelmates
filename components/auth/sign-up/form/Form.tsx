@@ -39,7 +39,7 @@ export default function SignUpForm() {
 			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
 			await SecureStore.setItemAsync('username', data.username)
-			storeAuthTokens(accessToken, refreshToken)
+			await storeAuthTokens(accessToken, refreshToken)
 
 			useAuthStore.getState().setIsSignedIn(true)
 			reset()
