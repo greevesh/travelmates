@@ -11,7 +11,7 @@ import PlaneIcon from '@/components/base/PlaneIcon'
 export default function SignInCard() {
 	return (
 		<Card style={styles.card} mode="contained">
-			<PlaneIcon style={{ left: -40 }} />
+			<PlaneIcon style={{ top: 10, right: 290 }} />
 			<Title text='Sign in' style={{ marginTop: 20 }} />
 			<Subtitle text='Welcome back!' />
 			<SignInForm />

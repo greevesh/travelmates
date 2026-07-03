@@ -16,7 +16,5 @@ export default function PlaneIcon({ style }: PlaneIcon) {
 const styles = StyleSheet.create({
     planeContainer: {
         position: 'absolute', 
-        top: 10, 
-        left: 10
     },
 })

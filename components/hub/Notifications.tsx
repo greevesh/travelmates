@@ -116,7 +116,7 @@ export default function NotificationsModal() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
-                <PlaneIcon />
+                <PlaneIcon style={{ top: 10, left: 10 }} />
                 <Text style={styles.title}>Notifications</Text>
                 {notifications.length === 0 ? (
                     <NotificationsEmptyState />

@@ -23,7 +23,7 @@ export default function SendFriendRequestButton() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
-                <PlaneIcon />
+                <PlaneIcon style={{ top: 10, left: 10 }} />
                 <Text style={styles.title}>Add Friend</Text>
                 <SearchUserBar />
             </WithModal>
