@@ -8,7 +8,7 @@ import { View } from 'react-native'
 
 ExpoSplashScreen.preventAutoHideAsync().catch(() => {})
 
-const MIN_SPLASH_MS = 5000
+const MIN_SPLASH_MS = 3000
 
 export default function RootLayout() {
   const [appIsReady, setAppIsReady] = useState(false)
