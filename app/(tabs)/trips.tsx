@@ -187,7 +187,7 @@ export default function Trips() {
                                         }
                                         <View style={styles.trip}>
                                             <Icon color='#b22222' source="map-marker" size={25} />
-                                            <Text style={styles.locationText}>{trip.location}</Text>
+                                            <Text style={styles.locationText}>{trip.location && trip.location.length > 25 ? trip.location.slice(0, 25) + '...' : trip.location}</Text>
                                             <View style={styles.dateTextContainer}>
                                                 <Text style={{ fontSize: 13 }}>{trip.startDate?.toDateString()} - </Text>
                                                 <Text style={{ fontSize: 13 }}>{trip.endDate?.toDateString()}</Text>
@@ -214,15 +214,15 @@ const styles = StyleSheet.create({
         width: '90%',
 		borderWidth: 1,
         borderRadius: 20,
-		borderColor: '#d3d3d3',
+		borderColor: '#e8eaed',
 		backgroundColor: '#fff',
 		height: 500,
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4},
-        shadowOpacity: 0.1,
-        shadowRadius: 10, 
-        elevation: 5
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 6,
+        elevation: 2,
     },
     subcontainer: {
         alignItems: 'center', 
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     dateContainer: {
         flexDirection: 'row', 
         justifyContent: 'center', 
-        marginTop: 20,
+        marginTop: 50,
         marginLeft: 0,
         width: '90%'
     },
@@ -255,10 +255,10 @@ const styles = StyleSheet.create({
     },
     addTripBtn: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 6,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
+        elevation: 2,
         borderRadius: 25, 
         width: 345, 
         height: 45, 
@@ -271,10 +271,13 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 12,
         padding: 10,
+        borderWidth: 1,
+        borderColor: '#eceff4',
         shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5, 
-        elevation: 5
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.04,
+        shadowRadius: 2,
+        elevation: 1,
     },
     spinner: {
         position: 'absolute', 
