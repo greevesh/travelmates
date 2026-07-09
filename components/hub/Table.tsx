@@ -225,6 +225,24 @@ export default function Table() {
         return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
     }
 
+    const trimLocationLength = (location: string, trip: TableTrip) => {
+        const tripWidth = getTripWidthInMonth(trip)
+
+        if (!location || !trip || !tripWidth) return
+
+        const sliceEnd = (tripWidth / 10) - 1
+        let needsTrimming = sliceEnd < location.length
+        let trimmedLocation = location.slice(0, sliceEnd)
+
+        if (needsTrimming) {
+            if (trimmedLocation.endsWith(',') || trimmedLocation.endsWith(' ')) {
+                return trimmedLocation.slice(0, -1) + '...'
+            }
+            return trimmedLocation + '...'
+        }
+        return location
+    }
+
     return (
         <>
             {rowsLoadState === 'loading' ? (
@@ -268,7 +286,7 @@ export default function Table() {
                                                     row._id === trip.userId &&
                                                     trip.startDay === day && (
                                                         <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) }]}>
-                                                            <Text style={styles.locationText}>{trip.location}</Text>
+                                                            <Text style={styles.locationText}>{trimLocationLength(trip.location, trip)}</Text>
                                                         </View>
                                                     )
                                                 ))}
