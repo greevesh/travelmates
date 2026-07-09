@@ -11,6 +11,32 @@ import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 import TableLoadError from "./TableLoadError"
 
+function UserProfileImage({ pic }: { pic?: string }) {
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        setIsLoading(true)
+    }, [pic])
+
+    return (
+        <View style={styles.userPicWrapper}>
+            {isLoading && (
+                <View style={[styles.userPic, styles.userPicSkeleton]} />
+            )}
+            <Image
+                source={
+                    pic
+                        ? { uri: pic }
+                        : require('../../assets/img/placeholder-profile2.webp')
+                }
+                style={styles.userPic}
+                onLoad={() => setIsLoading(false)}
+                onError={() => setIsLoading(false)}
+            />
+        </View>
+    )
+}
+
 type RowsLoadState = 'loading' | 'error' | 'success'
 
 interface TableTrip {
@@ -228,14 +254,7 @@ export default function Table() {
                                 {rows.map((row) => (
                                     <DataTable.Row key={row._id} style={styles.dataRow}>
                                         <View style={styles.userCell}>
-                                        <Image 
-                                            source={
-                                                row.pic
-                                                    ? { uri: row.pic }
-                                                    : require('../../assets/img/placeholder-profile2.webp')
-                                            }
-                                            style={styles.userPic} 
-                                        />
+                                            <UserProfileImage pic={row.pic} />
                                             <Text style={styles.username}>{row.username}</Text>
                                         </View>
                                         {displayDays && displayDays.map((day) => {
@@ -286,10 +305,19 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#1f2937',
     },
+    userPicWrapper: {
+        width: 34,
+        height: 34,
+    },
     userPic: {
         width: 34,
-		height: 34,
-		borderRadius: 17,
+        height: 34,
+        borderRadius: 17,
+    },
+    userPicSkeleton: {
+        position: 'absolute',
+        backgroundColor: '#e0e0e0',
+        zIndex: 1,
     },
     userTxt: {
         justifyContent: 'center', 
