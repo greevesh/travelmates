@@ -8,7 +8,7 @@ interface IAuthLinkProps {
 
 export default function AuthLink({ path, text }: IAuthLinkProps) {
     return (
-        <Link push href={path} asChild>
+        <Link style={{ marginTop: 10 }} push href={path} asChild>
             <Pressable
                 style={styles.pressable}
                 android_ripple={{ color: 'transparent' }}

@@ -63,7 +63,7 @@ export default function SignUpForm() {
 			<Error msg={errors.passwordConfirmation?.message} />
 			<AuthLink path='./' text='Already have an account?' />
 			<SignUpButton onPress={handleSubmit(onSubmit)}>
-				{isLoading && <Spinner />}
+				{isLoading && <Spinner style={{ right: 15 }} color='#fff' />}
 			</SignUpButton>
 		</View>
 	)

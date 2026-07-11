@@ -14,6 +14,7 @@ import { View, StyleSheet, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
 import { handleError } from "@/utils/errorHandler"
 import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
+import PlaneIcon from "@/components/base/PlaneIcon"
 
 interface Trip {
     id?: undefined | string
@@ -157,9 +158,7 @@ export default function Trips() {
                 <View style={styles.card}>
                     <View style={styles.subcontainer}>
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.planeContainer}>
-                                <Icon size={40} source="airplane" color='#3a9fff' />
-                            </View>
+                            <PlaneIcon style={{ top: 10, right: 200 }} />
                             <Title style={styles.title}>Trips</Title>
                         </View>
                         <SearchLocationBar />
@@ -169,7 +168,7 @@ export default function Trips() {
                         </View>
                         <View style={styles.btnContainer}>
                             <Button style={[styles.addTripBtn, { backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#3a9fff'}` }]} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>
-                                {createTripLoading ? <Spinner /> : <Text style={{ fontSize: 18, textAlign: 'center' }}>Add Trip</Text>}
+                                {createTripLoading ? <Spinner color="#fff" /> : <Text style={{ fontSize: 18, textAlign: 'center' }}>Add Trip</Text>}
                             </Button>
                         </View>
                         <FlatList
@@ -181,7 +180,7 @@ export default function Trips() {
                                 <View style={{ width: 330, marginTop: 15 }}>
                                     <View style={styles.tripContainer}>
                                         {deletingTripId === trip.id ?
-                                            <Spinner style={styles.spinner} />
+                                            <Spinner style={styles.spinner} color="#3a9fff" />
                                             :
                                             <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={25} />
                                         }
@@ -229,11 +228,6 @@ const styles = StyleSheet.create({
         width: '100%', 
         overflow: 'scroll',
     },
-    planeContainer: {
-        position: 'absolute', 
-        top: 20, 
-        left: -100
-    },
     title: {
         fontSize: 36,
 		textAlign: 'center',
@@ -262,7 +256,7 @@ const styles = StyleSheet.create({
         borderRadius: 25, 
         width: 345, 
         height: 45, 
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     tripContainer: {
         flexDirection: 'row', 
@@ -280,16 +274,13 @@ const styles = StyleSheet.create({
         elevation: 1,
     },
     spinner: {
-        position: 'absolute', 
-        top: 2, 
-        right: -15,
-        color: '#3a9fff',
         height: 80,
-        width: 80
+        width: 80,
+        right: -20
     },
     deleteIcon: {
         position: 'absolute', 
-        top: 15, 
+        top: 12, 
         right: -3
     },
     trip: {
