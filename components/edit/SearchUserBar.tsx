@@ -163,7 +163,7 @@ export default function SearchUserBar() {
 				placeholder={"Search users"}
 				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
 				onClearIconPress={() => setUsers([])}
-				selectionColor={'#006994'}
+				selectionColor='#3a9fff'
 				readOnly={selectedUsers.length > 1}
 			/>
 			{error && 

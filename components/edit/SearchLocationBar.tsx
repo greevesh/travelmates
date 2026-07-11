@@ -92,7 +92,7 @@ export default function SearchLocationBar() {
 				}}
 				placeholder="Search location"
 				onClearIconPress={() => setLocation(undefined)}
-				selectionColor={'#006994'}
+				selectionColor='#3a9fff'
 				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
 			/>
 			{error &&
