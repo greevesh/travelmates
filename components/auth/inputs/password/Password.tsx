@@ -19,6 +19,8 @@ export default function Password({ control }: IInputProps) {
 				}}
 				render={({ field: { onChange, value } }) => (
 					<TextInput
+						selectionColor='#3a9fff'
+						activeUnderlineColor='#3a9fff'
 						onChangeText={onChange}
 						value={value}
 						secureTextEntry={!secureText}
