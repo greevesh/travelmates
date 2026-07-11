@@ -285,7 +285,7 @@ export default function Table() {
                                                 {dayTrips.map((trip) => (
                                                     row._id === trip.userId &&
                                                     trip.startDay === day && (
-                                                        <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) }]}>
+                                                        <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) - 7 }]}>
                                                             <Text style={styles.locationText}>{trimLocationLength(trip.location, trip)}</Text>
                                                         </View>
                                                     )
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     },
     tripBar: {
         position: 'absolute',
-        left: -1,
+        left: 3,
         top: 11,
         zIndex: 10,
     },
