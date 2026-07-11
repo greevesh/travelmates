@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
     modal: {
         width: '90%',
-        height: 165,
+        height: 185,
         alignItems: 'center',
     },
     title: {
