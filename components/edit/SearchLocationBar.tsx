@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
 	},
 	resultsContainer: {
 		position: 'absolute',
-		top: 102,
+		top: 118,
 		width: 345,
 		marginTop: 10,
 		backgroundColor: '#f9f9f9',
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
-		top: 85,
+		top: 150,
 		left: 25,
 	},
 	errorText: {
