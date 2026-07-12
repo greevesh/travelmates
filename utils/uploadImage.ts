@@ -59,6 +59,7 @@ const uploadImageToDb = async (pic: string) => {
   }
   catch (err) {
     handleError(err, 'Failed to upload file to DB')
+    throw err
   }
 } 
 

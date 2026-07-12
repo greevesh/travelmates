@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { uploadImageToS3, uploadImageToDb } from '@/utils/uploadImage'
+import { handleError } from '@/utils/errorHandler'
 
 const PROFILE_PIC_SIZE = 64
 
@@ -37,21 +38,32 @@ export default function UserInfo() {
     }, [])
 
     const handleChoosePhoto = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 0.7
-        })
+        const prevPhoto = photo
+        const prevUploadedState = uploaded
 
-        if (result.canceled) return
-
-        const localUri = result.assets[0].uri
-        setPhoto(localUri)
-        setUploaded(true)
-
-        const picUrl = await uploadImageToS3(localUri)
-        await uploadImageToDb(picUrl)
-        setPhoto(picUrl)
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: 0.7
+            })
+    
+            if (result.canceled) return
+    
+            const localUri = result.assets[0].uri
+            setPhoto(localUri)
+            setUploaded(true)
+    
+            const picUrl = await uploadImageToS3(localUri)
+            await uploadImageToDb(picUrl)
+            setPhoto(picUrl)
+        }
+        catch (err) {
+            setPhoto(prevPhoto)
+            setUploaded(prevUploadedState)
+            if (__DEV__) console.log('Failed to choose a photo: ', err)
+            handleError(err, 'Failed to choose a photo. Please try again.')
+        }
     }
 
     return (
