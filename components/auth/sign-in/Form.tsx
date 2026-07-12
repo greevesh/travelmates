@@ -14,7 +14,7 @@ import AuthLink from '../AuthLink'
 import Spinner from '@/components/base/Spinner'
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
-import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { DEV_CREDENTIALS } from '@/consts/env'
 
@@ -78,7 +78,7 @@ export default function SignInForm() {
 			<Error msg={errors.password?.message} />
 			<AuthLink path='./signup' text='Not a member?' />
 			<SignInButton onPress={handleSubmit(onSubmit)} >
-				{isLoading && <Spinner />}
+				{isLoading && <Spinner style={{ right: 15 }} color='#fff' />}
 			</SignInButton>
 		</View>
 	)
