@@ -10,13 +10,14 @@ import { useTableStore } from "@/stores/useTableStore"
 import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 import TableLoadError from "./TableLoadError"
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore"
 
 function UserProfileImage({ pic }: { pic?: string }) {
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         setIsLoading(true)
-    }, [pic])
+    }, [])
 
     return (
         <View style={styles.userPicWrapper}>
@@ -62,6 +63,7 @@ export default function Table() {
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
 
     const [trips, setTrips] = useState<TableTrip[]>([])
+    const { photo } = useCurrentUserStore()
     
     const rows = useTableStore((state) => state.rows)
     const setRows = useTableStore((state) => state.setRows)
@@ -214,6 +216,10 @@ export default function Table() {
             setRowsLoadState('error')
         }
     }
+
+    useEffect(() => {
+        setRows([{ ...rows[0], pic: photo }, ...rows.slice(1)])
+    }, [photo])
 
     useEffect(() => {
         loadRows()
