@@ -3,7 +3,7 @@ import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/aut
 import { View, StyleSheet, Text, Alert, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
-import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import { handleError } from '@/utils/errorHandler'
 import { useTableStore } from '@/stores/useTableStore'
 

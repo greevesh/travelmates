@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { View, Image, StyleSheet, Text, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
 import * as ImagePicker from 'expo-image-picker'
-import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { uploadImageToS3, uploadImageToDb } from '@/utils/uploadImage'
 
