@@ -1,6 +1,6 @@
 import { useAuthStore } from '../../stores/useAuthStore'
 import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/auth'
-import { TouchableOpacity, View, StyleSheet, Text, Alert } from 'react-native'
+import { View, StyleSheet, Text, Alert, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
@@ -37,12 +37,12 @@ export default function SignOutButton() {
 	}
 
 	return (
-		<TouchableOpacity onPress={onSubmit} style={styles.container}>
+		<Pressable onPress={onSubmit} style={styles.container} >
           <View style={styles.btn}>
             <Icon size={20} source="logout" color='#fff' />
             <Text style={styles.text}>Sign out</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
 	)
 }
 
