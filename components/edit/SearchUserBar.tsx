@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Button, Icon, Searchbar } from 'react-native-paper'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { useUserStore } from '../../stores/useUserStore'
 import { friendRequestsEndpoint, usersEndpoint } from '../../consts/api'
@@ -11,6 +11,7 @@ import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 import { handleError } from '@/utils/errorHandler'
+import Spinner from '../base/Spinner'
 
 enum FriendRequestStatus {
 	PENDING = 'pending',
@@ -182,15 +183,23 @@ export default function SearchUserBar() {
 							source={require('../../assets/img/placeholder-profile2.webp')} 
 							style={styles.img} 
 						/>
-						<Text style={{ left: 10, fontWeight: '500', width: 200 }}>{user.username}</Text>
+						<Text style={{ left: 10, fontWeight: '400', width: 200 }}>{user.username}</Text>
 						{!alreadyAddedUsers.includes(user._id.toString()) ? 
-							<Button onPress={() => handleSendFriendRequest(user._id.toString())}>
-								{!loadingUserId?.includes(user._id.toString()) 
-								? 'Add friend' 
-								: 
-								<ActivityIndicator size="small" color="#007BFF" />}</Button> 
+							<View style={styles.actionContainer}>
+								{loadingUserId === user._id.toString() ? (
+									<Spinner color='#3a9fff' style={{ top: 8, right: 20 }} />
+								) : (
+									<Pressable
+										style={styles.addFriendButton}
+										android_ripple={{ color: 'transparent' }}
+										onPress={() => handleSendFriendRequest(user._id.toString())}
+									>
+										<Text style={styles.addFriendText}>Add friend</Text>
+									</Pressable>
+								)}
+							</View>
 							:
-							<Button disabled>Added</Button>
+							<Button style={{ width: 120, right: 10 }} disabled>Added</Button>
 						}
 					</View>		
 				))}
@@ -251,5 +260,20 @@ const styles = StyleSheet.create({
 		width: 35,
 		height: 35,
 		borderRadius: 25,
+	},
+	actionContainer: {
+		position: 'relative',
+		width: 90,
+		height: 36,
+		justifyContent: 'center',
+	},
+	addFriendButton: {
+		width: 120,
+		right: -10,
+		backgroundColor: 'transparent',
+	},
+	addFriendText: {
+		color: '#374151',
+		fontWeight: '500',
 	},
 })
