@@ -10,6 +10,7 @@ import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 import { handleError } from '@/utils/errorHandler'
 import Spinner from '../base/Spinner'
+import { useTableStore } from '@/stores/useTableStore'
 
 enum FriendRequestStatus {
 	PENDING = 'pending',
@@ -51,25 +52,24 @@ export default function SearchUserBar() {
 
 	const MAX_QUERY_LENGTH = 13
 
-	const { selectedUsers } = useUserStore((state) => ({
-		selectedUsers: state.selectedUsers,
-	}))
+	const rows = useTableStore((state) => state.rows)
 
 	const fetchUsers = async (input: string) => {
+		const currentUserAndfriends = rows.map((r) => r._id)
+
 		try {
 			setLoading(true)
-			const { _id } = await fetchCurrentUser()
 			const res = await withAuthRetry((headers) => fetch(usersEndpoint + input, {
 				method: 'GET',
 				headers,
 			}))
 			const userData = await res.json()
-			const usersExceptCurrentUser = userData.filter((user: User) => user._id.toString() !== _id.toString())
+			const eligibleUsers = userData.filter((u: User) => !currentUserAndfriends.includes(u._id))
 			if (__DEV__) {
 				console.log('users: ', users)
-				console.log('current user id: ', _id)
+				console.log('eligibleUsers: ', eligibleUsers)
 			}
-			setUsers(usersExceptCurrentUser)
+			setUsers(eligibleUsers)
 		} catch (error) {
 			handleError(error, 'Failed to fetch users')
 			setError('Failed to fetch users. Please try again.')
@@ -128,7 +128,7 @@ export default function SearchUserBar() {
 		}
 	}
 
-	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [selectedUsers])
+	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [rows])
 
 	useEffect(() => {
 		if (!query) {
