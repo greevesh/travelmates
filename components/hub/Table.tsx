@@ -71,7 +71,7 @@ export default function Table() {
     const [tableHeight, setTableHeight] = useState<number>(50)
 
     const HEADER_HEIGHT = 50
-    const ROW_HEIGHT = 50
+    const ROW_HEIGHT = 55
     const MAX_VISIBLE_ROWS = 5
 
     const tableWidth = monthDaysLength === 31 ? 1766 : 1716
