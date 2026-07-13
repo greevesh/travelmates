@@ -2,9 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Button, Icon, Searchbar } from 'react-native-paper'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
-import { useUserStore } from '../../stores/useUserStore'
 import { friendRequestsEndpoint, usersEndpoint } from '../../consts/api'
-import { type User } from '../../stores/useUserStore'
 import React from 'react'
 import debounce from '@/utils/debounce'
 import axios from 'axios'
@@ -23,6 +21,12 @@ enum FriendRequestStatus {
 enum FriendRequestType {
 	INCOMING = 'incoming',
 	OUTGOING = 'outgoing'
+}
+
+interface User {
+    _id: string
+    username: string
+    pic: string
 }
 
 interface FriendRequest {
@@ -154,10 +158,6 @@ export default function SearchUserBar() {
 		if (__DEV__) console.log('added users: ', alreadyAddedUsers)
 	}, [])
 
-	useEffect(() => {
-		if (__DEV__) console.log('selected users: ', selectedUsers)
-	}, [selectedUsers])
-
 	return (
 		<>
 			<Searchbar
@@ -174,7 +174,6 @@ export default function SearchUserBar() {
 				onClearIconPress={() => setUsers([])}
 				selectionColor='#3a9fff'
 				autoCorrect={false}
-				readOnly={selectedUsers.length > 1}
 			/>
 			{error && 
 			<View style={styles.errorContainer}>
