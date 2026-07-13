@@ -34,6 +34,7 @@ interface FriendRequest {
 	senderId: string,
 	recipientId: string,
 	senderUsername: string,
+	senderPic: string,
 	status: FriendRequestStatus,
 	requestType: FriendRequestType
 }
@@ -101,7 +102,7 @@ export default function SearchUserBar() {
 
 	const handleSendFriendRequest = async (recipientId: string) => {
 		setLoadingUserId(recipientId)
-		const { _id } = await fetchCurrentUser()
+		const { _id, pic } = await fetchCurrentUser()
 		const { username, accessToken } = await fetchUserCredentials()
 		try {
             const user = { 
@@ -112,6 +113,7 @@ export default function SearchUserBar() {
 				senderId: _id,
 				recipientId,
 				senderUsername: user.username || '',
+				senderPic: pic,
 				status: FriendRequestStatus.PENDING,
 				requestType: FriendRequestType.OUTGOING
 			}
