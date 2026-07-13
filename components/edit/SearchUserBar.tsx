@@ -45,6 +45,8 @@ export default function SearchUserBar() {
 	const [alreadyAddedUsers, setAlreadyAddedUsers] = useState<Array<string>>([])
 	const [error, setError] = useState<string | null>(null)
 
+	const MAX_QUERY_LENGTH = 13
+
 	const { selectedUsers } = useUserStore((state) => ({
 		selectedUsers: state.selectedUsers,
 	}))
@@ -132,9 +134,15 @@ export default function SearchUserBar() {
 	}, [query, loading])
 
 	useEffect(() => {
+		const msg = `No results found for`
 		const timeoutId = setTimeout(() => {
-			if (!users.length && query && !loading && !error) {
-				setError(`No results found for ${query}.`)
+			if (!users.length && query && !error && !loading) {
+				if (query.length <= MAX_QUERY_LENGTH) {
+					setError(`${msg} ${query}.`)
+				}
+				else {
+					setError(`${msg} ${query.slice(0, MAX_QUERY_LENGTH)}.`)
+				}
 			}
 		}, 500)
 
@@ -156,7 +164,7 @@ export default function SearchUserBar() {
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
 				style={[styles.searchbar]}
-				value={query}
+				value={query.length > 13 ? query.slice(0, 13) : query}
 				onChangeText={(text) => {
 					setQuery(text)
 					text.length > 0 && debouncedFetchUsers(text)

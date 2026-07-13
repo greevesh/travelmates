@@ -17,6 +17,8 @@ export default function SearchLocationBar() {
 	const setLocation = useTripStore((state) => state.setLocation)
 	const location = useTripStore((state) => state.location)
 
+	const MAX_QUERY_LENGTH = 17
+
 	const fetchPlaces = async (input: string) => {
 		setLoading(true)
 		const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${input}&key=${process.env.EXPO_PUBLIC_GOOGLE_PLACES_API_KEY}&language=en&types=(cities)`
@@ -37,15 +39,6 @@ export default function SearchLocationBar() {
 		setLocation(placeName)
 		setQuery(placeName)
 		setPlaces([])
-	}
-
-	const shortenPlaceName = (placeName: string) => {
-		let shortened: string
-		let cutOffPoint: number
-		placeName[26] === " " ? cutOffPoint = 26 : cutOffPoint = 27
-		let end = placeName.slice(cutOffPoint, placeName.length)
-		shortened = placeName.replace(end, '...')
-		return shortened
 	}
 
 	const formatPlaceName = (placeName: string) => {
@@ -70,9 +63,15 @@ export default function SearchLocationBar() {
 	}
 
 	useEffect(() => {
+		const msg = `No results found for`
 		const timeoutId = setTimeout(() => {
 			if (!places.length && query && !loading && !error && !location) {
-				setError(`No results found for ${query}.`)
+				if (query.length <= MAX_QUERY_LENGTH) {
+					setError(`${msg} ${query}.`)
+				}
+				else {
+					setError(`${msg} ${query.slice(0, MAX_QUERY_LENGTH)}.`)
+				}
 			}
 		}, 500)
 
@@ -85,7 +84,8 @@ export default function SearchLocationBar() {
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
 				style={styles.searchbar}
-				value={query.length > 28 ? shortenPlaceName(query) : query}
+				value={query.length > MAX_QUERY_LENGTH ? query.slice(0, MAX_QUERY_LENGTH)
+					: query}
 				onChangeText={(text) => {
 					setQuery(text)
 					fetchPlaces(text)
