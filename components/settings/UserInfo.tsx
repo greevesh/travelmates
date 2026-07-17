@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { View, Image, StyleSheet, Text, Pressable } from 'react-native'
+import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
 import * as ImagePicker from 'expo-image-picker'
 import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { uploadImageToS3, uploadImageToDb } from '@/utils/uploadImage'
 import { handleError } from '@/utils/errorHandler'
+import UserProfileImage from '@/components/base/UserProfileImage'
 
 const PROFILE_PIC_SIZE = 64
 
@@ -69,13 +70,9 @@ export default function UserInfo() {
     return (
         <View style={styles.card}>
             <View style={styles.profileContainer}>
-                <Image
-                    style={styles.profilePic}
-                    source={
-                        uploaded && photo
-                            ? { uri: photo }
-                            : require('../../assets/img/placeholder-profile2.webp')
-                    }
+                <UserProfileImage
+                    pic={uploaded && photo ? photo : undefined}
+                    size={PROFILE_PIC_SIZE}
                 />
                 <Pressable style={styles.cameraBadge} onPress={handleChoosePhoto}>
                     <Icon source="camera" size={14} color="#fff" />
@@ -98,11 +95,6 @@ const styles = StyleSheet.create({
     },
     profileContainer: {
         position: 'relative',
-    },
-    profilePic: {
-        width: PROFILE_PIC_SIZE,
-        height: PROFILE_PIC_SIZE,
-        borderRadius: PROFILE_PIC_SIZE / 2,
     },
     cameraBadge: {
         position: 'absolute',

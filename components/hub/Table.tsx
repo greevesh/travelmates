@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { DataTable, IconButton } from 'react-native-paper'
-import { ScrollView, View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native'
+import { ScrollView, View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import { friendsEndpoint } from "@/consts/api"
 import { withAuthRetry } from "@/utils/auth"
@@ -11,32 +11,7 @@ import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 import TableLoadError from "./TableLoadError"
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore"
-
-function UserProfileImage({ pic }: { pic?: string }) {
-    const [isLoading, setIsLoading] = useState(false)
-
-    useEffect(() => {
-        setIsLoading(true)
-    }, [])
-
-    return (
-        <View style={styles.userPicWrapper}>
-            {isLoading && (
-                <View style={[styles.userPic, styles.userPicSkeleton]} />
-            )}
-            <Image
-                source={
-                    pic
-                        ? { uri: pic }
-                        : require('../../assets/img/placeholder-profile2.webp')
-                }
-                style={styles.userPic}
-                onLoad={() => setIsLoading(false)}
-                onError={() => setIsLoading(false)}
-            />
-        </View>
-    )
-}
+import UserProfileImage from "@/components/base/UserProfileImage"
 
 type RowsLoadState = 'loading' | 'error' | 'success'
 
@@ -278,7 +253,7 @@ export default function Table() {
                                 {rows.map((row) => (
                                     <DataTable.Row key={row._id} style={styles.dataRow}>
                                         <View style={styles.userCell}>
-                                            <UserProfileImage pic={row.pic} />
+                                            <UserProfileImage pic={row.pic} size={34} />
                                             <Text style={styles.username}>{row.username}</Text>
                                         </View>
                                         {displayDays && displayDays.map((day) => {
@@ -328,20 +303,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '700',
         color: '#1f2937',
-    },
-    userPicWrapper: {
-        width: 34,
-        height: 34,
-    },
-    userPic: {
-        width: 34,
-        height: 34,
-        borderRadius: 17,
-    },
-    userPicSkeleton: {
-        position: 'absolute',
-        backgroundColor: '#e0e0e0',
-        zIndex: 1,
     },
     userTxt: {
         justifyContent: 'center', 
