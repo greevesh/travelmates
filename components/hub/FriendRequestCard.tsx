@@ -1,22 +1,20 @@
-import { StyleSheet, View, Image } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { IconButton, Text } from 'react-native-paper'
+import UserProfileImage from '@/components/base/UserProfileImage'
 
 interface FriendRequestCardProps {
     pic: string,
     username: string
     onAccept: () => void
     onReject: () => void
+    isLast?: boolean
 }
 
-export default function FriendRequestCard({ pic, username, onAccept, onReject }: FriendRequestCardProps) {
+export default function FriendRequestCard({ pic, username, onAccept, onReject, isLast = false }: FriendRequestCardProps) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, !isLast && styles.divider]}>
             <View style={styles.userInfo}>
-                <Image
-                    src={pic} 
-                    source={require('../../assets/img/placeholder-profile2.webp')} 
-                    style={styles.img} 
-                />
+                <UserProfileImage pic={pic} size={50} style={styles.img} />
                 <View>
                     <Text style={styles.username}>{username}</Text>
                     <Text style={styles.message}>wants to add you</Text>
@@ -46,24 +44,23 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 16,
-        borderRadius: 8,
-        marginBottom: 8,
-        elevation: 2,
-        width: '70%'
+        paddingVertical: 18,
+        paddingHorizontal: 16,
+        width: '94%',
+        alignSelf: 'center',
+    },
+    divider: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#e8eaed',
     },
     userInfo: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 20,
-        width: '80%'
+        flex: 1,
+        marginRight: 12,
     },
     img: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
-        marginRight: 20,
-        marginLeft: -25
+        marginRight: 16,
 	},
     username: {
         fontSize: 17,
@@ -75,7 +72,7 @@ const styles = StyleSheet.create({
     },
     actions: {
         flexDirection: 'row',
-        gap: 8,
+        gap: 12,
     },
     acceptButton: {
         backgroundColor: '#3a9fff',
