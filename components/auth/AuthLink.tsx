@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Pressable, StyleSheet, Text } from 'react-native'
 import { Link, type RelativePathString } from 'expo-router'
 
 interface IAuthLinkProps {
@@ -8,13 +8,23 @@ interface IAuthLinkProps {
 
 export default function AuthLink({ path, text }: IAuthLinkProps) {
     return (
-        <Link push href={path} style={styles.link}>{text}</Link>
+        <Link style={{ marginTop: 10 }} push href={path} asChild>
+            <Pressable
+                style={styles.pressable}
+                android_ripple={{ color: 'transparent' }}
+            >
+                <Text style={styles.link}>{text}</Text>
+            </Pressable>
+        </Link>
     )
 }
 
 const styles = StyleSheet.create({
+    pressable: {
+        backgroundColor: 'transparent',
+    },
     link: {
         textAlign: 'center',
         color: '#006994',
-    }
+    },
 })

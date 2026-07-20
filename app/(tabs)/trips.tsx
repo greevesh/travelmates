@@ -7,13 +7,14 @@ import { tripEndpoint } from "@/consts/api"
 import { useTripStore } from "@/stores/useTripStore"
 import { getAuthContext, withAuthRetry } from "@/utils/auth"
 import fetchCurrentUser from "@/utils/fetchCurrentUser"
-import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import axios from "axios"
 import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
-import { View, StyleSheet, Alert, Text, FlatList } from "react-native"
+import { View, StyleSheet, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
 import { handleError } from "@/utils/errorHandler"
+import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
+import PlaneIcon from "@/components/base/PlaneIcon"
 
 interface Trip {
     id?: undefined | string
@@ -41,7 +42,7 @@ export default function Trips() {
 
     const btnDisabled = !location || !startDate || !endDate
 
-    const fetchTrips = async () => {
+    const handleFetchTrips = async () => {
         try {
             const loadedTrips: Trip[] = []
             const fetchedTrips = await fetchCurrentUserTrips()
@@ -53,6 +54,7 @@ export default function Trips() {
             })
             if (__DEV__) console.log('loaded trips: ', loadedTrips)
             setTrips(loadedTrips)
+            return loadedTrips
         }
         catch (err) {
             handleError(err, 'Error fetching trips')
@@ -71,9 +73,7 @@ export default function Trips() {
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
-            const trips = await fetchCurrentUserTrips()
-            const tripWithId = { ...trip, id: trips[trips.length - 1]._id }
-            setTrips((prevTrips) => [...prevTrips, tripWithId])
+            await handleFetchTrips()
             return res.data
         }
         catch (err) {
@@ -140,7 +140,7 @@ export default function Trips() {
     }
 
     useEffect(() => {
-        fetchTrips()
+        handleFetchTrips()
     }, [])
 
     useEffect(() => {
@@ -158,9 +158,7 @@ export default function Trips() {
                 <View style={styles.card}>
                     <View style={styles.subcontainer}>
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={styles.planeContainer}>
-                                <Icon size={40} source="airplane" color='#3a9fff' />
-                            </View>
+                            <PlaneIcon style={{ top: 10, right: 200 }} />
                             <Title style={styles.title}>Trips</Title>
                         </View>
                         <SearchLocationBar />
@@ -170,7 +168,7 @@ export default function Trips() {
                         </View>
                         <View style={styles.btnContainer}>
                             <Button style={[styles.addTripBtn, { backgroundColor: `${btnDisabled ? 'rgba(66, 133, 244, 0.3)' : '#3a9fff'}` }]} labelStyle={{ color: '#fff' }} disabled={btnDisabled} onPress={handlePostTrip}>
-                                {createTripLoading ? <Spinner /> : <Text style={{ fontSize: 18, textAlign: 'center' }}>Add Trip</Text>}
+                                {createTripLoading ? <Spinner color="#fff" /> : <Text style={{ fontSize: 18, textAlign: 'center' }}>Add Trip</Text>}
                             </Button>
                         </View>
                         <FlatList
@@ -182,13 +180,13 @@ export default function Trips() {
                                 <View style={{ width: 330, marginTop: 15 }}>
                                     <View style={styles.tripContainer}>
                                         {deletingTripId === trip.id ?
-                                            <Spinner style={styles.spinner} />
+                                            <Spinner style={styles.spinner} color="#3a9fff" />
                                             :
                                             <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={25} />
                                         }
                                         <View style={styles.trip}>
                                             <Icon color='#b22222' source="map-marker" size={25} />
-                                            <Text style={styles.locationText}>{trip.location}</Text>
+                                            <Text style={styles.locationText}>{trip.location && trip.location.length > 25 ? trip.location.slice(0, 25) + '...' : trip.location}</Text>
                                             <View style={styles.dateTextContainer}>
                                                 <Text style={{ fontSize: 13 }}>{trip.startDate?.toDateString()} - </Text>
                                                 <Text style={{ fontSize: 13 }}>{trip.endDate?.toDateString()}</Text>
@@ -215,25 +213,20 @@ const styles = StyleSheet.create({
         width: '90%',
 		borderWidth: 1,
         borderRadius: 20,
-		borderColor: '#d3d3d3',
+		borderColor: '#e8eaed',
 		backgroundColor: '#fff',
 		height: 500,
         alignItems: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4},
-        shadowOpacity: 0.1,
-        shadowRadius: 10, 
-        elevation: 5
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 6,
+        elevation: 2,
     },
     subcontainer: {
         alignItems: 'center', 
         width: '100%', 
         overflow: 'scroll',
-    },
-    planeContainer: {
-        position: 'absolute', 
-        top: 20, 
-        left: -100
     },
     title: {
         fontSize: 36,
@@ -244,7 +237,7 @@ const styles = StyleSheet.create({
     dateContainer: {
         flexDirection: 'row', 
         justifyContent: 'center', 
-        marginTop: 20,
+        marginTop: 50,
         marginLeft: 0,
         width: '90%'
     },
@@ -256,14 +249,14 @@ const styles = StyleSheet.create({
     },
     addTripBtn: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 6,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
+        elevation: 2,
         borderRadius: 25, 
         width: 345, 
         height: 45, 
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     tripContainer: {
         flexDirection: 'row', 
@@ -272,22 +265,22 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 12,
         padding: 10,
+        borderWidth: 1,
+        borderColor: '#eceff4',
         shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5, 
-        elevation: 5
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.04,
+        shadowRadius: 2,
+        elevation: 1,
     },
     spinner: {
-        position: 'absolute', 
-        top: 2, 
-        right: -15,
-        color: '#3a9fff',
         height: 80,
-        width: 80
+        width: 80,
+        right: -20
     },
     deleteIcon: {
         position: 'absolute', 
-        top: 15, 
+        top: 12, 
         right: -3
     },
     trip: {

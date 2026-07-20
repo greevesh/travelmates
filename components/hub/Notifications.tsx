@@ -1,27 +1,32 @@
-import { StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import { IconButton, Text, Badge } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
-import { friendRequestsEndpoint } from '@/consts/api'
-import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
+import { friendRequestsEndpoint, usersEndpoint } from '@/consts/api'
+import { withAuthRetry } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
+import NotificationsEmptyState from './NotificationsEmptyState'
 import { handleError } from '@/utils/errorHandler'
+import { useTableStore } from '@/stores/useTableStore'
+import PlaneIcon from '../base/PlaneIcon'
 
 interface Notification {
-  _id: string;
-  senderUsername: string;
-  senderPic: string;
+  _id: string
+  senderId: string
+  senderUsername: string
+  senderPic: string
 }
 
 export default function NotificationsModal() {
     const [visible, setVisible] = useState(false)
-    const [loading, setLoading] = useState<boolean>(false)
 
     const [count, setCount] = useState(0)
     const [notifications, setNotifications] = useState<Notification[]>([])
+
+    const addRow = useTableStore((state) => state.addRow)
 
     async function fetchFriendReqs() {
         try {
@@ -45,26 +50,6 @@ export default function NotificationsModal() {
         }
     }
 
-    const handlePostData = async () => {
-		setLoading(true)
-        const { username, accessToken } = await fetchUserCredentials()
-		try {
-            const user = { 
-				username, 
-				accessToken 
-			}
-			const res = await withAuthRetry((headers) => axios.post(friendRequestsEndpoint, { user }, { headers }))
-			if (__DEV__) console.log('data: ', res.data)
-			return res.data
-		}
-		catch (err) {
-			
-		}
-		finally {
-			setLoading(false)
-		}
-	}
-
     const handleAccept = async (requestId: string) => {
         try {
             await withAuthRetry((headers) => axios.patch(
@@ -72,7 +57,14 @@ export default function NotificationsModal() {
                 { status: 'accepted' },
                 { headers }
             ))
-            // setNotifications(notifications.filter((notification) => notification._id !== requestId))
+            setNotifications(notifications.filter((notification) => notification._id !== requestId))
+            const newFriend = notifications.find((n) => n._id === requestId)
+            if (!newFriend) return
+
+            const res = await withAuthRetry((headers) => axios.get(usersEndpoint + newFriend.senderUsername, { headers }))
+            const { _id, username, pic } = res.data[0]
+            newFriend && addRow({ _id, username, pic })
+            setCount(count - 1)
         }
         catch(err) {
             handleError(err, 'Failed to accept the friend request')
@@ -87,7 +79,7 @@ export default function NotificationsModal() {
                 { status: 'rejected' },
                 { headers }
             ))
-            // setNotifications(notifications.filter((notification) => notification._id !== requestId))
+            setNotifications(notifications.filter((notification) => notification._id !== requestId))
         }
         catch(err) {
             handleError(err, 'Failed to reject the friend request')
@@ -108,6 +100,7 @@ export default function NotificationsModal() {
             <IconButton
                 icon="bell"
                 size={28}
+                iconColor="#183a75"
                 onPress={() => setVisible(true)}
             />
             {count > 0 && (
@@ -123,10 +116,28 @@ export default function NotificationsModal() {
                 visible={visible}
 				onClose={() => setVisible(false)}
             >
+                <PlaneIcon style={{ top: 10, left: 10 }} />
                 <Text style={styles.title}>Notifications</Text>
-                {notifications.map((notification) => (
-                    <FriendRequestCard pic={notification.senderPic} username={notification.senderUsername} onAccept={() => handleAccept(notification._id)} onReject={() => handleReject(notification._id)} key={notification._id} request={notification} />
-                ))}
+                {notifications.length === 0 ? (
+                    <NotificationsEmptyState />
+                ) : (
+                    <ScrollView
+                        style={styles.notificationsScroll}
+                        contentContainerStyle={styles.notificationsList}
+                        nestedScrollEnabled
+                    >
+                        {notifications.map((notification, index) => (
+                            <FriendRequestCard
+                                pic={notification.senderPic}
+                                username={notification.senderUsername}
+                                onAccept={() => handleAccept(notification._id)}
+                                onReject={() => handleReject(notification._id)}
+                                isLast={index === notifications.length - 1}
+                                key={notification._id}
+                            />
+                        ))}
+                    </ScrollView>
+                )}
             </WithModal>
         </>
     )
@@ -144,8 +155,12 @@ const styles = StyleSheet.create({
     },
     modal: {
         width: '90%',
-        height: 300,
-        alignItems: 'center',
+        minHeight: 380,
+    },
+    planeContainer: {
+        position: 'absolute', 
+        top: 10, 
+        left: 10
     },
     title: {
         fontSize: 28,
@@ -153,5 +168,14 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         textAlign: 'center',
         color: '#000',
+    },
+    notificationsScroll: {
+        maxHeight: 320,
+        width: '100%',
+    },
+    notificationsList: {
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
     },
 }) 

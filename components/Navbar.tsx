@@ -4,7 +4,7 @@ import { Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 
 import { usePathname } from 'expo-router'
 import SendFriendRequestButton from './hub/SendFriendRequestButton'
-import NotificationsButton from './hub/NotificationsButton'
+import NotificationsButton from './hub/Notifications'
 
 export default function Navbar() {
 	const pathname = usePathname()

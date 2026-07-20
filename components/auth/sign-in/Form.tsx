@@ -14,10 +14,9 @@ import AuthLink from '../AuthLink'
 import Spinner from '@/components/base/Spinner'
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
-import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
-
-const DEV_CREDENTIALS = { username: process.env.EXPO_PUBLIC_DEV_USERNAME!, password: process.env.EXPO_PUBLIC_DEV_PASS! }
+import { DEV_CREDENTIALS } from '@/consts/env'
 
 export default function SignInForm() {
 	const {
@@ -45,17 +44,17 @@ export default function SignInForm() {
 			await SecureStore.setItemAsync('username', data.username)
 			await storeAuthTokens(accessToken, refreshToken)
 			try {
-				const { username, pic } = await fetchCurrentUser()
+				const { _id, username, pic } = await fetchCurrentUser()
 				setUsername(username)
 				if (pic) {
 					setUploaded(true)
 					setPhoto(pic)
 				}
+				router.push('/hub')
 			}
 			catch (err) {
 				console.error('Error setting photo: ', err)
 			}
-			router.push('/hub')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
@@ -79,7 +78,7 @@ export default function SignInForm() {
 			<Error msg={errors.password?.message} />
 			<AuthLink path='./signup' text='Not a member?' />
 			<SignInButton onPress={handleSubmit(onSubmit)} >
-				{isLoading && <Spinner />}
+				{isLoading && <Spinner style={{ right: 15 }} color='#fff' />}
 			</SignInButton>
 		</View>
 	)

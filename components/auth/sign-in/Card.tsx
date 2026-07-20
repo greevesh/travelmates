@@ -6,10 +6,12 @@ import Subtitle from '../titles/Subtitle'
 import SignInForm from './Form'
 import GoogleSignInButton from './buttons/GoogleSignInButton'
 import AuthLink from '../AuthLink'
+import PlaneIcon from '@/components/base/PlaneIcon'
 
 export default function SignInCard() {
 	return (
 		<Card style={styles.card} mode="contained">
+			<PlaneIcon style={{ top: 10, right: 290 }} />
 			<Title text='Sign in' style={{ marginTop: 20 }} />
 			<Subtitle text='Welcome back!' />
 			<SignInForm />
@@ -21,7 +23,7 @@ export default function SignInCard() {
 
 const styles = StyleSheet.create({
 	card: {
-		// height: 530,
+		// height: 530, // reserved for extra content
 		height: 450,
 		display: 'flex',
 		flexDirection: 'row',

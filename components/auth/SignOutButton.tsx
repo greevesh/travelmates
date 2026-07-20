@@ -1,10 +1,11 @@
 import { useAuthStore } from '../../stores/useAuthStore'
 import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/auth'
-import { TouchableOpacity, View, StyleSheet, Text, Alert } from 'react-native'
+import { View, StyleSheet, Text, Alert, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
 import { router } from 'expo-router'
-import { useCurrentUserStore } from '@/stores/useProfilePhotoStore'
+import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import { handleError } from '@/utils/errorHandler'
+import { useTableStore } from '@/stores/useTableStore'
 
 export default function SignOutButton() {
 	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
@@ -13,6 +14,7 @@ export default function SignOutButton() {
 		setPhoto: state.setPhoto,
 		setUsername: state.setUsername
 	}))
+	const setRows = useTableStore((state) => state.setRows)
 
 	const onSubmit = async () => {
 		const { username, refreshToken, accessToken } = await fetchUserCredentials()
@@ -23,6 +25,7 @@ export default function SignOutButton() {
 			setUploaded(false)
 			setPhoto('')
 			setUsername('')
+			setRows([])
 			router.push('/')
 		}
 		catch (err) {
@@ -34,12 +37,12 @@ export default function SignOutButton() {
 	}
 
 	return (
-		<TouchableOpacity onPress={onSubmit} style={styles.container}>
+		<Pressable onPress={onSubmit} style={styles.container} >
           <View style={styles.btn}>
             <Icon size={20} source="logout" color='#fff' />
             <Text style={styles.text}>Sign out</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
 	)
 }
 

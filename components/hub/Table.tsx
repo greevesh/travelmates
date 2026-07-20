@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from "react"
 import { DataTable, IconButton } from 'react-native-paper'
-import { ScrollView, View, Text, StyleSheet } from 'react-native'
-import ProfilePhoto from "../edit/ProfilePhoto"
-import { useCurrentUserStore } from "@/stores/useProfilePhotoStore"
-import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
+import { ScrollView, View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import fetchCurrentUser from "@/utils/fetchCurrentUser"
+import { friendsEndpoint } from "@/consts/api"
+import { withAuthRetry } from "@/utils/auth"
+import axios from "axios"
+import { handleError } from "@/utils/errorHandler"
+import { useTableStore } from "@/stores/useTableStore"
+import fetchTrips from "@/utils/fetchTrips"
+import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
+import TableLoadError from "./TableLoadError"
+import { useCurrentUserStore } from "@/stores/useCurrentUserStore"
+import UserProfileImage from "@/components/base/UserProfileImage"
+
+type RowsLoadState = 'loading' | 'error' | 'success'
 
 interface TableTrip {
     location: string
     startDay: number | undefined
     endDay: number | undefined
+    userId: string
 }
 
 interface RawTrip {
     startDate: Date
     endDate: Date
     location: string
+    userId: string
 }
 
 export default function Table() {
@@ -26,8 +38,20 @@ export default function Table() {
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
 
     const [trips, setTrips] = useState<TableTrip[]>([])
+    const { photo } = useCurrentUserStore()
     
-    const username = useCurrentUserStore((state) => state.username)
+    const rows = useTableStore((state) => state.rows)
+    const setRows = useTableStore((state) => state.setRows)
+    const [rowsLoadState, setRowsLoadState] = useState<RowsLoadState>('loading')
+    const [tableHeight, setTableHeight] = useState<number>(50)
+
+    const HEADER_HEIGHT = 50
+    const ROW_HEIGHT = 55
+    const MAX_VISIBLE_ROWS = 5
+
+    const tableWidth = monthDaysLength === 31 ? 1766 : 1716
+
+    const visibleRows = Math.min(rows.length, MAX_VISIBLE_ROWS)
 
     /**
      * Parses a trip into a format suitable for display in the monthly calendar
@@ -39,7 +63,7 @@ export default function Table() {
     */
     
     const parseTrip = (trip: RawTrip): TableTrip | null => {
-        const { startDate, endDate, location } = trip
+        const { startDate, endDate, location, userId } = trip
         let startDay = startDate.getDate()
         let endDay = endDate.getDate()
         let fullMonth = false
@@ -63,30 +87,29 @@ export default function Table() {
         else if (!startsInCurrentMonth && endsInCurrentMonth) {
             startDay = 1
         }
-
         if (startsInCurrentMonth || endsInCurrentMonth || fullMonth) {
-            return { location, startDay, endDay }
+            return { location, startDay, endDay, userId }
         }
         return null
     }
     
-    const loadCurrentUserTrips = async () => {
+    const loadTrips = async () => {
         try {
-            const rawTrips = await fetchCurrentUserTrips()
+            const rawTrips = await fetchTrips()
             const newTrips: TableTrip[] = []
             
             rawTrips.forEach((trip: any) => {
                 const startDate = new Date(trip.startDate)
                 const endDate = new Date(trip.endDate)
-                const { location } = trip
-                const parsedTrip = parseTrip({ startDate, endDate, location })
+                const { location, userId } = trip
+                const parsedTrip = parseTrip({ startDate, endDate, location, userId })
                 parsedTrip && newTrips.push(parsedTrip)
             })
             setTrips(newTrips)
             if (__DEV__) console.log('trips loaded: ', newTrips)
         }
         catch (err) {
-            console.error('Error storing current trip data: ', err)
+            if (__DEV__) console.error('Error storing current trip data: ', err)
         }
     }
 
@@ -124,8 +147,17 @@ export default function Table() {
     const previousBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear()
     const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
 
+    const getTripDays = (day: number) => {
+        const filteredTrips = trips.filter(trip => 
+            trip.startDay && trip.endDay && 
+            day >= trip.startDay && 
+            day <= trip.endDay
+        )
+        return filteredTrips
+    }
+
     useEffect(() => {
-        loadCurrentUserTrips()
+        loadTrips()
         if (__DEV__) console.log('month: ', month)
     }, [month])
 
@@ -134,89 +166,227 @@ export default function Table() {
         if (__DEV__) console.log('trips: ', trips)
     }, [monthDaysLength, trips])
 
-    const getTripDays = (day: number) => {
-        return trips.filter(trip => 
-            trip.startDay && trip.endDay && 
-            day >= trip.startDay && 
-            day <= trip.endDay
-        )
+    useEffect(() => {
+        setTableHeight(HEADER_HEIGHT + ROW_HEIGHT * visibleRows)
+      }, [rows.length])
+
+    const showTable = rowsLoadState === 'success' && rows.length > 0
+
+    const loadRows = async () => {
+        try {
+            setRowsLoadState('loading')
+            const user = await fetchCurrentUser()
+            if (!user?._id) {
+                throw new Error('Failed to load current user')
+            }
+            const { _id, username, pic } = user
+            const res = await withAuthRetry((headers) => axios.get(friendsEndpoint, { headers }))
+            const friends = Array.isArray(res.data) ? res.data : []
+            setRows([{ _id, username, pic }, ...friends])
+            setRowsLoadState('success')
+        }
+        catch (err) {
+            handleError(err, 'Failed to load users')
+            setRows([])
+            setRowsLoadState('error')
+        }
+    }
+
+    useEffect(() => {
+        setRows([{ ...rows[0], pic: photo }, ...rows.slice(1)])
+    }, [photo])
+
+    useEffect(() => {
+        loadRows()
+    }, [])
+
+    const getTripWidthInMonth = (trip: TableTrip) => {
+        if (!trip.startDay || !trip.endDay) return 0
+        const daysInMonth = trip.endDay - trip.startDay + 1
+        return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
+    }
+
+    const trimLocationLength = (location: string, trip: TableTrip) => {
+        const tripWidth = getTripWidthInMonth(trip)
+
+        if (!location || !trip || !tripWidth) return
+
+        const sliceEnd = (tripWidth / 10) - 1
+        let needsTrimming = sliceEnd < location.length
+        let trimmedLocation = location.slice(0, sliceEnd)
+
+        if (needsTrimming) {
+            if (trimmedLocation.endsWith(',') || trimmedLocation.endsWith(' ')) {
+                return trimmedLocation.slice(0, -1) + '...'
+            }
+            return trimmedLocation + '...'
+        }
+        return location
     }
 
     return (
         <>
-            <View style={{ height: 100, backgroundColor: '#fff' }}>
-                <ScrollView horizontal={true}>
-                    <DataTable style={{ width: 1100 }}>
-                        <DataTable.Header>
-                            <View style={styles.userTxt}>
-                                <Text>User</Text>
-                            </View>
-                            {displayDays && displayDays.map((day) => (
-                                <View style={styles.day} key={day}>
-                                    <Text>{day}</Text>
+            {rowsLoadState === 'loading' ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#3a9fff" />
+                </View>
+            ) : showTable ? (
+                <View style={styles.tableSection}>
+                <View style={{ maxHeight: tableHeight, backgroundColor: '#ffffff' }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        <DataTable style={{ width: tableWidth }}>
+                            <DataTable.Header style={styles.headerRow}>
+                                <View style={styles.userTxt}>
+                                    <Text style={styles.headerText}>User</Text>
                                 </View>
-                            ))}
-                        </DataTable.Header>
-                        <DataTable.Row>
-                            <View style={{ flexDirection: 'row', marginTop: 14 }}>
-                                <ProfilePhoto size={25} />
-                                <Text style={{ marginTop: 3, marginLeft: 7 }}>{username}</Text>
-                            </View>
-                            {displayDays && displayDays.map((day) => {
-                                const dayTrips = getTripDays(day)
-                                return (
-                                    <React.Fragment key={day}>
-                                        <View style={{ backgroundColor: dayTrips.length > 0 ? 'lightblue' : undefined, width: 30 }}>
-                                            {dayTrips.map((trip, index) => (
-                                                trip.startDay === day && (
-                                                    <Text key={index} style={styles.locationText}>{trip.location}</Text>
-                                                )
-                                            ))}
+                                {displayDays && displayDays.map((day) => (
+                                    <View style={styles.day} key={day}>
+                                        <Text style={styles.headerText}>{day}</Text>
+                                    </View>
+                                ))}
+                            </DataTable.Header>
+                            <ScrollView
+                                style={{ maxHeight: tableHeight }}
+                                nestedScrollEnabled
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {rows.map((row) => (
+                                    <DataTable.Row key={row._id} style={styles.dataRow}>
+                                        <View style={styles.userCell}>
+                                            <UserProfileImage pic={row.pic} size={34} />
+                                            <Text style={styles.username}>{row.username}</Text>
                                         </View>
-                                    </React.Fragment>
-                                )
-                            })}
-                        </DataTable.Row>
-                    </DataTable>
-                </ScrollView>
-            </View>
+                                        {displayDays && displayDays.map((day) => {
+                                        const dayTrips = getTripDays(day)
+                                        return (
+                                            <View
+                                                key={`${row._id}-${day}`}
+                                                style={styles.dayCell}
+                                            >
+                                                {dayTrips.map((trip) => (
+                                                    row._id === trip.userId &&
+                                                    trip.startDay === day && (
+                                                        <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) - 7 }]}>
+                                                            <Text style={styles.locationText}>{trimLocationLength(trip.location, trip)}</Text>
+                                                        </View>
+                                                    )
+                                                ))}
+                                            </View>
+                                        )
+                                    })}
+                                </DataTable.Row>
+                                ))}
+                        </ScrollView>
+                        </DataTable>
+                    </ScrollView>
+                </View>
             <View style={styles.belowTableContainer}>
-                <Text style={{ margin: 14 }}>{displayMonth} {displayYear}</Text>
+                <Text style={styles.monthLabel}>{displayMonth} {displayYear}</Text>
                 <View style={styles.chevronBtns}>
-                    <IconButton disabled={previousBtnDisabled} onPress={decrementMonth} icon="chevron-left" />
-                    <IconButton disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
+                    <IconButton size={30} disabled={previousBtnDisabled} onPress={decrementMonth} icon="chevron-left" />
+                    <IconButton size={30} disabled={nextBtnDisabled} onPress={incrementMonth} icon="chevron-right" />
                 </View>
             </View>
+                </View>
+            ) : (
+                <TableLoadError onRetry={loadRows} />
+            )}
         </>
     )
 }
 
 const styles = StyleSheet.create({
+    headerRow: {
+        backgroundColor: '#f7f9fc',
+    },
+    headerText: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#1f2937',
+    },
     userTxt: {
         justifyContent: 'center', 
-        width: 100, 
-        height: 50
+        width: 120, 
+        height: 50,
+        marginRight: 40,
     },
     day: {
         justifyContent: 'center', 
         alignItems: 'center', 
-        width: 30
+        width: DAY_CELL_WIDTH,
+        borderLeftWidth: 1,
+        borderLeftColor: '#e5e7eb',
+    },
+    dataRow: {
+        height: 56,
+    },
+    dayCell: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        height: 56,
+        width: DAY_CELL_WIDTH,
+        borderLeftWidth: 1,
+        borderLeftColor: '#eceff4',
+        overflow: 'visible',
+        left: 1
+    },
+    userCell: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 50,
+        marginTop: 3,
+    },
+    username: {
+        marginTop: 0,
+        marginLeft: 10,
+        width: 115
+    },
+    locationContainer: {
+        backgroundColor: '#98ea93',
+        borderColor: '#6cd16c',
+        borderWidth: 1,
+        height: 34,
+        borderRadius: 10,
+        justifyContent: 'center',
+    },
+    tripBar: {
+        position: 'absolute',
+        left: 3,
+        top: 11,
+        zIndex: 10,
     },
     locationText: {
-        marginTop: 15, 
-        marginLeft: 5, 
-        fontSize: 14, 
-        width: 400, 
-        zIndex: 50 
+        marginLeft: 10,
+        fontSize: 14,
+        color: '#1f2937',
+        width: 400,
+        zIndex: 50,
+    },
+    tableSection: {
+        width: '100%',
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ffffff',
     },
     belowTableContainer: {
-        display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 12,
+        marginTop: 8,
+    },
+    monthLabel: {
+        margin: 6,
+        fontSize: 37 - 17,
+        fontWeight: '600',
+        color: '#183a75',
     },
     chevronBtns: {
-        display: 'flex', 
         flexDirection: 'row', 
-        marginTop: -3
-    }
+        alignItems: 'center',
+    },
 })

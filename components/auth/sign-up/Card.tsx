@@ -5,10 +5,12 @@ import Title from '../titles/Title'
 import Subtitle from '../titles/Subtitle'
 import SignUpForm from './form/Form'
 import GoogleSignUpButton from './buttons/GoogleSignUpButton'
+import PlaneIcon from '@/components/base/PlaneIcon'
 
 export default function SignUpCard() {
 	return (
 		<Card style={styles.card} mode="contained">
+			<PlaneIcon style={{ top: 10, right: 290 }} />
 			<Title text='Sign up' style={{ marginTop: 20 }} />
 			<Subtitle text='Become a Travel Mate today' />
 			<SignUpForm />
@@ -19,7 +21,7 @@ export default function SignUpCard() {
 
 const styles = StyleSheet.create({
 	card: {
-		// height: 600,
+		// height: 600, // reserved for extra content
 		height: 540,
 		display: 'flex',
 		flexDirection: 'row',

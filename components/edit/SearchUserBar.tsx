@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Icon, Searchbar } from 'react-native-paper'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
-import { useUserStore } from '../../stores/useUserStore'
 import { friendRequestsEndpoint, usersEndpoint } from '../../consts/api'
-import { type User } from '../../stores/useUserStore'
 import React from 'react'
 import debounce from '@/utils/debounce'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 import { handleError } from '@/utils/errorHandler'
+import Spinner from '../base/Spinner'
+import { useTableStore } from '@/stores/useTableStore'
 
 enum FriendRequestStatus {
 	PENDING = 'pending',
@@ -24,10 +24,17 @@ enum FriendRequestType {
 	OUTGOING = 'outgoing'
 }
 
+interface User {
+    _id: string
+    username: string
+    pic: string
+}
+
 interface FriendRequest {
 	senderId: string,
 	recipientId: string,
 	senderUsername: string,
+	senderPic: string,
 	status: FriendRequestStatus,
 	requestType: FriendRequestType
 }
@@ -44,25 +51,25 @@ export default function SearchUserBar() {
 	const [alreadyAddedUsers, setAlreadyAddedUsers] = useState<Array<string>>([])
 	const [error, setError] = useState<string | null>(null)
 
-	const { selectedUsers } = useUserStore((state) => ({
-		selectedUsers: state.selectedUsers,
-	}))
+	const MAX_QUERY_LENGTH = 13
+
+	const rows = useTableStore((state) => state.rows)
 
 	const fetchUsers = async (input: string) => {
+		const currentUserAndfriends = rows.map((r) => r._id)
+
 		try {
 			setLoading(true)
-			const { _id } = await fetchCurrentUser()
-			const res = await withAuthRetry((headers) => fetch(usersEndpoint + input, {
-				method: 'GET',
-				headers,
-			}))
-			const userData = await res.json()
-			const usersExceptCurrentUser = userData.filter((user: User) => user._id.toString() !== _id.toString())
+			setError(null)
+			const res = await withAuthRetry((headers) =>
+				axios.get(usersEndpoint + input, { headers })
+			)
+			const userData = Array.isArray(res.data) ? res.data : []
+			const eligibleUsers = userData.filter((u: User) => !currentUserAndfriends.includes(u._id))
 			if (__DEV__) {
-				console.log('users: ', users)
-				console.log('current user id: ', _id)
+				console.log('eligibleUsers: ', eligibleUsers)
 			}
-			setUsers(usersExceptCurrentUser)
+			setUsers(eligibleUsers)
 		} catch (error) {
 			handleError(error, 'Failed to fetch users')
 			setError('Failed to fetch users. Please try again.')
@@ -94,7 +101,7 @@ export default function SearchUserBar() {
 
 	const handleSendFriendRequest = async (recipientId: string) => {
 		setLoadingUserId(recipientId)
-		const { _id } = await fetchCurrentUser()
+		const { _id, pic } = await fetchCurrentUser()
 		const { username, accessToken } = await fetchUserCredentials()
 		try {
             const user = { 
@@ -105,6 +112,7 @@ export default function SearchUserBar() {
 				senderId: _id,
 				recipientId,
 				senderUsername: user.username || '',
+				senderPic: pic,
 				status: FriendRequestStatus.PENDING,
 				requestType: FriendRequestType.OUTGOING
 			}
@@ -121,7 +129,7 @@ export default function SearchUserBar() {
 		}
 	}
 
-	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [selectedUsers])
+	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [rows])
 
 	useEffect(() => {
 		if (!query) {
@@ -131,9 +139,15 @@ export default function SearchUserBar() {
 	}, [query, loading])
 
 	useEffect(() => {
+		const msg = `No results found for`
 		const timeoutId = setTimeout(() => {
-			if (!users.length && query && !loading && !error) {
-				setError(`No results found for ${query}.`)
+			if (!users.length && query && !error && !loading) {
+				if (query.length <= MAX_QUERY_LENGTH) {
+					setError(`${msg} ${query}.`)
+				}
+				else {
+					setError(`${msg} ${query.slice(0, MAX_QUERY_LENGTH)}.`)
+				}
 			}
 		}, 500)
 
@@ -145,17 +159,13 @@ export default function SearchUserBar() {
 		if (__DEV__) console.log('added users: ', alreadyAddedUsers)
 	}, [])
 
-	useEffect(() => {
-		if (__DEV__) console.log('selected users: ', selectedUsers)
-	}, [selectedUsers])
-
 	return (
 		<>
 			<Searchbar
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
 				style={[styles.searchbar]}
-				value={query}
+				value={query.length > 13 ? query.slice(0, 13) : query}
 				onChangeText={(text) => {
 					setQuery(text)
 					text.length > 0 && debouncedFetchUsers(text)
@@ -163,8 +173,8 @@ export default function SearchUserBar() {
 				placeholder={"Search users"}
 				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
 				onClearIconPress={() => setUsers([])}
-				selectionColor={'#006994'}
-				readOnly={selectedUsers.length > 1}
+				selectionColor='#3a9fff'
+				autoCorrect={false}
 			/>
 			{error && 
 			<View style={styles.errorContainer}>
@@ -172,28 +182,37 @@ export default function SearchUserBar() {
 				<Text style={styles.errorText}>{error}</Text>
 			</View>
 			}
+			{users.length > 0 && (
 			<View style={styles.resultsContainer}>
 				{users.slice(0, 5).map((user, index) => (
-					<View key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === users.length - 1 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
-						<View style={styles.skeletonLoader} />
+					<View key={user._id} style={[styles.resultItem, index < Math.min(users.length, 5) - 1 && styles.resultItemDivider]} accessibilityLabel={`Select ${user.username}`}>
 						<Image 
 							src={user.pic} 
 							source={require('../../assets/img/placeholder-profile2.webp')} 
 							style={styles.img} 
 						/>
-						<Text style={{ left: 10, fontWeight: '500', width: 200 }}>{user.username}</Text>
+						<Text style={{ left: 10, fontWeight: '400', width: 200 }}>{user.username}</Text>
 						{!alreadyAddedUsers.includes(user._id.toString()) ? 
-							<Button onPress={() => handleSendFriendRequest(user._id.toString())}>
-								{!loadingUserId?.includes(user._id.toString()) 
-								? 'Add friend' 
-								: 
-								<ActivityIndicator size="small" color="#007BFF" />}</Button> 
+							<View style={styles.actionContainer}>
+								{loadingUserId === user._id.toString() ? (
+									<Spinner color='#3a9fff' style={{ top: 8, right: 3 }} />
+								) : (
+									<Pressable
+										style={styles.addFriendButton}
+										android_ripple={{ color: 'transparent' }}
+										onPress={() => handleSendFriendRequest(user._id.toString())}
+									>
+										<Text style={styles.addFriendText}>Add friend</Text>
+									</Pressable>
+								)}
+							</View>
 							:
-							<Button disabled>Added</Button>
+							<Text style={styles.addedText}>Added</Text>
 						}
 					</View>		
 				))}
 			</View>
+			)}
 		</>
 	)
 }
@@ -203,7 +222,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 90,
 		height: 45,
-		width: 345,
+		width: '100%',
 		borderRadius: 50,
 		backgroundColor: '#f0f0f0',
 		marginBottom: 15
@@ -223,11 +242,11 @@ const styles = StyleSheet.create({
 	resultsContainer: {
 		position: 'absolute',
 		top: 125,
-		width: 345,
+		width: '100%',
 		marginTop: 10,
-		backgroundColor: '#f9f9f9',
-		borderColor: '#f9f9f9',
+		backgroundColor: '#f5f5f5',
 		borderRadius: 8,
+		overflow: 'hidden',
 		zIndex: 1000
 	},
 	resultItem: {
@@ -235,20 +254,39 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		padding: 10,
-		borderColor: '#ccc',
-		borderBottomWidth: 1,
 	},
-	skeletonLoader: {
-		position: 'absolute',
-		left: 10,
-		width: 35,
-		height: 35,
-		borderRadius: 25,
-		backgroundColor: '#e0e0e0',
+	resultItemDivider: {
+		borderBottomWidth: 1,
+		borderBottomColor: '#e8eaed',
 	},
 	img: {
 		width: 35,
 		height: 35,
 		borderRadius: 25,
+	},
+	actionContainer: {
+		position: 'relative',
+		width: 90,
+		height: 36,
+		justifyContent: 'center',
+	},
+	addFriendButton: {
+		width: 120,
+		right: -10,
+		backgroundColor: 'transparent',
+	},
+	addFriendText: {
+		color: '#374151',
+		fontWeight: '500',
+		width: 120,
+		textAlign: 'right',
+		right: 25
+	},
+	addedText: {
+		color: '#94A3B8',
+		fontWeight: '500',
+		width: 120,
+		textAlign: 'right',
+		right: 10
 	},
 })

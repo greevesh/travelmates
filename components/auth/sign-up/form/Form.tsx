@@ -39,11 +39,11 @@ export default function SignUpForm() {
 			setIsLoading(true)
 			const { accessToken, refreshToken } = await authenticate(data, signUpEndpoint)
 			await SecureStore.setItemAsync('username', data.username)
-			storeAuthTokens(accessToken, refreshToken)
+			await storeAuthTokens(accessToken, refreshToken)
 
 			useAuthStore.getState().setIsSignedIn(true)
 			reset()
-			router.push('/setup')
+			router.push('/hub')
 		} catch {
 			// error scenarios handled in authenticate()
 			return
@@ -63,7 +63,7 @@ export default function SignUpForm() {
 			<Error msg={errors.passwordConfirmation?.message} />
 			<AuthLink path='./' text='Already have an account?' />
 			<SignUpButton onPress={handleSubmit(onSubmit)}>
-				{isLoading && <Spinner />}
+				{isLoading && <Spinner style={{ right: 15 }} color='#fff' />}
 			</SignUpButton>
 		</View>
 	)
