@@ -122,15 +122,17 @@ export default function NotificationsModal() {
                     <NotificationsEmptyState />
                 ) : (
                     <ScrollView
-                        style={{ maxHeight: 320 }}
+                        style={styles.notificationsScroll}
+                        contentContainerStyle={styles.notificationsList}
                         nestedScrollEnabled
                     >
-                        {notifications.map((notification) => (
+                        {notifications.map((notification, index) => (
                             <FriendRequestCard
                                 pic={notification.senderPic}
                                 username={notification.senderUsername}
                                 onAccept={() => handleAccept(notification._id)}
                                 onReject={() => handleReject(notification._id)}
+                                isLast={index === notifications.length - 1}
                                 key={notification._id}
                             />
                         ))}
@@ -166,5 +168,14 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         textAlign: 'center',
         color: '#000',
+    },
+    notificationsScroll: {
+        maxHeight: 320,
+        width: '100%',
+    },
+    notificationsList: {
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
     },
 }) 
