@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Icon, Searchbar } from 'react-native-paper'
+import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { friendRequestsEndpoint, usersEndpoint } from '../../consts/api'
@@ -182,10 +182,10 @@ export default function SearchUserBar() {
 				<Text style={styles.errorText}>{error}</Text>
 			</View>
 			}
+			{users.length > 0 && (
 			<View style={styles.resultsContainer}>
 				{users.slice(0, 5).map((user, index) => (
-					<View key={user._id} style={{ ...styles.resultItem, borderBottomWidth: index === users.length - 1 ? 0 : 1 }} accessibilityLabel={`Select ${user.username}`}>
-						<View style={styles.skeletonLoader} />
+					<View key={user._id} style={[styles.resultItem, index < Math.min(users.length, 5) - 1 && styles.resultItemDivider]} accessibilityLabel={`Select ${user.username}`}>
 						<Image 
 							src={user.pic} 
 							source={require('../../assets/img/placeholder-profile2.webp')} 
@@ -195,7 +195,7 @@ export default function SearchUserBar() {
 						{!alreadyAddedUsers.includes(user._id.toString()) ? 
 							<View style={styles.actionContainer}>
 								{loadingUserId === user._id.toString() ? (
-									<Spinner color='#3a9fff' style={{ top: 8, right: 20 }} />
+									<Spinner color='#3a9fff' style={{ top: 8, right: 3 }} />
 								) : (
 									<Pressable
 										style={styles.addFriendButton}
@@ -207,11 +207,12 @@ export default function SearchUserBar() {
 								)}
 							</View>
 							:
-							<Button style={{ width: 120, right: 10 }} disabled>Added</Button>
+							<Text style={styles.addedText}>Added</Text>
 						}
 					</View>		
 				))}
 			</View>
+			)}
 		</>
 	)
 }
@@ -221,7 +222,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 90,
 		height: 45,
-		width: 345,
+		width: '100%',
 		borderRadius: 50,
 		backgroundColor: '#f0f0f0',
 		marginBottom: 15
@@ -241,11 +242,11 @@ const styles = StyleSheet.create({
 	resultsContainer: {
 		position: 'absolute',
 		top: 125,
-		width: 345,
+		width: '100%',
 		marginTop: 10,
 		backgroundColor: '#f5f5f5',
-		borderColor: '#f5f5f5',
 		borderRadius: 8,
+		overflow: 'hidden',
 		zIndex: 1000
 	},
 	resultItem: {
@@ -253,16 +254,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		padding: 10,
-		borderColor: '#ccc',
-		borderBottomWidth: 1,
 	},
-	skeletonLoader: {
-		position: 'absolute',
-		left: 10,
-		width: 35,
-		height: 35,
-		borderRadius: 25,
-		backgroundColor: '#e0e0e0',
+	resultItemDivider: {
+		borderBottomWidth: 1,
+		borderBottomColor: '#e8eaed',
 	},
 	img: {
 		width: 35,
@@ -283,5 +278,15 @@ const styles = StyleSheet.create({
 	addFriendText: {
 		color: '#374151',
 		fontWeight: '500',
+		width: 120,
+		textAlign: 'right',
+		right: 25
+	},
+	addedText: {
+		color: '#94A3B8',
+		fontWeight: '500',
+		width: 120,
+		textAlign: 'right',
+		right: 10
 	},
 })
