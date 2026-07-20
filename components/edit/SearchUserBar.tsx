@@ -60,14 +60,13 @@ export default function SearchUserBar() {
 
 		try {
 			setLoading(true)
-			const res = await withAuthRetry((headers) => fetch(usersEndpoint + input, {
-				method: 'GET',
-				headers,
-			}))
-			const userData = await res.json()
+			setError(null)
+			const res = await withAuthRetry((headers) =>
+				axios.get(usersEndpoint + input, { headers })
+			)
+			const userData = Array.isArray(res.data) ? res.data : []
 			const eligibleUsers = userData.filter((u: User) => !currentUserAndfriends.includes(u._id))
 			if (__DEV__) {
-				console.log('users: ', users)
 				console.log('eligibleUsers: ', eligibleUsers)
 			}
 			setUsers(eligibleUsers)
