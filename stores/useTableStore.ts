@@ -1,15 +1,17 @@
+import { Trip } from '@/types'
 import { create } from 'zustand'
 
 export interface Row {
     _id: string | undefined
     username: string | undefined
     pic: string | undefined
+    trip: Trip
 }
 
 interface TableState {
     rows: Row[]
-    addRow: (friend: Row) => void
-    setRows: (friends: Row[]) => void
+    addRow: (row: Row) => void
+    setRows: (rows: Row[]) => void
 }
 
 export const useTableStore = create<TableState>((set) => ({
