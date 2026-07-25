@@ -15,14 +15,7 @@ import { Button, Icon, IconButton } from "react-native-paper"
 import { handleError } from "@/utils/errorHandler"
 import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import PlaneIcon from "@/components/base/PlaneIcon"
-
-interface Trip {
-    id?: undefined | string
-    userId: undefined | number
-    location: undefined | string
-    startDate: undefined | Date
-    endDate: undefined | Date
-}
+import { Trip } from "@/types"
 
 export default function Trips() {
     const [createTripLoading, setCreateTripLoading] = useState<boolean>(false)
