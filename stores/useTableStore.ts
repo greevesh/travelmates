@@ -1,11 +1,9 @@
-import { Trip } from '@/types'
 import { create } from 'zustand'
 
 export interface Row {
     _id: string | undefined
     username: string | undefined
     pic: string | undefined
-    trip: Trip
 }
 
 interface TableState {
