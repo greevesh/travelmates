@@ -6,7 +6,7 @@ import { friendsEndpoint } from "@/consts/api"
 import { withAuthRetry } from "@/utils/auth"
 import axios from "axios"
 import { handleError } from "@/utils/errorHandler"
-import { useTableStore } from "@/stores/useTableStore"
+import { useUsersStore } from "@/stores/useUsersStore"
 import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 import TableLoadError from "./TableLoadError"
@@ -40,8 +40,8 @@ export default function Table() {
     const [trips, setTrips] = useState<TableTrip[]>([])
     const { photo } = useCurrentUserStore()
     
-    const rows = useTableStore((state) => state.rows)
-    const setRows = useTableStore((state) => state.setRows)
+    const users = useUsersStore((state) => state.users)
+    const setUsers = useUsersStore((state) => state.setUsers)
     const [rowsLoadState, setRowsLoadState] = useState<RowsLoadState>('loading')
     const [tableHeight, setTableHeight] = useState<number>(50)
 
@@ -51,7 +51,7 @@ export default function Table() {
 
     const tableWidth = monthDaysLength === 31 ? 1766 : 1716
 
-    const visibleRows = Math.min(rows.length, MAX_VISIBLE_ROWS)
+    const visibleRows = Math.min(users.length, MAX_VISIBLE_ROWS)
 
     /**
      * Parses a trip into a format suitable for display in the monthly calendar
@@ -168,9 +168,9 @@ export default function Table() {
 
     useEffect(() => {
         setTableHeight(HEADER_HEIGHT + ROW_HEIGHT * visibleRows)
-      }, [rows.length])
+      }, [users.length])
 
-    const showTable = rowsLoadState === 'success' && rows.length > 0
+    const showTable = rowsLoadState === 'success' && users.length > 0
 
     const loadRows = async () => {
         try {
@@ -182,18 +182,18 @@ export default function Table() {
             const { _id, username, pic } = user
             const res = await withAuthRetry((headers) => axios.get(friendsEndpoint, { headers }))
             const friends = Array.isArray(res.data) ? res.data : []
-            setRows([{ _id, username, pic }, ...friends])
+            setUsers([{ _id, username, pic }, ...friends])
             setRowsLoadState('success')
         }
         catch (err) {
             handleError(err, 'Failed to load users')
-            setRows([])
+            setUsers([])
             setRowsLoadState('error')
         }
     }
 
     useEffect(() => {
-        setRows([{ ...rows[0], pic: photo }, ...rows.slice(1)])
+        setUsers([{ ...users[0], pic: photo }, ...users.slice(1)])
     }, [photo])
 
     useEffect(() => {
@@ -250,21 +250,21 @@ export default function Table() {
                                 nestedScrollEnabled
                                 showsVerticalScrollIndicator={false}
                             >
-                                {rows.map((row) => (
-                                    <DataTable.Row key={row._id} style={styles.dataRow}>
+                                {users.map((user) => (
+                                    <DataTable.Row key={user._id} style={styles.dataRow}>
                                         <View style={styles.userCell}>
-                                            <UserProfileImage pic={row.pic} size={34} />
-                                            <Text style={styles.username}>{row.username}</Text>
+                                            <UserProfileImage pic={user.pic} size={34} />
+                                            <Text style={styles.username}>{user.username}</Text>
                                         </View>
                                         {displayDays && displayDays.map((day) => {
                                         const dayTrips = getTripDays(day)
                                         return (
                                             <View
-                                                key={`${row._id}-${day}`}
+                                                key={`${user._id}-${day}`}
                                                 style={styles.dayCell}
                                             >
                                                 {dayTrips.map((trip) => (
-                                                    row._id === trip.userId &&
+                                                    user._id === trip.userId &&
                                                     trip.startDay === day && (
                                                         <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) - 7 }]}>
                                                             <Text style={styles.locationText}>{trimLocationLength(trip.location, trip)}</Text>

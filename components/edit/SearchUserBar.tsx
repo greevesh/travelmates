@@ -10,7 +10,7 @@ import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { fetchUserCredentials, withAuthRetry } from '@/utils/auth'
 import { handleError } from '@/utils/errorHandler'
 import Spinner from '../base/Spinner'
-import { useTableStore } from '@/stores/useTableStore'
+import { useUsersStore } from '@/stores/useUsersStore'
 
 enum FriendRequestStatus {
 	PENDING = 'pending',
@@ -45,7 +45,7 @@ interface Friendship {
 
 export default function SearchUserBar() {
 	const [query, setQuery] = useState<string>('')
-	const [users, setUsers] = useState<Array<User>>([])
+	const [fetchedUsers, setFetchedUsers] = useState<Array<User>>([])
 	const [loading, setLoading] = useState<boolean>(false)
 	const [loadingUserId, setLoadingUserId] = useState<string | null>(null)
 	const [alreadyAddedUsers, setAlreadyAddedUsers] = useState<Array<string>>([])
@@ -53,10 +53,10 @@ export default function SearchUserBar() {
 
 	const MAX_QUERY_LENGTH = 13
 
-	const rows = useTableStore((state) => state.rows)
+	const users = useUsersStore((state) => state.users)
 
 	const fetchUsers = async (input: string) => {
-		const currentUserAndfriends = rows.map((r) => r._id)
+		const currentUserAndfriends = users.map((r) => r._id)
 
 		try {
 			setLoading(true)
@@ -69,7 +69,7 @@ export default function SearchUserBar() {
 			if (__DEV__) {
 				console.log('eligibleUsers: ', eligibleUsers)
 			}
-			setUsers(eligibleUsers)
+			setFetchedUsers(eligibleUsers)
 		} catch (error) {
 			handleError(error, 'Failed to fetch users')
 			setError('Failed to fetch users. Please try again.')
@@ -129,11 +129,11 @@ export default function SearchUserBar() {
 		}
 	}
 
-	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [rows])
+	const debouncedFetchUsers = useCallback(debounce(fetchUsers, 300), [users])
 
 	useEffect(() => {
 		if (!query) {
-			setUsers([])
+			setFetchedUsers([])
 			setError(null)
 		}
 	}, [query, loading])
@@ -141,7 +141,7 @@ export default function SearchUserBar() {
 	useEffect(() => {
 		const msg = `No results found for`
 		const timeoutId = setTimeout(() => {
-			if (!users.length && query && !error && !loading) {
+			if (!fetchedUsers.length && query && !error && !loading) {
 				if (query.length <= MAX_QUERY_LENGTH) {
 					setError(`${msg} ${query}.`)
 				}
@@ -152,7 +152,7 @@ export default function SearchUserBar() {
 		}, 500)
 
 		return () => clearTimeout(timeoutId)
-	}, [users, query, loading])
+	}, [fetchedUsers, query, loading])
 
 	useEffect(() => {
 		fetchAlreadyAddedUsers()
@@ -172,7 +172,7 @@ export default function SearchUserBar() {
 				}}
 				placeholder={"Search users"}
 				clearIcon={loading ? () => <ActivityIndicator size="small" color="#007BFF" /> : undefined}
-				onClearIconPress={() => setUsers([])}
+				onClearIconPress={() => setFetchedUsers([])}
 				selectionColor='#3a9fff'
 				autoCorrect={false}
 			/>
@@ -182,25 +182,25 @@ export default function SearchUserBar() {
 				<Text style={styles.errorText}>{error}</Text>
 			</View>
 			}
-			{users.length > 0 && (
+			{fetchedUsers.length > 0 && (
 			<View style={styles.resultsContainer}>
-				{users.slice(0, 5).map((user, index) => (
-					<View key={user._id} style={[styles.resultItem, index < Math.min(users.length, 5) - 1 && styles.resultItemDivider]} accessibilityLabel={`Select ${user.username}`}>
+				{fetchedUsers.slice(0, 5).map((fetchedUser, index) => (
+					<View key={fetchedUser._id} style={[styles.resultItem, index < Math.min(fetchedUsers.length, 5) - 1 && styles.resultItemDivider]} accessibilityLabel={`Select ${fetchedUser.username}`}>
 						<Image 
-							src={user.pic} 
+							src={fetchedUser.pic} 
 							source={require('../../assets/img/placeholder-profile2.webp')} 
 							style={styles.img} 
 						/>
-						<Text style={{ left: 10, fontWeight: '400', width: 200 }}>{user.username}</Text>
-						{!alreadyAddedUsers.includes(user._id.toString()) ? 
+						<Text style={{ left: 10, fontWeight: '400', width: 200 }}>{fetchedUser.username}</Text>
+						{!alreadyAddedUsers.includes(fetchedUser._id.toString()) ? 
 							<View style={styles.actionContainer}>
-								{loadingUserId === user._id.toString() ? (
+								{loadingUserId === fetchedUser._id.toString() ? (
 									<Spinner color='#3a9fff' style={{ top: 8, right: 3 }} />
 								) : (
 									<Pressable
 										style={styles.addFriendButton}
 										android_ripple={{ color: 'transparent' }}
-										onPress={() => handleSendFriendRequest(user._id.toString())}
+										onPress={() => handleSendFriendRequest(fetchedUser._id.toString())}
 									>
 										<Text style={styles.addFriendText}>Add friend</Text>
 									</Pressable>

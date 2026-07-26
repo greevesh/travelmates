@@ -10,7 +10,7 @@ import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import FriendRequestCard from './FriendRequestCard'
 import NotificationsEmptyState from './NotificationsEmptyState'
 import { handleError } from '@/utils/errorHandler'
-import { useTableStore } from '@/stores/useTableStore'
+import { useUsersStore } from '@/stores/useUsersStore'
 import PlaneIcon from '../base/PlaneIcon'
 
 interface Notification {
@@ -26,7 +26,7 @@ export default function NotificationsModal() {
     const [count, setCount] = useState(0)
     const [notifications, setNotifications] = useState<Notification[]>([])
 
-    const addRow = useTableStore((state) => state.addRow)
+    const addUser = useUsersStore((state) => state.addUser)
 
     async function fetchFriendReqs() {
         try {
@@ -63,7 +63,7 @@ export default function NotificationsModal() {
 
             const res = await withAuthRetry((headers) => axios.get(usersEndpoint + newFriend.senderUsername, { headers }))
             const { _id, username, pic } = res.data[0]
-            newFriend && addRow({ _id, username, pic })
+            newFriend && addUser({ _id, username, pic })
             setCount(count - 1)
         }
         catch(err) {
