@@ -17,6 +17,7 @@ import { router } from 'expo-router'
 import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
 import { DEV_CREDENTIALS } from '@/consts/env'
+import { handleError } from '@/utils/errorHandler'
 
 export default function SignInForm() {
 	const {
@@ -55,9 +56,8 @@ export default function SignInForm() {
 			catch (err) {
 				console.error('Error setting photo: ', err)
 			}
-		} catch {
-			// error scenarios handled in authenticate()
-			return
+		} catch (err) {
+			handleError(err, 'Failed to sign in. Please try again.')
 		}
 		finally {
 			setIsLoading(false)
