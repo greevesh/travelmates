@@ -45,9 +45,8 @@ export default function Trips() {
 
     const handleFetchCurrentUserTrips = async () => {
         try {
-            const currentUser = await SecureStore.getItemAsync('user')
-            const currentUserObj = currentUser && JSON.parse(currentUser)
-            const currentUserTrips = trips.filter((trip: Trip) => trip.userId === currentUserObj._id)
+            const { _id } = await fetchCurrentUser()
+            const currentUserTrips = trips.filter((trip: Trip) => trip.userId === _id)
             setCurrentUserTrips(currentUserTrips)
         }
         catch (err) {
@@ -58,9 +57,9 @@ export default function Trips() {
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
         try {
-            const { user, accessToken } = await getAuthContext()
+            const { username, accessToken } = await getAuthContext()
             const { _id } = await fetchCurrentUser()
-            const userCredentials = { user, accessToken }
+            const userCredentials = { username, accessToken }
             let trip = { userId: _id, startDate, endDate, location }
             const res = await withAuthRetry((retryHeaders) => axios.post(tripEndpoint, { userCredentials, trip }, { headers: retryHeaders }))
 			if (__DEV__) console.log('data: ', res.data)
