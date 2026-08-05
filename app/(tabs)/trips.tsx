@@ -13,14 +13,22 @@ import { useEffect, useState } from "react"
 import { View, StyleSheet, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
 import { handleError } from "@/utils/errorHandler"
-import fetchCurrentUserTrips from "@/utils/fetchCurrentUserTrips"
 import PlaneIcon from "@/components/base/PlaneIcon"
 import { Trip } from "@/types"
+import { useTripsStore } from "@/stores/useTripsStore"
+import * as SecureStore from 'expo-secure-store'
+
 
 export default function Trips() {
     const [createTripLoading, setCreateTripLoading] = useState<boolean>(false)
     const [deletingTripId, setDeletingTripId] = useState<string | null>(null)
-    const [trips, setTrips] = useState<Trip[]>([{ id: undefined, userId: undefined, location: undefined, startDate: undefined, endDate: undefined }])
+    const [currentUserTrips, setCurrentUserTrips] = useState<Trip[]>([])
+
+    const { trips, setTrips, addTrip } = useTripsStore((state) => ({
+        trips: state.trips,
+        setTrips: state.setTrips,
+        addTrip: state.addTrip
+    }))
 
     const { location, startDate, endDate, tripDates, setLocationQuery, setStartDate, setEndDate, setTripDates } = useTripStore((state) => ({
         location: state.locationQuery,
@@ -35,19 +43,12 @@ export default function Trips() {
 
     const btnDisabled = !location || !startDate || !endDate
 
-    const handleFetchTrips = async () => {
+    const handleFetchCurrentUserTrips = async () => {
         try {
-            const loadedTrips: Trip[] = []
-            const fetchedTrips = await fetchCurrentUserTrips()
-            fetchedTrips.forEach((trip: any) => {
-                let { _id: id, userId, startDate, endDate, location } = trip
-                startDate = new Date(startDate)
-                endDate = new Date(endDate)
-                loadedTrips.push({ id, userId, startDate, endDate, location })
-            })
-            if (__DEV__) console.log('loaded trips: ', loadedTrips)
-            setTrips(loadedTrips)
-            return loadedTrips
+            const currentUser = await SecureStore.getItemAsync('user')
+            const currentUserObj = currentUser && JSON.parse(currentUser)
+            const currentUserTrips = trips.filter((trip: Trip) => trip.userId === currentUserObj._id)
+            setCurrentUserTrips(currentUserTrips)
         }
         catch (err) {
             handleError(err, 'Error fetching trips')
@@ -57,16 +58,16 @@ export default function Trips() {
     const handlePostTrip = async () => {
         setCreateTripLoading(true)
         try {
-            const { username, accessToken } = await getAuthContext()
+            const { user, accessToken } = await getAuthContext()
             const { _id } = await fetchCurrentUser()
-            const user = { username, accessToken }
-            const trip = { userId: _id, startDate, endDate, location }
-            const res = await withAuthRetry((retryHeaders) => axios.post(tripEndpoint, { user, trip }, { headers: retryHeaders }))
+            const userCredentials = { user, accessToken }
+            let trip = { userId: _id, startDate, endDate, location }
+            const res = await withAuthRetry((retryHeaders) => axios.post(tripEndpoint, { userCredentials, trip }, { headers: retryHeaders }))
 			if (__DEV__) console.log('data: ', res.data)
             setLocationQuery('')
             setStartDate(undefined)
             setEndDate(undefined)
-            await handleFetchTrips()
+            addTrip(res.data)
             return res.data
         }
         catch (err) {
@@ -86,7 +87,7 @@ export default function Trips() {
         try {
             setDeletingTripId(tripId)
             await withAuthRetry((headers) => axios.delete(`${tripEndpoint}/${tripId}`, { headers }))
-            setTrips((prevTrips) => prevTrips?.filter(trip => trip.id !== tripId))
+            setTrips(trips.filter(trip => trip._id !== tripId))
         } 
         catch (err) {
             if (err instanceof Error && err.message === 'Missing user credentials') {
@@ -101,15 +102,14 @@ export default function Trips() {
     }
 
     const fetchTripDates = () => {
-        const dates: any[] = []
-        trips.forEach((trip) => {
-            let startDate = trip.startDate
-            const endDate = trip.endDate
+        const dates: string[] = []
+        currentUserTrips && currentUserTrips.forEach((trip) => {
+            let startDate = new Date(trip.startDate)
+            const endDate = new Date(trip.endDate)
             if (startDate && endDate) {
                 let currentIterationDate = startDate
                 while (currentIterationDate <= endDate) {
                     dates.push(currentIterationDate.toDateString())
-                    currentIterationDate = new Date(currentIterationDate)
                     currentIterationDate.setDate(currentIterationDate.getDate() + 1)
                 }
             }
@@ -133,12 +133,13 @@ export default function Trips() {
     }
 
     useEffect(() => {
-        handleFetchTrips()
-    }, [])
+        handleFetchCurrentUserTrips()
+        fetchTripDates()
+    }, [trips])
 
     useEffect(() => {
         fetchTripDates()
-    }, [trips])
+    }, [currentUserTrips])
 
     useEffect(() => {
         sortTripDates()
@@ -165,24 +166,24 @@ export default function Trips() {
                             </Button>
                         </View>
                         <FlatList
-                            data={trips.filter(trip => trip.id)}
-                            keyExtractor={(item) => item.id || ''}
+                            data={currentUserTrips.filter(trip => trip._id)}
+                            keyExtractor={(item) => item._id || ''}
                             contentContainerStyle={styles.tripsListContent}
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item: trip }) => (
                                 <View style={{ width: 330, marginTop: 15 }}>
                                     <View style={styles.tripContainer}>
-                                        {deletingTripId === trip.id ?
+                                        {deletingTripId === trip._id ?
                                             <Spinner style={styles.spinner} color="#3a9fff" />
                                             :
-                                            <IconButton onPress={() => handleDeleteTrip(trip.id)} style={styles.deleteIcon} icon="delete" size={25} />
+                                            <IconButton onPress={() => handleDeleteTrip(trip._id)} style={styles.deleteIcon} icon="delete" size={25} />
                                         }
                                         <View style={styles.trip}>
                                             <Icon color='#b22222' source="map-marker" size={25} />
                                             <Text style={styles.locationText}>{trip.location && trip.location.length > 25 ? trip.location.slice(0, 25) + '...' : trip.location}</Text>
                                             <View style={styles.dateTextContainer}>
-                                                <Text style={{ fontSize: 13 }}>{trip.startDate?.toDateString()} - </Text>
-                                                <Text style={{ fontSize: 13 }}>{trip.endDate?.toDateString()}</Text>
+                                                <Text style={{ fontSize: 13 }}>{new Date(trip.startDate).toDateString()} - </Text>
+                                                <Text style={{ fontSize: 13 }}>{new Date(trip.endDate).toDateString()}</Text>
                                             </View>
                                         </View>
                                     </View>
