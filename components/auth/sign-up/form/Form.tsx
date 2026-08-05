@@ -12,7 +12,6 @@ import PasswordConfirmation from '../../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
 import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
-import { useAuthStore } from '../../../../stores/useAuthStore'
 import AuthLink from '@/components/auth/AuthLink'
 import Spinner from '@/components/base/Spinner'
 import { router } from 'expo-router'
@@ -41,7 +40,6 @@ export default function SignUpForm() {
 			await SecureStore.setItemAsync('username', data.username)
 			await storeAuthTokens(accessToken, refreshToken)
 
-			useAuthStore.getState().setIsSignedIn(true)
 			reset()
 			router.push('/hub')
 		} catch {
