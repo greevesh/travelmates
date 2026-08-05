@@ -1,4 +1,3 @@
-import { useAuthStore } from '../../stores/useAuthStore'
 import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/auth'
 import { View, StyleSheet, Text, Alert, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
@@ -8,7 +7,6 @@ import { handleError } from '@/utils/errorHandler'
 import { useUsersStore } from '@/stores/useUsersStore'
 
 export default function SignOutButton() {
-	const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn)
 	const { setUploaded, setPhoto, setUsername } = useCurrentUserStore((state) => ({
 		setUploaded: state.setUploaded,
 		setPhoto: state.setPhoto,
@@ -21,7 +19,6 @@ export default function SignOutButton() {
 		try {
 			await signOut(username, refreshToken)
 			refreshToken && accessToken && await removeAuthTokens()
-			setIsSignedIn(false)
 			setUploaded(false)
 			setPhoto('')
 			setUsername('')
