@@ -231,10 +231,6 @@ export default function Table() {
         return location
     }
 
-    useEffect(() => {
-        console.log('USER$: ', users)
-    }, [users])
-
     return (
         <>
             {rowsLoadState === 'loading' ? (
