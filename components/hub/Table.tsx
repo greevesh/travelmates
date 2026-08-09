@@ -193,7 +193,7 @@ export default function Table() {
     }
 
     useEffect(() => {
-        setUsers([{ ...users[0], pic: photo }, ...users.slice(1)])
+        users.length > 0 && setUsers([{ ...users[0], pic: photo }, ...users.slice(1)])
     }, [photo])
 
     useEffect(() => {
@@ -230,6 +230,10 @@ export default function Table() {
         if (needsTrimming) return appendEllipsis(trimmedLocation)
         return location
     }
+
+    useEffect(() => {
+        console.log('USER$: ', users)
+    }, [users])
 
     return (
         <>
