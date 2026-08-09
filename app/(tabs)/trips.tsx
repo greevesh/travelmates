@@ -16,7 +16,7 @@ import { handleApiError, handleError } from "@/utils/errorHandler"
 import PlaneIcon from "@/components/base/PlaneIcon"
 import { Trip } from "@/types"
 import { useTripsStore } from "@/stores/useTripsStore"
-import * as SecureStore from 'expo-secure-store'
+import handleLocationLength from "@/utils/handleLocationLength"
 
 export default function Trips() {
     const [createTripLoading, setCreateTripLoading] = useState<boolean>(false)
@@ -178,7 +178,7 @@ export default function Trips() {
                                         }
                                         <View style={styles.trip}>
                                             <Icon color='#b22222' source="map-marker" size={25} />
-                                            <Text style={styles.locationText}>{trip.location && trip.location.length > 25 ? trip.location.slice(0, 25) + '...' : trip.location}</Text>
+                                            <Text style={styles.locationText}>{handleLocationLength(trip.location, 28)}</Text>
                                             <View style={styles.dateTextContainer}>
                                                 <Text style={{ fontSize: 13 }}>{new Date(trip.startDate).toDateString()} - </Text>
                                                 <Text style={{ fontSize: 13 }}>{new Date(trip.endDate).toDateString()}</Text>

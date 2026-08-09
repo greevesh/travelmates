@@ -64,11 +64,11 @@ export default function SignInForm() {
 		}
 	}
 
-	useEffect(() => {
-		if (__DEV__) {
-			onSubmit(DEV_CREDENTIALS)
-		}
-	}, [])
+	// useEffect(() => {
+	// 	if (__DEV__) {
+	// 		onSubmit(DEV_CREDENTIALS)
+	// 	}
+	// }, [])
 
 	return (
 		<View style={{ marginTop: 55 }}>

@@ -14,6 +14,7 @@ import { useCurrentUserStore } from "@/stores/useCurrentUserStore"
 import UserProfileImage from "@/components/base/UserProfileImage"
 import { useTripsStore } from "@/stores/useTripsStore"
 import { Trip } from "@/types"
+import { appendEllipsis } from "@/utils/handleLocationLength"
 
 type RowsLoadState = 'loading' | 'error' | 'success'
 
@@ -217,7 +218,7 @@ export default function Table() {
         return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
     }
 
-    const trimLocationLength = (location: string, trip: TableTrip) => {
+    const handleTableLocationLength = (location: string, trip: TableTrip) => {
         const tripWidth = getTripWidthInMonth(trip)
 
         if (!location || !trip || !tripWidth) return
@@ -226,12 +227,7 @@ export default function Table() {
         let needsTrimming = sliceEnd < location.length
         let trimmedLocation = location.slice(0, sliceEnd)
 
-        if (needsTrimming) {
-            if (trimmedLocation.endsWith(',') || trimmedLocation.endsWith(' ')) {
-                return trimmedLocation.slice(0, -1) + '...'
-            }
-            return trimmedLocation + '...'
-        }
+        if (needsTrimming) return appendEllipsis(trimmedLocation)
         return location
     }
 
@@ -278,7 +274,7 @@ export default function Table() {
                                                     user._id === trip.userId &&
                                                     trip.startDay === day && (
                                                         <View key={`${trip.startDay}-${trip._id}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) - 7 }]}>
-                                                            <Text style={styles.locationText}>{trimLocationLength(trip.location, trip)}</Text>
+                                                            <Text style={styles.locationText}>{handleTableLocationLength(trip.location, trip)}</Text>
                                                         </View>
                                                     )
                                                 ))}
