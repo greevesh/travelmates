@@ -3,7 +3,7 @@ import { IconButton, Text, Badge } from 'react-native-paper'
 import { useEffect, useState } from 'react'
 import React from 'react'
 import WithModal from '../hoc/WithModal'
-import { friendRequestsEndpoint, usersEndpoint } from '@/consts/api'
+import { friendRequestsEndpoint, tripsEndpoint, usersEndpoint } from '@/consts/api'
 import { withAuthRetry } from '@/utils/auth'
 import axios from 'axios'
 import fetchCurrentUser from '@/utils/fetchCurrentUser'
@@ -12,6 +12,7 @@ import NotificationsEmptyState from './NotificationsEmptyState'
 import { handleError } from '@/utils/errorHandler'
 import { useUsersStore } from '@/stores/useUsersStore'
 import PlaneIcon from '../base/PlaneIcon'
+import { useTripsStore } from '@/stores/useTripsStore'
 
 interface Notification {
   _id: string
@@ -27,6 +28,11 @@ export default function NotificationsModal() {
     const [notifications, setNotifications] = useState<Notification[]>([])
 
     const addUser = useUsersStore((state) => state.addUser)
+
+    const { trips, setTrips } = useTripsStore((state) => ({
+        trips: state.trips,
+        setTrips: state.setTrips
+    }))
 
     async function fetchFriendReqs() {
         try {
@@ -63,11 +69,16 @@ export default function NotificationsModal() {
 
             const res = await withAuthRetry((headers) => axios.get(usersEndpoint + newFriend.senderUsername, { headers }))
             const { _id, username, pic } = res.data[0]
-            newFriend && addUser({ _id, username, pic })
+            const newFriendsTrips = await withAuthRetry((headers) => axios.get(tripsEndpoint + `/${_id}`, { headers }))
+            if (newFriend)  {
+                addUser({ _id, username, pic })
+                setTrips([...trips, ...newFriendsTrips.data])
+            }
             setCount(count - 1)
         }
         catch(err) {
             handleError(err, 'Failed to accept the friend request')
+            setCount(count - 1)
             throw err
         }
     }
