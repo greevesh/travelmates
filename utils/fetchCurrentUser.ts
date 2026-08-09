@@ -1,7 +1,7 @@
 import { usersEndpoint } from "@/consts/api"
 import axios from 'axios'
 import { fetchUserCredentials, withAuthRetry } from "./auth"
-import { handleError } from "./errorHandler"
+import { handleApiError } from "./errorHandler"
 
 export default async function fetchCurrentUser() {
     const { username } = await fetchUserCredentials()
@@ -13,7 +13,7 @@ export default async function fetchCurrentUser() {
         return res.data[0]
     }
     catch(err) {
-        handleError(err, 'Failed to fetch the current user')
+        handleApiError(err, 'Failed to fetch the current user')
         throw err
     }
 }

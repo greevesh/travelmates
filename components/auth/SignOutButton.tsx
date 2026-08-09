@@ -1,29 +1,14 @@
-import { fetchUserCredentials, removeAuthTokens, signOut } from '../../utils/auth'
-import { View, StyleSheet, Text, Alert, Pressable } from 'react-native'
+import { fetchUserCredentials, handleSignOut, removeAuthTokens, signOut } from '../../utils/auth'
+import { View, StyleSheet, Text, Pressable } from 'react-native'
 import { Icon } from 'react-native-paper'
-import { router } from 'expo-router'
-import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
 import { handleError } from '@/utils/errorHandler'
-import { useUsersStore } from '@/stores/useUsersStore'
 
 export default function SignOutButton() {
-	const { setUploaded, setPhoto, setUsername } = useCurrentUserStore((state) => ({
-		setUploaded: state.setUploaded,
-		setPhoto: state.setPhoto,
-		setUsername: state.setUsername
-	}))
-	const setRows = useUsersStore((state) => state.setUsers)
-
 	const onSubmit = async () => {
-		const { username, refreshToken, accessToken } = await fetchUserCredentials()
+		const { username, refreshToken } = await fetchUserCredentials()
 		try {
 			await signOut(username, refreshToken)
-			refreshToken && accessToken && await removeAuthTokens()
-			setUploaded(false)
-			setPhoto('')
-			setUsername('')
-			setRows([])
-			router.push('/')
+			await handleSignOut()
 		}
 		catch (err) {
 			handleError(err, 'There was a problem signing out')

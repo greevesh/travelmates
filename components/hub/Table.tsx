@@ -5,7 +5,7 @@ import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import { friendsEndpoint } from "@/consts/api"
 import { withAuthRetry } from "@/utils/auth"
 import axios from "axios"
-import { handleError } from "@/utils/errorHandler"
+import { handleApiError } from "@/utils/errorHandler"
 import { useUsersStore } from "@/stores/useUsersStore"
 import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
@@ -185,7 +185,7 @@ export default function Table() {
             setRowsLoadState('success')
         }
         catch (err) {
-            handleError(err, 'Failed to load users')
+            handleApiError(err, 'Failed to load users')
             setUsers([])
             setRowsLoadState('error')
         }

@@ -12,12 +12,11 @@ import { LinearGradient } from "expo-linear-gradient"
 import { useEffect, useState } from "react"
 import { View, StyleSheet, Text, FlatList } from "react-native"
 import { Button, Icon, IconButton } from "react-native-paper"
-import { handleError } from "@/utils/errorHandler"
+import { handleApiError, handleError } from "@/utils/errorHandler"
 import PlaneIcon from "@/components/base/PlaneIcon"
 import { Trip } from "@/types"
 import { useTripsStore } from "@/stores/useTripsStore"
 import * as SecureStore from 'expo-secure-store'
-
 
 export default function Trips() {
     const [createTripLoading, setCreateTripLoading] = useState<boolean>(false)
@@ -50,7 +49,7 @@ export default function Trips() {
             setCurrentUserTrips(currentUserTrips)
         }
         catch (err) {
-            handleError(err, 'Error fetching trips')
+            handleApiError(err, 'Error fetching trips')
         }
     }
 
