@@ -116,7 +116,8 @@ export default function Trips() {
     }
 
     const sortTripDates = () => {
-        const sortedDates = tripDates && tripDates.sort((a: string, b: string) => {
+        if (!tripDates || tripDates.length <= 1) return
+        const sortedTripDates = tripDates && [...tripDates].sort((a: string, b: string) => {
             const dateA = new Date(a)
             const dateB = new Date(b)
             if (dateA < dateB) {
@@ -127,22 +128,17 @@ export default function Trips() {
             }
             return 0
         })
-        setTripDates(sortedDates)
+        setTripDates(sortedTripDates)
     }
 
     useEffect(() => {
         handleFetchCurrentUserTrips()
-        fetchTripDates()
     }, [trips])
 
     useEffect(() => {
         fetchTripDates()
-    }, [currentUserTrips])
-
-    useEffect(() => {
         sortTripDates()
-        if (__DEV__) console.log('trip dates: ', tripDates)
-    }, [tripDates])
+    }, [currentUserTrips])
 
     return (
         <LinearGradient colors={['#8ec5fc', '#5f93d3']}>
