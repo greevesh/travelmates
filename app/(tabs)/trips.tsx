@@ -66,6 +66,7 @@ export default function Trips() {
             setStartDate(undefined)
             setEndDate(undefined)
             addTrip(res.data)
+            sortTripDates()
             return res.data
         }
         catch (err) {
@@ -86,6 +87,7 @@ export default function Trips() {
             setDeletingTripId(tripId)
             await withAuthRetry((headers) => axios.delete(`${tripEndpoint}/${tripId}`, { headers }))
             setTrips(trips.filter(trip => trip._id !== tripId))
+            sortTripDates()
         } 
         catch (err) {
             if (err instanceof Error && err.message === 'Missing user credentials') {
@@ -112,12 +114,16 @@ export default function Trips() {
                 }
             }
         })
-        setTripDates(dates)
+        return dates
     }
 
     const sortTripDates = () => {
-        if (!tripDates || tripDates.length <= 1) return
-        const sortedTripDates = tripDates && [...tripDates].sort((a: string, b: string) => {
+        const fetchedTripDates = fetchTripDates()
+        if (!fetchedTripDates || fetchedTripDates.length <= 1) {
+            setTripDates([])
+            return
+        }
+        const sortedTripDates = fetchedTripDates && [...fetchedTripDates].sort((a: string, b: string) => {
             const dateA = new Date(a)
             const dateB = new Date(b)
             if (dateA < dateB) {
@@ -136,7 +142,6 @@ export default function Trips() {
     }, [trips])
 
     useEffect(() => {
-        fetchTripDates()
         sortTripDates()
     }, [currentUserTrips])
 
