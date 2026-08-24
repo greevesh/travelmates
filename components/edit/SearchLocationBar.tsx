@@ -6,6 +6,7 @@ import { useTripStore } from '../../stores/useTripStore'
 
 import flags, { FlagMap } from "../../flag-emojis"
 import React from 'react'
+import handleLocationLength from '@/utils/handleLocationLength'
 
 export default function SearchLocationBar() {
 	const [places, setPlaces] = useState<Array<{ place_id: string; description: string }>>([])
@@ -84,8 +85,7 @@ export default function SearchLocationBar() {
 				inputStyle={{ marginTop: -5 }}
 				mode='bar'
 				style={styles.searchbar}
-				value={query.length > MAX_QUERY_LENGTH ? query.slice(0, MAX_QUERY_LENGTH)
-					: query}
+				value={handleLocationLength(query, 25)}
 				onChangeText={(text) => {
 					setQuery(text)
 					fetchPlaces(text)
@@ -108,7 +108,7 @@ export default function SearchLocationBar() {
 						key={place_id} 
 						style={{ ...styles.resultItem, borderBottomWidth: index === places.length - 1 ? 0 : 1 }}>
 						<Text>{getFlag(description)}</Text>
-						<Text>{description}</Text>
+						<Text>{handleLocationLength(description, 38)}</Text>
 					</TouchableOpacity>
 				))}
 			</View>

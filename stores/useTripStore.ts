@@ -1,17 +1,16 @@
 import { create } from 'zustand'
 
 type Location = string | undefined
-export type TDate = Date | undefined
 
 interface TripState {
   locationQuery: string
   setLocationQuery: (query: string) => void
   location: Location
   setLocation: (location: Location) => void
-  startDate: TDate
-  setStartDate: (startDate: TDate) => void
-  endDate: TDate
-  setEndDate: (endDate: TDate) => void
+  startDate: Date | undefined
+  setStartDate: (startDate: Date | undefined) => void
+  endDate: Date | undefined
+  setEndDate: (endDate: Date | undefined) => void
   tripDates: string[]
   setTripDates: (dates: any) => void
 }

@@ -5,27 +5,24 @@ import fetchCurrentUser from "@/utils/fetchCurrentUser"
 import { friendsEndpoint } from "@/consts/api"
 import { withAuthRetry } from "@/utils/auth"
 import axios from "axios"
-import { handleError } from "@/utils/errorHandler"
+import { handleApiError } from "@/utils/errorHandler"
 import { useUsersStore } from "@/stores/useUsersStore"
 import fetchTrips from "@/utils/fetchTrips"
 import { widthsByDaySpan, DAY_CELL_WIDTH } from "@/consts/table"
 import TableLoadError from "./TableLoadError"
 import { useCurrentUserStore } from "@/stores/useCurrentUserStore"
 import UserProfileImage from "@/components/base/UserProfileImage"
+import { useTripsStore } from "@/stores/useTripsStore"
+import { Trip } from "@/types"
+import { appendEllipsis } from "@/utils/handleLocationLength"
 
 type RowsLoadState = 'loading' | 'error' | 'success'
 
 interface TableTrip {
+    _id: string
     location: string
     startDay: number | undefined
     endDay: number | undefined
-    userId: string
-}
-
-interface RawTrip {
-    startDate: Date
-    endDate: Date
-    location: string
     userId: string
 }
 
@@ -37,7 +34,11 @@ export default function Table() {
     const [monthDaysLength, setMonthDaysLength] = useState(new Date(displayYear, month + 1, 0).getDate())
     const [displayDays, setDisplayDays] = useState<number[] | undefined>(undefined)
 
-    const [trips, setTrips] = useState<TableTrip[]>([])
+    const { trips, setTrips } = useTripsStore((state) => ({
+        trips: state.trips,
+        setTrips: state.setTrips
+    }))
+    const [tableTrips, setTableTrips] = useState<TableTrip[]>([])
     const { photo } = useCurrentUserStore()
     
     const users = useUsersStore((state) => state.users)
@@ -62,10 +63,10 @@ export default function Table() {
      * - Trip spans multiple years
     */
     
-    const parseTrip = (trip: RawTrip): TableTrip | null => {
-        const { startDate, endDate, location, userId } = trip
-        let startDay = startDate.getDate()
-        let endDay = endDate.getDate()
+    const parseTrip = (trip: Trip): TableTrip | null => {
+        const { _id, startDate, endDate, location, userId } = trip
+        let startDay = startDate?.getDate()
+        let endDay = endDate?.getDate()
         let fullMonth = false
 
         const startsInCurrentMonth = startDate.getMonth() === month && startDate.getFullYear() === displayYear
@@ -88,24 +89,23 @@ export default function Table() {
             startDay = 1
         }
         if (startsInCurrentMonth || endsInCurrentMonth || fullMonth) {
-            return { location, startDay, endDay, userId }
+            return { _id, location, startDay, endDay, userId }
         }
         return null
     }
     
-    const loadTrips = async () => {
+    const loadTableTrips = async (trips: Trip[]) => {
         try {
-            const rawTrips = await fetchTrips()
             const newTrips: TableTrip[] = []
             
-            rawTrips.forEach((trip: any) => {
+            trips.forEach((trip: any) => {
                 const startDate = new Date(trip.startDate)
                 const endDate = new Date(trip.endDate)
-                const { location, userId } = trip
-                const parsedTrip = parseTrip({ startDate, endDate, location, userId })
+                const { _id, location, userId } = trip
+                const parsedTrip = parseTrip({ _id, startDate, endDate, location, userId })
                 parsedTrip && newTrips.push(parsedTrip)
             })
-            setTrips(newTrips)
+            setTableTrips(newTrips)
             if (__DEV__) console.log('trips loaded: ', newTrips)
         }
         catch (err) {
@@ -148,7 +148,7 @@ export default function Table() {
     const nextBtnDisabled = month === new Date().getMonth() && displayYear === new Date().getFullYear() + 3
 
     const getTripDays = (day: number) => {
-        const filteredTrips = trips.filter(trip => 
+        const filteredTrips = tableTrips.filter(trip => 
             trip.startDay && trip.endDay && 
             day >= trip.startDay && 
             day <= trip.endDay
@@ -157,7 +157,7 @@ export default function Table() {
     }
 
     useEffect(() => {
-        loadTrips()
+        loadTableTrips(trips)
         if (__DEV__) console.log('month: ', month)
     }, [month])
 
@@ -186,19 +186,31 @@ export default function Table() {
             setRowsLoadState('success')
         }
         catch (err) {
-            handleError(err, 'Failed to load users')
+            handleApiError(err, 'Failed to load users')
             setUsers([])
             setRowsLoadState('error')
         }
     }
 
     useEffect(() => {
-        setUsers([{ ...users[0], pic: photo }, ...users.slice(1)])
+        users.length > 0 && setUsers([{ ...users[0], pic: photo }, ...users.slice(1)])
     }, [photo])
 
     useEffect(() => {
         loadRows()
     }, [])
+
+    useEffect(() => {
+        const fetchAndLoadTrips = async () => {
+            const trips = await fetchTrips()
+            setTrips(trips)
+        }
+        fetchAndLoadTrips()
+    }, [])
+
+    useEffect(() => {
+        loadTableTrips(trips)
+    }, [trips])
 
     const getTripWidthInMonth = (trip: TableTrip) => {
         if (!trip.startDay || !trip.endDay) return 0
@@ -206,7 +218,7 @@ export default function Table() {
         return widthsByDaySpan[daysInMonth] ?? daysInMonth * DAY_CELL_WIDTH
     }
 
-    const trimLocationLength = (location: string, trip: TableTrip) => {
+    const handleTableLocationLength = (location: string, trip: TableTrip) => {
         const tripWidth = getTripWidthInMonth(trip)
 
         if (!location || !trip || !tripWidth) return
@@ -215,12 +227,7 @@ export default function Table() {
         let needsTrimming = sliceEnd < location.length
         let trimmedLocation = location.slice(0, sliceEnd)
 
-        if (needsTrimming) {
-            if (trimmedLocation.endsWith(',') || trimmedLocation.endsWith(' ')) {
-                return trimmedLocation.slice(0, -1) + '...'
-            }
-            return trimmedLocation + '...'
-        }
+        if (needsTrimming) return appendEllipsis(trimmedLocation)
         return location
     }
 
@@ -266,8 +273,8 @@ export default function Table() {
                                                 {dayTrips.map((trip) => (
                                                     user._id === trip.userId &&
                                                     trip.startDay === day && (
-                                                        <View key={`${trip.startDay}-${trip.userId}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) - 7 }]}>
-                                                            <Text style={styles.locationText}>{trimLocationLength(trip.location, trip)}</Text>
+                                                        <View key={`${trip.startDay}-${trip._id}`} style={[styles.locationContainer, styles.tripBar, { width: getTripWidthInMonth(trip) - 7 }]}>
+                                                            <Text style={styles.locationText}>{handleTableLocationLength(trip.location, trip)}</Text>
                                                         </View>
                                                     )
                                                 ))}
@@ -390,3 +397,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 })
+
+function setTrips(trips: any) {
+    throw new Error("Function not implemented.")
+}

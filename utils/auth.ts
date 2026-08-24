@@ -3,11 +3,20 @@ import { Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 
 import { refreshEndpoint, signInEndpoint, signUpEndpoint, signOutEndpoint } from '../consts/api'
-import { handleError } from './errorHandler'
+import { handleError, RefreshTokenFailedError } from './errorHandler'
+import { router } from 'expo-router'
+import { useCurrentUserStore } from '@/stores/useCurrentUserStore'
+import { useUsersStore } from '@/stores/useUsersStore'
 
 interface Credentials {
     username: string
     password: string
+}
+
+export type AuthRequestHeaders = {
+	'Content-Type': 'application/json'
+	'Authorization': string
+	'X-Username': string
 }
 
 export const authenticate = async (data: Credentials, endpoint: string) => {
@@ -98,6 +107,22 @@ export const signOut = async (username: string | null, refreshToken: string | nu
 	}
 }
 
+export const handleSignOut = async () => {
+	const { refreshToken, accessToken } = await fetchUserCredentials()
+	try {
+		refreshToken && accessToken && await removeAuthTokens()
+		useCurrentUserStore.getState().setUploaded(false)
+		useCurrentUserStore.getState().setPhoto('')
+		useCurrentUserStore.getState().setUsername('')
+		useUsersStore.getState().setUsers([])
+		router.push('/')
+	}
+	catch (err) {
+		handleError(err, 'Failed to fully complete the sign out process. Please restart the app.')
+		throw err
+	}
+}
+
 export const fetchUserCredentials = async () => {
 	try {
 		const username = await SecureStore.getItemAsync('username')
@@ -128,13 +153,6 @@ export const removeAuthTokens = async () => {
 	}
 }
 
-export type AuthRequestHeaders = {
-	'Content-Type': 'application/json'
-	'Authorization': string
-	'X-Username': string
-}
-
-/** One SecureStore read; use when you need headers and tokens in the same request (e.g. POST body). */
 export const getAuthContext = async () => {
 	const { username, accessToken } = await fetchUserCredentials()
 	if (!username || !accessToken) {
@@ -184,7 +202,7 @@ export const refreshAccessToken = async () => {
 		return nextAccessToken
 	}
 	catch (err) {
-		handleError(err, 'Failed to refresh access token')
+		if (__DEV__) console.error('Failed to refresh access token', err)
 		throw err
 	}
 }
@@ -197,8 +215,16 @@ export const withAuthRetry = async (
 	}
 	catch (err) {
 		if (err instanceof AxiosError && (err.response?.status === 401 || err.response?.status === 403)) {
-			await refreshAccessToken()
-			return await request(await getAuthHeaders())
+			try {
+				await refreshAccessToken()
+				return await request(await getAuthHeaders())
+			}
+			catch (err) {
+				if (__DEV__) console.error('Token refresh failed', err)
+				await handleSignOut()
+				handleError(err, 'You have been signed out because of an authentication failure. Please try again.')
+        		throw new RefreshTokenFailedError()
+			}
 		}
 		throw err
 	}

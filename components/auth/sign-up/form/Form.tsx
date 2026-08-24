@@ -12,10 +12,10 @@ import PasswordConfirmation from '../../inputs/password/PasswordConfirmation'
 import Error from '../../Error'
 import { signUpEndpoint } from '../../../../consts/api'
 import{ authenticate, storeAuthTokens } from '../../../../utils/auth'
-import { useAuthStore } from '../../../../stores/useAuthStore'
 import AuthLink from '@/components/auth/AuthLink'
 import Spinner from '@/components/base/Spinner'
 import { router } from 'expo-router'
+import { handleError } from '@/utils/errorHandler'
 
 export default function SignUpForm() {
 	const {
@@ -41,12 +41,10 @@ export default function SignUpForm() {
 			await SecureStore.setItemAsync('username', data.username)
 			await storeAuthTokens(accessToken, refreshToken)
 
-			useAuthStore.getState().setIsSignedIn(true)
 			reset()
 			router.push('/hub')
-		} catch {
-			// error scenarios handled in authenticate()
-			return
+		} catch (err) {
+			handleError(err, 'Error signing up. Please try again.')
 		}
 		finally {
 			setIsLoading(false)
