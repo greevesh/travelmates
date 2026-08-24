@@ -11,6 +11,14 @@
     "test": "jest --watchAll",
     "lint": "expo lint"
   },
+  "ios": {
+    "bundleIdentifier": "travelmates",
+    "supportsTablet": false,
+    "icon": "./assets/img/travelmates.png",
+    "infoPlist": {
+      "ITSAppUsesNonExemptEncryption": false
+    }
+  },
   "jest": {
     "preset": "jest-expo"
   },
