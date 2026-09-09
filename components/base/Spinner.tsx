@@ -1,5 +1,4 @@
-import { ViewStyle } from "react-native"
-import { ActivityIndicator } from "react-native-paper"
+import { ViewStyle, ActivityIndicator } from "react-native"
 
 interface ISpinnerProps {
     style?: ViewStyle
