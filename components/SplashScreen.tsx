@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     textBlock: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 24,
