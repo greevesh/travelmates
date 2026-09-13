@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Icon, Searchbar } from 'react-native-paper'
+import { StyleSheet, ActivityIndicator, Text, TouchableOpacity, View } from 'react-native'
 
 import { useTripStore } from '../../stores/useTripStore'
 

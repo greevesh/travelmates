@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, Icon, Searchbar } from 'react-native-paper'
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Icon, Searchbar } from 'react-native-paper'
+import { Image, ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
 
 import { friendRequestsEndpoint, usersEndpoint } from '../../consts/api'
 import React from 'react'
