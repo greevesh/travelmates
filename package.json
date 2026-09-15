@@ -16,7 +16,8 @@
     "supportsTablet": false,
     "icon": "./assets/img/travelmates.png",
     "infoPlist": {
-      "ITSAppUsesNonExemptEncryption": false
+      "ITSAppUsesNonExemptEncryption": false,
+      "UIDeviceFamily": [1]
     }
   },
   "jest": {
